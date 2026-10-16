@@ -10,6 +10,11 @@
 <link rel="canonical" href="https://imaedesign.eu/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://imaedesign.eu/">
+<meta property="og:image" content="https://imaedesign.eu/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://imaedesign.eu/og.png">
 <meta property="og:locale" content="lv_LV">
 <meta property="og:site_name" content="IMAE Design &amp; Engineering">
 <meta property="og:title" content="IMAE Design &amp; Engineering">
@@ -264,8 +269,12 @@ footer .wrap{
   font-family:var(--mono);font-size:.74rem;color:var(--ink-2);
 }
 @media (max-width:720px){
-  .bar nav{display:none}
-  .langs{margin-left:auto}
+  .bar .wrap{flex-wrap:wrap;row-gap:0;padding-bottom:0}
+  .bar nav + .langs{margin-left:auto}
+  .bar nav{order:3;width:100%;margin:0 0 0;gap:1.2rem;flex-wrap:nowrap;overflow-x:auto;padding:.55rem 0;border-top:1px solid var(--line);margin-top:.55rem;scrollbar-width:none}
+  .bar nav::-webkit-scrollbar{display:none}
+  .bar nav a{white-space:nowrap}
+  section[id],main{scroll-margin-top:92px}
 }
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"IMAE Design & Engineering","url":"https://imaedesign.eu/","description":"CAD modelēšana, prototipi, 3D druka un CNC sagatavošana.","areaServed":"LV","address":{"@type":"PostalAddress","addressLocality":"Salaspils","addressCountry":"LV"}}</script>
@@ -521,7 +530,7 @@ footer .wrap{
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="vendor/three.min.js"></script>
 <script>
 const T = {
   "nav.services":{lv:"Pakalpojumi",ru:"Услуги",en:"Services"},
@@ -704,7 +713,7 @@ function isDarkTheme(){
 /* anchors in part space (mm): x across, y up, z = depth, origin at the centre of the box */
 const ANN = [
   {p:[0,-31.3,-20],      o:[0,50],    text:"63,7"},
-  {p:[-31.8,0,-31.4],    o:[-58,-12], text:"62,6"},
+  {p:[-31.8,0,-31.4],    o:[-90,50], text:"62,6"},
   {p:[0,-26,-31.4],      o:[56,-38],  text:"3× ⌀3,4", mark:true},
   {p:[31.8,-31.3,0],     o:[56,26],   text:"62,9", opt:true},
   {p:[0,10,8],           o:[-54,-44], text:"55 cm³", mark:true, opt:true}
