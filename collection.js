@@ -149,7 +149,7 @@
     if (!ensureThumbRenderer()) return;
     thumbScene.theme();
     thumbScene.show(card.m);
-    fit(thumbScene, card.m, 520/390, 0.8);
+    fit(thumbScene, card.m, 520/390, 0.74);
     gl.setClearColor(0x000000, 0);
     gl.render(thumbScene.scene, thumbScene.camera);
     card.img.src = gl.domElement.toDataURL('image/png');
