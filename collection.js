@@ -1,4 +1,4 @@
-/* Collection: simplified STL models rendered as lazy thumbnails (one shared WebGL context) + an interactive dialog viewer */
+/* Collection: simplified STL models rendered as lazy thumbnails (one shared WebGL context) +  */
 (function(){
   var DATA = window.COLLECTION || [];
   var root = document.getElementById('coll');
@@ -9,7 +9,6 @@
   var cards = [];
   var geoCache = {};
   var gl = null;           // shared offscreen renderer for thumbnails
-  var viewer = null;       // dialog viewer state
 
   function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
   function isDark(){
@@ -136,8 +135,7 @@
 
   /* ---- cards ---- */
   DATA.forEach(function(m){
-    var b = document.createElement('button');
-    b.type = 'button';
+    var b = document.createElement('div');
     b.className = 'ccard';
     b.setAttribute('data-cat', m.cat);
     var th = document.createElement('div'); th.className = 'cthumb';
@@ -149,7 +147,6 @@
     root.appendChild(b);
     var card = {m:m, el:b, img:img, name:name, meta:meta, done:false};
     b.__card = card;
-    b.addEventListener('click', function(){ openViewer(card); });
     cards.push(card);
     if (io) io.observe(b); else renderThumb(card);
   });
@@ -172,84 +169,14 @@
       c.meta.textContent = catText(c.m.cat) + ' · ' + dimsText(c.m.dims);
       c.el.setAttribute('aria-label', nm);
     });
-    if (viewer && viewer.card) fillViewerText();
   };
 
   function retheme(){
     cards.forEach(function(c){ if (c.done){ c.done = false; if (io){ io.observe(c.el); } } });
-    if (viewer && viewer.s) viewer.s.theme();
   }
   var mq = window.matchMedia('(prefers-color-scheme: dark)');
   if (mq.addEventListener) mq.addEventListener('change', retheme);
   new MutationObserver(retheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
-
-  /* ---- dialog viewer ---- */
-  var dlg = document.getElementById('cdlg');
-  var vbox = document.getElementById('cview');
-  function fillViewerText(){
-    var m = viewer.card.m;
-    document.getElementById('ctitle').textContent = m.n[lang] || m.n.lv;
-    document.getElementById('cinfo').textContent = catText(m.cat) + ' · ' + dimsText(m.dims);
-    var t = tr('coll.note');
-    document.getElementById('cnote').textContent = (t ? t[lang] : '').replace('{n}', m.tris.toLocaleString(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'lv-LV'));
-  }
-  function openViewer(card){
-    if (!dlg || !dlg.showModal) return;
-    if (!viewer){
-      var r;
-      try { r = new THREE.WebGLRenderer({antialias:true, alpha:true}); } catch (e) { return; }
-      r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      vbox.appendChild(r.domElement);
-      viewer = {r:r, s:makeScene(), card:null, auto:true, drag:false, raf:0};
-      var px = 0, py = 0, v = viewer;
-      vbox.addEventListener('pointerdown', function(e){
-        v.drag = true; v.auto = false; px = e.clientX; py = e.clientY; vbox.classList.add('grabbing');
-        try { vbox.setPointerCapture(e.pointerId); } catch (err) {}
-      });
-      vbox.addEventListener('pointermove', function(e){
-        if (!v.drag) return;
-        v.s.group.rotation.y += (e.clientX - px) * 0.009;
-        v.s.group.rotation.x = Math.max(-1.5, Math.min(1.5, v.s.group.rotation.x + (e.clientY - py) * 0.009));
-        px = e.clientX; py = e.clientY;
-      });
-      function end(){ v.drag = false; vbox.classList.remove('grabbing'); }
-      vbox.addEventListener('pointerup', end);
-      vbox.addEventListener('pointercancel', end);
-      vbox.addEventListener('wheel', function(e){
-        e.preventDefault();
-        var z = v.s.camera.position.z * (1 + e.deltaY * 0.001);
-        v.s.camera.position.z = Math.max(140, Math.min(520, z));
-      }, {passive:false});
-    }
-    viewer.card = card;
-    viewer.s.show(card.m);
-    viewer.s.group.rotation.set(-0.38, 0.62, 0);
-    viewer.s.camera.position.z = 300;
-    fit(viewer.s, card.m, 4/3, 0.66);
-    viewer.auto = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    fillViewerText();
-    dlg.showModal();
-    sizeViewer();
-    loop();
-  }
-  function sizeViewer(){
-    if (!viewer) return;
-    var w = vbox.clientWidth, h = vbox.clientHeight;
-    if (!w || !h) return;
-    viewer.r.setSize(w, h);
-    viewer.s.camera.aspect = w/h; viewer.s.camera.updateProjectionMatrix();
-    viewer.r.render(viewer.s.scene, viewer.s.camera);
-  }
-  function loop(){
-    if (!viewer || !dlg.open){ if (viewer) viewer.raf = 0; return; }
-    viewer.raf = requestAnimationFrame(loop);
-    if (viewer.auto) viewer.s.group.rotation.y += 0.006;
-    viewer.r.render(viewer.s.scene, viewer.s.camera);
-  }
-  window.addEventListener('resize', sizeViewer);
-  var closeBtn = document.getElementById('cclose');
-  if (closeBtn) closeBtn.addEventListener('click', function(){ dlg.close(); });
-  if (dlg) dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
 
   applyFilter();
   window.renderCollectionLang(document.documentElement.lang || 'lv');

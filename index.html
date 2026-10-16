@@ -229,24 +229,13 @@ td{font-family:var(--mono);font-size:.84rem;font-variant-numeric:tabular-nums}
 .cfilters button:hover{border-color:var(--accent);color:var(--accent)}
 .cfilters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .coll{display:grid;gap:1rem;margin-top:1.4rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
-.ccard{display:flex;flex-direction:column;gap:.35rem;text-align:left;font:inherit;color:inherit;background:var(--paper);border:1px solid var(--line);padding:0 0 .8rem;cursor:pointer;min-width:0}
+.ccard{display:flex;flex-direction:column;gap:.35rem;text-align:left;font:inherit;color:inherit;background:var(--paper);border:1px solid var(--line);padding:0 0 .8rem;min-width:0}
 .ccard[hidden]{display:none}
-.ccard:hover{border-color:var(--accent)}
+
 .cthumb{aspect-ratio:4/3;border-bottom:1px solid var(--line);background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 24px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/24px 100%,var(--surface);overflow:hidden}
 .cthumb img{width:100%;height:100%;object-fit:contain;display:block}
 .cname{font-family:var(--display);font-weight:700;font-stretch:104%;font-size:1rem;padding:.35rem .9rem 0;line-height:1.2}
 .cmeta{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);padding:0 .9rem;font-variant-numeric:tabular-nums}
-dialog.cdlg{border:1px solid var(--ink);background:var(--paper);color:var(--ink);padding:0;width:min(920px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto}
-dialog.cdlg::backdrop{background:rgba(8,10,12,.72)}
-.cdhead{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1rem 1.1rem;border-bottom:1px solid var(--line)}
-.cdhead h3{font-size:1.25rem;font-weight:700;font-stretch:108%}
-.cdhead p{font-family:var(--mono);font-size:.76rem;color:var(--ink-2);margin-top:.3rem}
-.cdhead button{font-family:var(--mono);font-size:.78rem;background:transparent;color:var(--ink);border:1px solid var(--line);padding:.35rem .7rem;cursor:pointer}
-.cdhead button:hover{border-color:var(--accent);color:var(--accent)}
-.cview{position:relative;aspect-ratio:4/3;max-height:68vh;width:100%;background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 32px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/32px 100%,var(--surface);touch-action:none;cursor:grab;overflow:hidden}
-.cview.grabbing{cursor:grabbing}
-.cview canvas{display:block;width:100%;height:100%}
-.cnote{font-family:var(--mono);font-size:.72rem;color:var(--ink-2);padding:.8rem 1.1rem}
 /* works */
 .works{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:2rem}
 @media (min-width:760px){.works{grid-template-columns:1fr 1fr}}
@@ -341,17 +330,13 @@ section.band .block{background:var(--paper)}
 footer .wrap{font-family:var(--body);font-size:.82rem}
 .cfilters button{font-family:var(--body);font-weight:500;font-size:.85rem;letter-spacing:0;border-radius:999px;padding:.5rem 1rem}
 .coll{gap:1.1rem}
-.ccard{border-radius:22px;overflow:hidden;background:var(--surface);border-color:transparent;transition:transform .2s ease,border-color .2s ease}
-.ccard:hover{border-color:var(--accent);transform:translateY(-2px)}
-@media (prefers-reduced-motion:reduce){.ccard{transition:none}.ccard:hover{transform:none}}
+.ccard{border-radius:22px;overflow:hidden;background:var(--surface);border-color:transparent}
+
+
 .cthumb{background:radial-gradient(110% 90% at 50% 20%,var(--paper),var(--surface) 75%);border-bottom:0}
 .cname{font-stretch:100%;font-weight:650;letter-spacing:-.01em}
 .cmeta{font-family:var(--body);font-size:.78rem}
-dialog.cdlg{border:0;border-radius:26px}
-.cdhead p,.cnote{font-family:var(--body)}
-.cdhead button{font-family:var(--body);border-radius:999px;padding:.4rem .9rem}
-.cview{background:radial-gradient(110% 90% at 50% 20%,var(--paper),var(--surface) 75%)}</style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"IMAE Design & Engineering","url":"https://imaedesign.eu/","description":"CAD modelēšana, prototipi, 3D druka un CNC sagatavošana.","areaServed":"LV","address":{"@type":"PostalAddress","addressLocality":"Salaspils","addressCountry":"LV"}}</script>
+</style><script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"IMAE Design & Engineering","url":"https://imaedesign.eu/","description":"CAD modelēšana, prototipi, 3D druka un CNC sagatavošana.","areaServed":"LV","address":{"@type":"PostalAddress","addressLocality":"Salaspils","addressCountry":"LV"}}</script>
 </head>
 <body>
 
@@ -539,7 +524,7 @@ dialog.cdlg{border:0;border-radius:26px}
     <div class="wrap">
       <p class="eyebrow" data-t="sec.coll.eyebrow">Kolekcija</p>
       <h2 data-t="sec.coll.title">Izdrukāto detaļu kolekcija</h2>
-      <p class="intro" data-t="sec.coll.intro">Detaļas no manas darbnīcas — mājai, dārzam, rotaļām un mehānikai. Katru var pagriezt 3D skatā.</p>
+      <p class="intro" data-t="sec.coll.intro">Detaļas no manas darbnīcas — mājai, dārzam, rotaļām un mehānikai.</p>
       <div class="cfilters" role="group" aria-label="Filter">
         <button type="button" data-f="all" aria-pressed="true" data-t="cat.all">Visas</button>
         <button type="button" data-f="home" aria-pressed="false" data-t="cat.home">Mājai</button>
@@ -552,14 +537,6 @@ dialog.cdlg{border:0;border-radius:26px}
     </div>
   </section>
 
-  <dialog class="cdlg" id="cdlg" aria-labelledby="ctitle">
-    <div class="cdhead">
-      <div><h3 id="ctitle"></h3><p id="cinfo"></p></div>
-      <button type="button" id="cclose" data-t="coll.close">Aizvērt</button>
-    </div>
-    <div class="cview" id="cview"></div>
-    <p class="cnote" id="cnote"></p>
-  </dialog>
   <section class="band" id="darbi">
     <div class="wrap">
       <p class="eyebrow" data-t="sec.works.eyebrow">Darbi</p>
@@ -644,15 +621,13 @@ const T = {
   "nav.coll":{lv:"Kolekcija",ru:"Коллекция",en:"Collection"},
   "sec.coll.eyebrow":{lv:"Kolekcija",ru:"Коллекция",en:"Collection"},
   "sec.coll.title":{lv:"Izdrukāto detaļu kolekcija",ru:"Коллекция напечатанных деталей",en:"Collection of printed parts"},
-  "sec.coll.intro":{lv:"Detaļas no manas darbnīcas — mājai, dārzam, rotaļām un mehānikai. Katru var pagriezt 3D skatā.",ru:"Детали из моей мастерской — для дома, сада, игр и механики. Каждую можно покрутить в 3D.",en:"Parts from my workshop — for home, garden, play and mechanics. Each one can be rotated in 3D."},
+  "sec.coll.intro":{lv:"Detaļas no manas darbnīcas — mājai, dārzam, rotaļām un mehānikai.",ru:"Детали из моей мастерской — для дома, сада, игр и механики.",en:"Parts from my workshop — for home, garden, play and mechanics."},
   "cat.all":{lv:"Visas",ru:"Все",en:"All"},
   "cat.home":{lv:"Mājai",ru:"Дом",en:"Home"},
   "cat.holders":{lv:"Turētāji",ru:"Держатели",en:"Holders"},
   "cat.mech":{lv:"Mehānika",ru:"Механика",en:"Mechanics"},
   "cat.garden":{lv:"Dārzs",ru:"Сад",en:"Garden"},
   "cat.toys":{lv:"Rotaļlietas",ru:"Игрушки",en:"Toys"},
-  "coll.close":{lv:"Aizvērt",ru:"Закрыть",en:"Close"},
-  "coll.note":{lv:"Skatā vienkāršots tīkls (oriģināls: {n} trīsstūri). Velciet, lai pagrieztu, ritiniet, lai tuvinātu.",ru:"В просмотре упрощённая сетка (оригинал: {n} треугольников). Потяните, чтобы повернуть, прокрутите для масштаба.",en:"Simplified mesh shown (original: {n} triangles). Drag to rotate, scroll to zoom."},
   "hero.eyebrow":{lv:"Salaspils · Rīgas reģions · Latvija",ru:"Саласпилс · Рижский регион · Латвия",en:"Salaspils · Riga region · Latvia"},
   "hero.lead":{lv:"No idejas līdz detaļai, kas der.",ru:"От идеи до детали, которая встаёт на место.",en:"From an idea to a part that fits."},
   "hero.sub":{lv:"Parametriski CAD modeļi, rasējumi ar pielaidēm, izdrukāti prototipi un sagatavots CNC process. 14+ gadu pieredze precīzijas metālapstrādē.",ru:"Параметрические CAD-модели, чертежи с допусками, напечатанные прототипы и подготовленный процесс для ЧПУ. 14+ лет в точной металлообработке.",en:"Parametric CAD models, drawings with tolerances, printed prototypes and a CNC process ready to run. 14+ years in precision metalworking."},
