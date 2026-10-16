@@ -28,6 +28,38 @@
     return e ? (e[lang] || e.lv) : c;
   }
 
+  /* smooth normals that stop at sharp edges: a corner only averages faces within `crease` degrees of its own */
+  function creasedGeometry(pos, index, crease){
+    var nf = index.length / 3, cosT = Math.cos(crease * Math.PI / 180);
+    var fn = new Float32Array(nf*3), adj = [], i, f, c;
+    for (i = 0; i < pos.length/3; i++) adj.push([]);
+    for (f = 0; f < nf; f++){
+      var a = index[f*3]*3, b = index[f*3+1]*3, d = index[f*3+2]*3;
+      var ux = pos[b]-pos[a], uy = pos[b+1]-pos[a+1], uz = pos[b+2]-pos[a+2];
+      var vx = pos[d]-pos[a], vy = pos[d+1]-pos[a+1], vz = pos[d+2]-pos[a+2];
+      fn[f*3] = uy*vz-uz*vy; fn[f*3+1] = uz*vx-ux*vz; fn[f*3+2] = ux*vy-uy*vx;
+      adj[index[f*3]].push(f); adj[index[f*3+1]].push(f); adj[index[f*3+2]].push(f);
+    }
+    var P = new Float32Array(nf*9), N = new Float32Array(nf*9);
+    for (f = 0; f < nf; f++){
+      var fx = fn[f*3], fy = fn[f*3+1], fz = fn[f*3+2], fl = Math.sqrt(fx*fx+fy*fy+fz*fz) || 1;
+      for (c = 0; c < 3; c++){
+        var vi = index[f*3+c], list = adj[vi], sx = 0, sy = 0, sz = 0;
+        for (var k = 0; k < list.length; k++){
+          var g = list[k], gx = fn[g*3], gy = fn[g*3+1], gz = fn[g*3+2], gl = Math.sqrt(gx*gx+gy*gy+gz*gz) || 1;
+          if ((fx*gx + fy*gy + fz*gz) / (fl*gl) >= cosT){ sx += gx/gl; sy += gy/gl; sz += gz/gl; }
+        }
+        var sl = Math.sqrt(sx*sx+sy*sy+sz*sz) || 1, o = f*9 + c*3;
+        N[o] = sx/sl; N[o+1] = sy/sl; N[o+2] = sz/sl;
+        P[o] = pos[vi*3]; P[o+1] = pos[vi*3+1]; P[o+2] = pos[vi*3+2];
+      }
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(P, 3));
+    geo.setAttribute('normal', new THREE.BufferAttribute(N, 3));
+    return geo;
+  }
+
   /* ---- geometry ---- */
   function geometryFor(m){
     if (geoCache[m.id]) return geoCache[m.id];
@@ -43,11 +75,12 @@
       var a = j % 3;
       pos[j] = (m.min[a] + quant[j]/65535*m.size[a] - c[a]) * k;
     }
-    var g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    g.setIndex(new THREE.BufferAttribute(index, 1));
-    g.computeVertexNormals();
-    var edges = new THREE.EdgesGeometry(g, 28);
+    var ig = new THREE.BufferGeometry();
+    ig.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    ig.setIndex(new THREE.BufferAttribute(index, 1));
+    var edges = new THREE.EdgesGeometry(ig, 35);
+    var g = creasedGeometry(pos, index, 35);
+    g.computeBoundingBox();
     geoCache[m.id] = {mesh: g, edges: edges};
     return geoCache[m.id];
   }
@@ -70,7 +103,7 @@
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(30, 4/3, 1, 2000);
     camera.position.set(0, 0, 250);
-    var mat = new THREE.MeshStandardMaterial({metalness:0.1, roughness:0.72, flatShading:true});
+    var mat = new THREE.MeshStandardMaterial({metalness:0.1, roughness:0.62, flatShading:false});
     var edgeMat = new THREE.LineBasicMaterial({transparent:true, opacity:0.22});
     var holder = new THREE.Group();
     var group = new THREE.Group();
