@@ -53,25 +53,39 @@
     return geoCache[m.id];
   }
 
+  /* scale the part so its rotated bounding box fills ~`fill` of the frame */
+  function fit(s, m, aspect, fill){
+    var g = geometryFor(m).mesh;
+    if (!g.boundingBox) g.computeBoundingBox();
+    var b = g.boundingBox, mx = 0, my = 0, v = new THREE.Vector3();
+    for (var i = 0; i < 8; i++){
+      v.set(i&1 ? b.max.x : b.min.x, i&2 ? b.max.y : b.min.y, i&4 ? b.max.z : b.min.z);
+      v.applyEuler(s.group.rotation);
+      mx = Math.max(mx, Math.abs(v.x)); my = Math.max(my, Math.abs(v.y));
+    }
+    var halfH = s.camera.position.z * Math.tan(Math.PI/12), halfW = halfH * aspect;
+    s.holder.scale.setScalar(fill * Math.min(halfW/Math.max(mx, 1e-3), halfH/Math.max(my, 1e-3)));
+  }
+
   function makeScene(){
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(30, 4/3, 1, 2000);
     camera.position.set(0, 0, 250);
-    var mat = new THREE.MeshStandardMaterial({metalness:0.2, roughness:0.58, flatShading:true});
-    var edgeMat = new THREE.LineBasicMaterial({transparent:true, opacity:0.75});
+    var mat = new THREE.MeshStandardMaterial({metalness:0.1, roughness:0.72, flatShading:true});
+    var edgeMat = new THREE.LineBasicMaterial({transparent:true, opacity:0.22});
     var holder = new THREE.Group();
     var group = new THREE.Group();
     group.add(holder);
     scene.add(group);
     var hemi = new THREE.HemisphereLight(0xffffff, 0x3a4046, 0.9);
-    var key = new THREE.DirectionalLight(0xffffff, 0.8); key.position.set(70, 110, 140);
+    var key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(70, 110, 140);
     var fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-120, -60, 70);
     scene.add(hemi, key, fill);
     var s = {scene:scene, camera:camera, mat:mat, edgeMat:edgeMat, holder:holder, group:group, hemi:hemi};
     s.theme = function(){
       var dark = isDark();
-      mat.color.set(dark ? 0x7E888F : 0xB6BEC4);
-      hemi.intensity = dark ? 0.7 : 0.95;
+      mat.color.set(dark ? 0x7E888F : 0x8B949B);
+      hemi.intensity = dark ? 0.7 : 0.62;
       edgeMat.color.set(cssVar('--ink') || (dark ? '#E7EBED' : '#12171A'));
     };
     s.show = function(m){
@@ -95,7 +109,7 @@
       gl = r;
       thumbScene = makeScene();
       thumbScene.group.rotation.set(-0.38, 0.62, 0);
-      thumbScene.camera.position.z = 195;
+      thumbScene.camera.position.z = 300;
     } catch (e) { gl = false; }
     return gl;
   }
@@ -103,6 +117,7 @@
     if (!ensureThumbRenderer()) return;
     thumbScene.theme();
     thumbScene.show(card.m);
+    fit(thumbScene, card.m, 520/390, 0.8);
     gl.setClearColor(0x000000, 0);
     gl.render(thumbScene.scene, thumbScene.camera);
     card.img.src = gl.domElement.toDataURL('image/png');
@@ -203,13 +218,14 @@
       vbox.addEventListener('wheel', function(e){
         e.preventDefault();
         var z = v.s.camera.position.z * (1 + e.deltaY * 0.001);
-        v.s.camera.position.z = Math.max(110, Math.min(420, z));
+        v.s.camera.position.z = Math.max(140, Math.min(520, z));
       }, {passive:false});
     }
     viewer.card = card;
     viewer.s.show(card.m);
     viewer.s.group.rotation.set(-0.38, 0.62, 0);
-    viewer.s.camera.position.z = 215;
+    viewer.s.camera.position.z = 300;
+    fit(viewer.s, card.m, 4/3, 0.66);
     viewer.auto = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     fillViewerText();
     dlg.showModal();
