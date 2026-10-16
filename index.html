@@ -236,6 +236,30 @@ td{font-family:var(--mono);font-size:.84rem;font-variant-numeric:tabular-nums}
 .mat td:first-child{color:var(--ink);font-weight:500}
 .mat td{font-family:var(--body);font-size:.88rem}
 
+/* collection */
+.cfilters{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.6rem}
+.cfilters button{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;background:transparent;color:var(--ink-2);border:1px solid var(--line);padding:.42rem .8rem;cursor:pointer}
+.cfilters button:hover{border-color:var(--accent);color:var(--accent)}
+.cfilters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.coll{display:grid;gap:1rem;margin-top:1.4rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.ccard{display:flex;flex-direction:column;gap:.35rem;text-align:left;font:inherit;color:inherit;background:var(--paper);border:1px solid var(--line);padding:0 0 .8rem;cursor:pointer;min-width:0}
+.ccard[hidden]{display:none}
+.ccard:hover{border-color:var(--accent)}
+.cthumb{aspect-ratio:4/3;border-bottom:1px solid var(--line);background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 24px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/24px 100%,var(--surface);overflow:hidden}
+.cthumb img{width:100%;height:100%;object-fit:contain;display:block}
+.cname{font-family:var(--display);font-weight:700;font-stretch:104%;font-size:1rem;padding:.35rem .9rem 0;line-height:1.2}
+.cmeta{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);padding:0 .9rem;font-variant-numeric:tabular-nums}
+dialog.cdlg{border:1px solid var(--ink);background:var(--paper);color:var(--ink);padding:0;width:min(920px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto}
+dialog.cdlg::backdrop{background:rgba(8,10,12,.72)}
+.cdhead{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1rem 1.1rem;border-bottom:1px solid var(--line)}
+.cdhead h3{font-size:1.25rem;font-weight:700;font-stretch:108%}
+.cdhead p{font-family:var(--mono);font-size:.76rem;color:var(--ink-2);margin-top:.3rem}
+.cdhead button{font-family:var(--mono);font-size:.78rem;background:transparent;color:var(--ink);border:1px solid var(--line);padding:.35rem .7rem;cursor:pointer}
+.cdhead button:hover{border-color:var(--accent);color:var(--accent)}
+.cview{position:relative;aspect-ratio:4/3;max-height:68vh;width:100%;background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 32px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/32px 100%,var(--surface);touch-action:none;cursor:grab;overflow:hidden}
+.cview.grabbing{cursor:grabbing}
+.cview canvas{display:block;width:100%;height:100%}
+.cnote{font-family:var(--mono);font-size:.72rem;color:var(--ink-2);padding:.8rem 1.1rem}
 /* works */
 .works{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:2rem}
 @media (min-width:760px){.works{grid-template-columns:1fr 1fr}}
@@ -288,6 +312,7 @@ footer .wrap{
       <a href="#pakalpojumi" data-t="nav.services">Pakalpojumi</a>
       <a href="#process" data-t="nav.process">Process</a>
       <a href="#specs" data-t="nav.specs">Specifikācija</a>
+      <a href="#kolekcija" data-t="nav.coll">Kolekcija</a>
       <a href="#darbi" data-t="nav.works">Darbi</a>
       <a href="#kontakti" data-t="nav.contact">Kontakti</a>
     </nav>
@@ -460,7 +485,32 @@ footer .wrap{
     </div>
   </section>
 
-  <section id="darbi">
+  <section id="kolekcija">
+    <div class="wrap">
+      <p class="eyebrow" data-t="sec.coll.eyebrow">Kolekcija</p>
+      <h2 data-t="sec.coll.title">Izdrukāto detaļu kolekcija</h2>
+      <p class="intro" data-t="sec.coll.intro">Detaļas no manas darbnīcas — mājai, dārzam, rotaļām un mehānikai. Katru var pagriezt 3D skatā.</p>
+      <div class="cfilters" role="group" aria-label="Filter">
+        <button type="button" data-f="all" aria-pressed="true" data-t="cat.all">Visas</button>
+        <button type="button" data-f="home" aria-pressed="false" data-t="cat.home">Mājai</button>
+        <button type="button" data-f="holders" aria-pressed="false" data-t="cat.holders">Turētāji</button>
+        <button type="button" data-f="mech" aria-pressed="false" data-t="cat.mech">Mehānika</button>
+        <button type="button" data-f="garden" aria-pressed="false" data-t="cat.garden">Dārzs</button>
+        <button type="button" data-f="toys" aria-pressed="false" data-t="cat.toys">Rotaļlietas</button>
+      </div>
+      <div class="coll" id="coll"></div>
+    </div>
+  </section>
+
+  <dialog class="cdlg" id="cdlg" aria-labelledby="ctitle">
+    <div class="cdhead">
+      <div><h3 id="ctitle"></h3><p id="cinfo"></p></div>
+      <button type="button" id="cclose" data-t="coll.close">Aizvērt</button>
+    </div>
+    <div class="cview" id="cview"></div>
+    <p class="cnote" id="cnote"></p>
+  </dialog>
+  <section class="band" id="darbi">
     <div class="wrap">
       <p class="eyebrow" data-t="sec.works.eyebrow">Darbi</p>
       <h2 data-t="sec.works.title">Daži darbi no darbnīcas</h2>
@@ -490,7 +540,7 @@ footer .wrap{
     </div>
   </section>
 
-  <section class="band" id="kontakti">
+  <section id="kontakti">
     <div class="wrap">
       <p class="eyebrow" data-t="sec.contact.eyebrow">Kontakti</p>
       <h2 data-t="sec.contact.title">Sāksim ar detaļu</h2>
@@ -531,6 +581,8 @@ footer .wrap{
 </footer>
 
 <script src="vendor/three.min.js"></script>
+<script src="collection-data.js"></script>
+<script src="collection.js"></script>
 <script>
 const T = {
   "nav.services":{lv:"Pakalpojumi",ru:"Услуги",en:"Services"},
@@ -539,6 +591,18 @@ const T = {
   "nav.works":{lv:"Darbi",ru:"Работы",en:"Work"},
   "nav.contact":{lv:"Kontakti",ru:"Контакты",en:"Contact"},
 
+  "nav.coll":{lv:"Kolekcija",ru:"Коллекция",en:"Collection"},
+  "sec.coll.eyebrow":{lv:"Kolekcija",ru:"Коллекция",en:"Collection"},
+  "sec.coll.title":{lv:"Izdrukāto detaļu kolekcija",ru:"Коллекция напечатанных деталей",en:"Collection of printed parts"},
+  "sec.coll.intro":{lv:"Detaļas no manas darbnīcas — mājai, dārzam, rotaļām un mehānikai. Katru var pagriezt 3D skatā.",ru:"Детали из моей мастерской — для дома, сада, игр и механики. Каждую можно покрутить в 3D.",en:"Parts from my workshop — for home, garden, play and mechanics. Each one can be rotated in 3D."},
+  "cat.all":{lv:"Visas",ru:"Все",en:"All"},
+  "cat.home":{lv:"Mājai",ru:"Дом",en:"Home"},
+  "cat.holders":{lv:"Turētāji",ru:"Держатели",en:"Holders"},
+  "cat.mech":{lv:"Mehānika",ru:"Механика",en:"Mechanics"},
+  "cat.garden":{lv:"Dārzs",ru:"Сад",en:"Garden"},
+  "cat.toys":{lv:"Rotaļlietas",ru:"Игрушки",en:"Toys"},
+  "coll.close":{lv:"Aizvērt",ru:"Закрыть",en:"Close"},
+  "coll.note":{lv:"Skatā vienkāršots tīkls (oriģināls: {n} trīsstūri). Velciet, lai pagrieztu, ritiniet, lai tuvinātu.",ru:"В просмотре упрощённая сетка (оригинал: {n} треугольников). Потяните, чтобы повернуть, прокрутите для масштаба.",en:"Simplified mesh shown (original: {n} triangles). Drag to rotate, scroll to zoom."},
   "hero.eyebrow":{lv:"Salaspils · Rīgas reģions · Latvija",ru:"Саласпилс · Рижский регион · Латвия",en:"Salaspils · Riga region · Latvia"},
   "hero.lead":{lv:"No idejas līdz detaļai, kas der.",ru:"От идеи до детали, которая встаёт на место.",en:"From an idea to a part that fits."},
   "hero.sub":{lv:"Parametriski CAD modeļi, rasējumi ar pielaidēm, izdrukāti prototipi un sagatavots CNC process. 14+ gadu pieredze precīzijas metālapstrādē.",ru:"Параметрические CAD-модели, чертежи с допусками, напечатанные прототипы и подготовленный процесс для ЧПУ. 14+ лет в точной металлообработке.",en:"Parametric CAD models, drawings with tolerances, printed prototypes and a CNC process ready to run. 14+ years in precision metalworking."},
@@ -664,6 +728,7 @@ function setLang(lang){
   });
   buttons.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
   try { localStorage.setItem('imae.lang', lang); } catch (e) {}
+  if (window.renderCollectionLang) window.renderCollectionLang(lang);
 }
 
 buttons.forEach(function(b){
