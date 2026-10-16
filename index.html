@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#12171A">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%2312171A%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Arial%27 font-weight=%27800%27 font-size=%2714%27 text-anchor=%27middle%27 fill=%27%234FC9D1%27%3EIM%3C/text%3E%3C/svg%3E">
 <title>IMAE Design &amp; Engineering</title>
 <meta name="description" content="IMAE Design &amp; Engineering — prototipi, inženiertehniskie risinājumi un 3D druka. CAD modelēšana, rasējumi ar pielaidēm, FDM druka, CNC sagatavošana. Salaspils, Latvija.">
@@ -20,44 +21,44 @@
 <meta property="og:title" content="IMAE Design &amp; Engineering">
 <meta property="og:description" content="Prototipi, inženiertehniskie risinājumi un 3D druka. No idejas līdz detaļai, kas der. Salaspils, Latvija.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: technical drawing sheet — sticky title bar, measured left-aligned columns, hairline grids, datasheet tables, title block at the foot */
 :root{
-  --paper:#EDEFF1;
-  --surface:#F8F9FA;
-  --ink:#12171A;
-  --ink-2:#555F66;
-  --line:#C6CDD2;
-  --accent:#0C6B73;
-  --accent-soft:rgba(12,107,115,.10);
-  --mark:#A8630A;
-  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --paper:#FFFFFF;
+  --surface:#F5F5F7;
+  --ink:#111113;
+  --ink-2:#6A6F76;
+  --line:#E5E7EA;
+  --accent:#0A7580;
+  --accent-soft:rgba(10,117,128,.09);
+  --mark:#B26A00;
+  --display:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --paper:#0E1113;
-    --surface:#171B1E;
-    --ink:#E7EBED;
-    --ink-2:#98A3AA;
-    --line:#2B3237;
-    --accent:#4FC9D1;
+    --paper:#0B0C0E;
+    --surface:#15171A;
+    --ink:#F2F3F4;
+    --ink-2:#9AA1A8;
+    --line:#25292D;
+    --accent:#5FD3DB;
     --accent-soft:rgba(79,201,209,.12);
-    --mark:#D79A3F;
+    --mark:#E0A24A;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0E1113;
-  --surface:#171B1E;
-  --ink:#E7EBED;
-  --ink-2:#98A3AA;
-  --line:#2B3237;
-  --accent:#4FC9D1;
+  --paper:#0B0C0E;
+  --surface:#15171A;
+  --ink:#F2F3F4;
+  --ink-2:#9AA1A8;
+  --line:#25292D;
+  --accent:#5FD3DB;
   --accent-soft:rgba(79,201,209,.12);
-  --mark:#D79A3F;
+  --mark:#E0A24A;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -300,7 +301,70 @@ footer .wrap{
   .bar nav a{white-space:nowrap}
   section[id],main{scroll-margin-top:92px}
 }
-</style>
+/* ---- light minimal skin (overrides the base rules above) ---- */
+html{scroll-behavior:smooth}
+body{margin:0}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{font-size:17px;line-height:1.65}
+h1,h2,h3{letter-spacing:-.025em;line-height:1.06;font-weight:650}
+.wrap{max-width:1120px}
+.bar{background:color-mix(in srgb,var(--paper) 82%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px)}
+.brand{font-stretch:100%;font-weight:700;letter-spacing:.04em}
+.brand-sub{font-family:var(--body);font-size:.8rem;letter-spacing:0;text-transform:none;font-weight:400;color:var(--ink-2)}
+.bar nav a{font-family:var(--body);font-size:.92rem;padding-bottom:0;border-bottom:0}
+.bar nav a:hover{color:var(--ink)}
+.langs{border-radius:999px;overflow:hidden}
+.langs button{font-family:var(--body);font-size:.78rem;font-weight:500;padding:.32rem .62rem}
+.eyebrow{font-family:var(--body);font-weight:600;font-size:.78rem;letter-spacing:.09em}
+.eyebrow::after{display:none}
+.hero-kicker{font-family:var(--body);font-size:.88rem;letter-spacing:0;text-transform:none}
+h1{font-stretch:100%;font-weight:700;font-size:clamp(3.8rem,13vw,7.4rem);letter-spacing:-.05em;margin-block:.4rem .1rem}
+.wordmark-sub{font-family:var(--body);font-size:1.25rem;letter-spacing:-.01em;text-transform:none;margin-bottom:1.4rem}
+.wordmark-sub::after{display:none}
+.lead{font-family:var(--body);font-weight:560;font-stretch:100%;letter-spacing:-.02em;font-size:clamp(1.45rem,3.6vw,2rem);line-height:1.2;max-width:22ch}
+.hero p.sub{font-size:1.06rem;max-width:50ch}
+.btn{font-family:var(--body);font-weight:500;font-size:.95rem;letter-spacing:0;border-radius:999px;padding:.82rem 1.45rem}
+.btn.ghost{border-color:var(--line)}
+.vbox{border:0;border-radius:28px;background:radial-gradient(120% 90% at 50% 15%,var(--paper),var(--surface) 70%)}
+.vcap{font-family:var(--body);font-size:.8rem}
+.dwg-fig .frame{border:0;border-radius:24px;background:var(--surface);padding:1.4rem}
+.dwg-fig figcaption{font-family:var(--body);font-size:.82rem}
+section .wrap{padding-block:clamp(3rem,7vw,5rem)}
+section.band{background:var(--surface);border-block:0}
+h2{font-stretch:100%;font-weight:650;font-size:clamp(2rem,5vw,3.2rem);margin-block:.9rem 1rem}
+.intro{font-size:1.1rem;max-width:56ch}
+.grid4,.works{gap:1rem;background:transparent;border:0;margin-top:2.6rem}
+.cell,.work{border-radius:22px;background:var(--surface);padding:clamp(1.5rem,3vw,2.1rem)}
+section.band .cell,section.band .work{background:var(--paper)}
+.cell h3,.work h3{font-stretch:100%;font-size:1.3rem;font-weight:650}
+.cell p,.work p{font-size:1rem}
+.out{border-top:1px solid var(--line);font-family:var(--body);font-size:.88rem}
+.out b{font-family:var(--body);letter-spacing:.06em;font-size:.7rem}
+.step .n{font-family:var(--body);font-weight:600;color:var(--accent)}
+.step h3{font-stretch:100%;font-size:1.15rem}
+.t-cap{font-family:var(--body);font-weight:600;font-size:.78rem;letter-spacing:.09em}
+td{font-family:var(--body);font-size:.92rem}
+thead th{font-family:var(--body);font-weight:600;letter-spacing:.06em}
+.tag{font-family:var(--body);font-size:.78rem;font-weight:500;border-radius:999px;padding:.28rem .75rem;letter-spacing:0}
+.check li::before{font-family:var(--body);font-weight:600}
+.block{border:0;border-radius:22px;background:var(--surface);overflow:hidden}
+section.band .block{background:var(--paper)}
+.block .k{font-family:var(--body);font-weight:600;font-size:.7rem;letter-spacing:.08em}
+.block .v{font-family:var(--body);font-size:.95rem}
+.copy{font-family:var(--body);border-radius:999px;letter-spacing:0;text-transform:none;font-size:.78rem;padding:.2rem .7rem}
+footer .wrap{font-family:var(--body);font-size:.82rem}
+.cfilters button{font-family:var(--body);font-weight:500;font-size:.85rem;letter-spacing:0;border-radius:999px;padding:.5rem 1rem}
+.coll{gap:1.1rem}
+.ccard{border-radius:22px;overflow:hidden;background:var(--surface);border-color:transparent;transition:transform .2s ease,border-color .2s ease}
+.ccard:hover{border-color:var(--accent);transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.ccard{transition:none}.ccard:hover{transform:none}}
+.cthumb{background:radial-gradient(110% 90% at 50% 20%,var(--paper),var(--surface) 75%);border-bottom:0}
+.cname{font-stretch:100%;font-weight:650;letter-spacing:-.01em}
+.cmeta{font-family:var(--body);font-size:.78rem}
+dialog.cdlg{border:0;border-radius:26px}
+.cdhead p,.cnote{font-family:var(--body)}
+.cdhead button{font-family:var(--body);border-radius:999px;padding:.4rem .9rem}
+.cview{background:radial-gradient(110% 90% at 50% 20%,var(--paper),var(--surface) 75%)}</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"IMAE Design & Engineering","url":"https://imaedesign.eu/","description":"CAD modelēšana, prototipi, 3D druka un CNC sagatavošana.","areaServed":"LV","address":{"@type":"PostalAddress","addressLocality":"Salaspils","addressCountry":"LV"}}</script>
 </head>
 <body>
