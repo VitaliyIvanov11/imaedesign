@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="lv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12171A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%2312171A%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Arial%27 font-weight=%27800%27 font-size=%2714%27 text-anchor=%27middle%27 fill=%27%234FC9D1%27%3EIM%3C/text%3E%3C/svg%3E">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>IMAE Design &amp; Engineering</title>
+<meta name="description" content="IMAE Design &amp; Engineering — prototipi, inženiertehniskie risinājumi un 3D druka. CAD modelēšana, rasējumi ar pielaidēm, FDM druka, CNC sagatavošana. Salaspils, Latvija.">
+<link rel="canonical" href="https://imaedesign.eu/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://imaedesign.eu/">
+<meta property="og:site_name" content="IMAE Design &amp; Engineering">
+<meta property="og:title" content="IMAE Design &amp; Engineering">
+<meta property="og:description" content="Prototipi, inženiertehniskie risinājumi un 3D druka. No idejas līdz detaļai, kas der. Salaspils, Latvija.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: technical drawing sheet — sticky title bar, measured left-aligned columns, hairline grids, datasheet tables, title block at the foot */
+:root{
+  --paper:#EDEFF1;
+  --surface:#F8F9FA;
+  --ink:#12171A;
+  --ink-2:#555F66;
+  --line:#C6CDD2;
+  --accent:#0C6B73;
+  --accent-soft:rgba(12,107,115,.10);
+  --mark:#A8630A;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1113;
+    --surface:#171B1E;
+    --ink:#E7EBED;
+    --ink-2:#98A3AA;
+    --line:#2B3237;
+    --accent:#4FC9D1;
+    --accent-soft:rgba(79,201,209,.12);
+    --mark:#D79A3F;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1113;
+  --surface:#171B1E;
+  --ink:#E7EBED;
+  --ink-2:#98A3AA;
+  --line:#2B3237;
+  --accent:#4FC9D1;
+  --accent-soft:rgba(79,201,209,.12);
+  --mark:#D79A3F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+.wrap{
+  max-width:1060px;margin-inline:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.08;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+.eyebrow{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:.7rem;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---- title bar ---- */
+.bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+  background:var(--paper);border-bottom:1px solid var(--line);
+}
+.bar .wrap{display:flex;align-items:center;gap:1.2rem;padding-block:.65rem;min-height:52px}
+.brand{
+  font-family:var(--display);font-weight:800;font-stretch:118%;
+  font-size:1.02rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;
+  display:flex;align-items:baseline;gap:.55rem;
+}
+.brand-sub{
+  font-family:var(--mono);font-weight:400;font-stretch:100%;font-size:.64rem;
+  letter-spacing:.14em;color:var(--accent);
+}
+@media (max-width:560px){.brand-sub{display:none}}
+.bar nav{display:flex;gap:1.35rem;margin-left:auto;flex-wrap:wrap}
+.bar nav a{
+  font-family:var(--mono);font-size:.78rem;text-decoration:none;color:var(--ink-2);
+  padding-bottom:2px;border-bottom:1px solid transparent;
+}
+.bar nav a:hover{color:var(--ink);border-bottom-color:var(--accent)}
+.langs{display:flex;border:1px solid var(--line);margin-left:auto}
+.bar nav + .langs{margin-left:0}
+.langs button{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+  background:transparent;color:var(--ink-2);border:0;border-left:1px solid var(--line);
+  padding:.3rem .5rem;cursor:pointer;
+}
+.langs button:first-child{border-left:0}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---- hero ---- */
+.hero .wrap{padding-block:clamp(2.4rem,7vw,4.2rem);display:grid;gap:clamp(2rem,5vw,3.4rem);grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.hero .wrap{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center}}
+.hero-kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+h1{
+  font-size:clamp(3.2rem,11vw,5.6rem);font-weight:800;font-stretch:124%;
+  letter-spacing:.01em;margin-block:.7rem .55rem;
+}
+.wordmark-sub{
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-2);display:flex;align-items:center;gap:.8rem;margin-bottom:1.1rem;
+}
+.wordmark-sub em{font-style:normal;color:var(--accent)}
+.wordmark-sub::after{content:"";flex:1;height:1px;background:var(--line);max-width:9rem}
+.lead{font-family:var(--display);font-size:clamp(1.25rem,3.4vw,1.6rem);font-weight:500;font-stretch:104%;line-height:1.25;max-width:22ch}
+.hero p.sub{color:var(--ink-2);margin-top:1rem;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem}
+.btn{
+  font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;text-decoration:none;
+  padding:.72rem 1.15rem;border:1px solid var(--ink);display:inline-block;
+}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+/* 3D viewer with dimension callouts */
+.viewer{margin:0}
+.vbox{
+  position:relative;aspect-ratio:4/3;width:100%;max-width:100%;
+  border:1px solid var(--line);background:
+    linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 32px,
+    linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/32px 100%,
+    var(--surface);
+  background-blend-mode:normal;
+  touch-action:pan-y;cursor:grab;overflow:hidden;
+}
+.vbox.grabbing{cursor:grabbing}
+.vbox canvas{display:block;position:relative;z-index:1}
+.vfallback{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:var(--mono);font-size:.8rem;color:var(--ink-2);padding:1.5rem;
+}
+.anno{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.anno line{stroke:var(--ink-2);stroke-width:1}
+.anno circle{fill:none;stroke:var(--accent);stroke-width:1.4}
+.labels{position:absolute;inset:0;pointer-events:none;z-index:3}
+.lbl{
+  position:absolute;transform:translate(-50%,-50%);white-space:nowrap;
+  font-family:var(--mono);font-size:.76rem;color:var(--ink-2);font-variant-numeric:tabular-nums;
+}
+.lbl.mark{color:var(--mark)}
+.vcap{
+  display:flex;flex-wrap:wrap;gap:.4rem 1rem;justify-content:space-between;margin-top:.7rem;
+  font-family:var(--mono);font-size:.72rem;color:var(--ink-2);
+}
+.vcap .hint{color:var(--accent)}
+@media (max-width:560px){.viewer .opt{display:none}}
+
+/* drawing band */
+.dwg-wrap{display:grid;gap:2rem}
+@media (min-width:900px){.dwg-wrap{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2.8rem;align-items:center}}
+.dwg-fig{margin:0;min-width:0}
+.dwg-fig .frame{border:1px solid var(--line);background:var(--paper);padding:.9rem}
+.dwg-fig figcaption{margin-top:.7rem;font-family:var(--mono);font-size:.72rem;color:var(--ink-2);line-height:1.5}
+.drawing{width:100%;max-width:100%;height:auto;display:block}
+.dwg-line{stroke:var(--ink);fill:none;stroke-width:1.6}
+.dwg-dim{stroke:var(--ink-2);fill:none;stroke-width:1}
+.dwg-center{stroke:var(--accent);fill:none;stroke-width:1;stroke-dasharray:14 3 2 3}
+.dwg-hidden{stroke:var(--ink-2);fill:none;stroke-width:1;stroke-dasharray:6 4;opacity:.75}
+.dwg-fill{fill:var(--paper)}
+.dwg-arrow{fill:var(--ink-2)}
+.dwg-t{font-family:var(--mono);font-size:13px;fill:var(--ink-2);font-variant-numeric:tabular-nums}
+.dwg-t.mark{fill:var(--mark)}
+@media (prefers-reduced-motion:no-preference){
+  .anim{animation:fade .5s ease-out both}
+  .anim-2{animation:fade .5s ease-out .18s both}
+  .anim-3{animation:fade .5s ease-out .34s both}
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ---- sections ---- */
+section.band{background:var(--surface);border-block:1px solid var(--line)}
+section .wrap{padding-block:clamp(2.6rem,6vw,4rem)}
+h2{font-size:clamp(1.75rem,4.6vw,2.5rem);font-weight:700;font-stretch:112%;margin-block:1rem .8rem}
+.intro{color:var(--ink-2);max-width:60ch}
+
+/* services grid with hairlines */
+.grid4{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:2rem}
+@media (min-width:760px){.grid4{grid-template-columns:1fr 1fr}}
+.cell{background:var(--paper);padding:clamp(1.2rem,3vw,1.7rem);min-width:0;display:flex;flex-direction:column;gap:.7rem}
+section.band .cell{background:var(--surface)}
+.cell h3{font-size:1.18rem;font-weight:700;font-stretch:106%}
+.cell p{color:var(--ink-2);font-size:.95rem}
+.out{margin-top:auto;padding-top:.9rem;border-top:1px dashed var(--line);font-family:var(--mono);font-size:.78rem;color:var(--ink)}
+.out b{color:var(--ink-2);font-weight:400;letter-spacing:.08em;text-transform:uppercase;font-size:.7rem;display:block;margin-bottom:.25rem}
+
+/* process */
+.steps{margin-top:2rem;display:grid;gap:0}
+.step{display:grid;grid-template-columns:3.2rem minmax(0,1fr);gap:1rem;padding-block:1.15rem;border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.step .n{font-family:var(--mono);font-size:.85rem;color:var(--mark);font-variant-numeric:tabular-nums;padding-top:.2rem}
+.step h3{font-size:1.05rem;font-weight:600;font-stretch:104%;margin-bottom:.25rem}
+.step p{color:var(--ink-2);font-size:.95rem;max-width:62ch}
+
+/* datasheet tables */
+.tables{display:grid;gap:2rem;margin-top:2rem}
+@media (min-width:860px){.tables{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:2.4rem}}
+.t-cap{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:.7rem}
+.t-scroll{overflow-x:auto;min-width:0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:.62rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:400;border-bottom:1px solid var(--ink)}
+tbody th{font-weight:500;color:var(--ink-2);width:42%}
+td{font-family:var(--mono);font-size:.84rem;font-variant-numeric:tabular-nums}
+.mat td:first-child{color:var(--ink);font-weight:500}
+.mat td{font-family:var(--body);font-size:.88rem}
+
+/* works */
+.works{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:2rem}
+@media (min-width:760px){.works{grid-template-columns:1fr 1fr}}
+.work{background:var(--paper);padding:clamp(1.2rem,3vw,1.7rem);min-width:0;display:flex;flex-direction:column;gap:.6rem}
+section.band .work{background:var(--surface)}
+.work h3{font-size:1.08rem;font-weight:700;font-stretch:104%}
+.work p{color:var(--ink-2);font-size:.95rem}
+.tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);padding:.2rem .5rem;align-self:flex-start;margin-top:auto}
+
+/* contact + title block */
+.contact-grid{display:grid;gap:2rem;margin-top:2rem}
+@media (min-width:860px){.contact-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.4rem}}
+.check{list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:.55rem;counter-reset:c}
+.check li{display:grid;grid-template-columns:1.9rem minmax(0,1fr);gap:.5rem;font-size:.95rem;color:var(--ink-2);counter-increment:c}
+.check li::before{content:counter(c,decimal-leading-zero);font-family:var(--mono);font-size:.78rem;color:var(--accent);padding-top:.18rem}
+.block{border:1px solid var(--ink);background:var(--paper)}
+section.band .block{background:var(--surface)}
+.block .row{display:grid;grid-template-columns:minmax(7.5rem,.8fr) minmax(0,1.6fr);border-bottom:1px solid var(--line)}
+.block .row:last-child{border-bottom:0}
+.block .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);padding:.65rem .8rem;border-right:1px solid var(--line)}
+.block .v{font-family:var(--mono);font-size:.85rem;padding:.6rem .8rem;min-width:0;overflow-wrap:anywhere}
+.fill{color:var(--mark);border-bottom:1px dashed var(--mark)}
+.copy{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--line);color:var(--ink-2);padding:.15rem .45rem;cursor:pointer;margin-left:.5rem;
+}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+footer{border-top:1px solid var(--line)}
+footer .wrap{
+  padding-block:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;justify-content:space-between;
+  font-family:var(--mono);font-size:.74rem;color:var(--ink-2);
+}
+@media (max-width:720px){
+  .bar nav{display:none}
+  .langs{margin-left:auto}
+}
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top">IMAE<span class="brand-sub">Design &amp; Engineering</span></a>
+    <nav>
+      <a href="#pakalpojumi" data-t="nav.services">Pakalpojumi</a>
+      <a href="#process" data-t="nav.process">Process</a>
+      <a href="#specs" data-t="nav.specs">Specifikācija</a>
+      <a href="#darbi" data-t="nav.works">Darbi</a>
+      <a href="#kontakti" data-t="nav.contact">Kontakti</a>
+    </nav>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="lv" aria-pressed="true">LV</button>
+      <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="hero-kicker" data-t="hero.eyebrow">Salaspils · Rīgas reģions · Latvija</p>
+        <h1>IMAE</h1>
+        <p class="wordmark-sub">Design <em>&amp;</em> Engineering</p>
+        <p class="lead" data-t="hero.lead">No idejas līdz detaļai, kas der.</p>
+        <p class="sub" data-t="hero.sub">Parametriski CAD modeļi, rasējumi ar pielaidēm, izdrukāti prototipi un sagatavots CNC process. 14+ gadu pieredze precīzijas metālapstrādē.</p>
+        <div class="cta">
+          <a class="btn primary" href="#kontakti" data-t="hero.cta1">Sākt projektu</a>
+          <a class="btn ghost" href="#pakalpojumi" data-t="hero.cta2">Ko es daru</a>
+        </div>
+      </div>
+      <figure class="viewer">
+        <div class="vbox" id="vbox" aria-label="3D">
+          <div class="vfallback" id="vfallback">63,7 × 62,9 × 62,6 mm · 55 cm³<br>3× ⌀3,4 · ⌀6 × 90° · PETG</div>
+          <svg class="anno" id="anno"></svg>
+          <div class="labels" id="labels"></div>
+        </div>
+        <figcaption class="vcap">
+          <span data-t="view.cap">Montāžas plāksne · AlMg3 · STEP</span>
+          <span class="hint" data-t="view.hint">velciet, lai pagrieztu</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" id="rasejums">
+    <div class="wrap dwg-wrap">
+      <div>
+        <p class="eyebrow" data-t="sec.dwg.eyebrow">Nodevums</p>
+        <h2 data-t="sec.dwg.title">Modelis un rasējums — viens fails</h2>
+        <p class="intro" data-t="sec.dwg.intro">Katrs modelis aiziet kopā ar rasējumu: gabarīti, urbumu izvietojums, pielaides un vispārīgā pielaižu klase. Tas ir dokuments, pēc kura detaļu var izgatavot vai izdrukāt jebkurš — ne tikai es.</p>
+      </div>
+      <figure class="dwg-fig">
+        <div class="frame">
+        <svg class="drawing" viewBox="55 10 400 292" role="img" aria-labelledby="dwgTitle">
+          <title id="dwgTitle" data-t="dwg.alt">Turētāja rasējums divos skatos ar izmēriem</title>
+          <g class="dwg-line anim"><path d="M97.5 78.7L137.9 78.7M79.9 41.1L220.1 41.1M220.1 41.1L220.1 41.4M79.9 41.1L79.9 41.4M220.1 41.4L220.1 42.2M79.9 41.4L79.9 42.2M220.1 42.2L220.1 43.5M79.9 42.2L79.9 43.5M220.1 43.5L220.1 45.3M79.9 43.5L79.9 45.3M220.1 45.3L220.1 47.6M79.9 45.3L79.9 47.6M220.1 47.6L220.1 50.2M79.9 47.6L79.9 50.2M220.1 50.2L220.1 53.2M79.9 50.2L79.9 53.2M220.1 53.2L220.1 56.4M79.9 53.2L79.9 56.4M220.1 56.4L220.1 59.8M79.9 56.4L79.9 59.8M79.9 59.8L79.9 69.4M220.1 59.8L220.1 69.4M79.9 69.4L79.9 78.9M220.1 69.4L220.1 78.9M79.9 78.9L79.9 88.2M220.1 78.9L220.1 88.2M79.9 88.2L79.9 97.2M220.1 88.2L220.1 97.2M79.9 97.2L79.9 105.8M220.1 97.2L220.1 105.8M79.9 105.8L79.9 114.0M220.1 105.8L220.1 114.0M79.9 114.0L79.9 121.8M220.1 114.0L220.1 121.8M79.9 121.8L79.9 129.0M220.1 121.8L220.1 129.0M79.9 129.0L79.9 131.2M220.1 129.0L220.1 131.2M79.9 131.2L79.9 133.0M220.1 131.2L220.1 133.0M79.9 133.0L79.9 134.4M220.1 133.0L220.1 134.4M79.9 134.4L79.9 135.2M220.1 134.4L220.1 135.2M79.9 135.2L79.9 135.4M220.1 135.2L220.1 135.4M79.9 135.4L220.1 135.4M79.9 135.4L220.1 135.4M79.9 150.1L79.9 135.4M220.1 150.1L220.1 135.4M219.7 152.3L220.0 151.2M220.0 151.2L220.1 150.1M84.3 156.3L85.4 156.6M219.2 153.4L219.7 152.3M218.5 154.3L219.2 153.4M217.7 155.1L218.5 154.3M215.7 156.3L216.8 155.8M216.8 155.8L217.7 155.1M214.6 156.6L215.7 156.3M213.5 156.7L214.6 156.6M86.5 156.7L213.5 156.7M85.4 156.6L86.5 156.7M80.3 152.3L80.8 153.4M80.8 153.4L81.5 154.3M81.5 154.3L82.3 155.1M83.2 155.8L84.3 156.3M82.3 155.1L83.2 155.8M79.9 150.1L80.0 151.2M80.0 151.2L80.3 152.3M86.5 156.7L213.5 156.7M219.2 153.4L219.7 152.3M219.7 152.3L220.0 151.2M220.0 151.2L220.1 150.1M220.1 176.7L220.1 150.1M108.8 163.1L109.5 163.7M107.9 162.7L108.8 163.1M107.0 162.5L107.9 162.7M145.8 164.4L146.5 163.7M108.8 172.7L109.5 172.1M107.9 173.1L108.8 172.7M109.5 172.1L110.2 171.4M110.2 171.4L110.8 170.6M110.8 170.6L111.2 169.8M111.2 169.8L111.4 168.8M111.4 168.8L111.5 167.9M111.4 166.9L111.5 167.9M111.2 166.0L111.4 166.9M110.8 165.1L111.2 166.0M149.0 162.5L150.0 162.4M110.2 164.4L110.8 165.1M109.5 163.7L110.2 164.4M195.9 173.1L196.8 172.7M196.8 172.7L197.5 172.1M197.5 172.1L198.2 171.4M198.2 171.4L198.8 170.6M198.8 170.6L199.2 169.8M199.2 169.8L199.4 168.8M216.8 155.8L217.7 155.1M217.7 155.1L218.5 154.3M218.5 154.3L219.2 153.4M213.5 156.7L214.6 156.6M198.8 165.1L199.2 166.0M198.2 164.4L198.8 165.1M197.5 163.7L198.2 164.4M196.8 163.1L197.5 163.7M195.9 162.7L196.8 163.1M195.0 162.5L195.9 162.7M194.0 162.4L195.0 162.5M152.8 163.1L153.5 163.7M151.9 162.7L152.8 163.1M146.5 163.7L147.2 163.1M152.8 172.7L153.5 172.1M151.9 173.1L152.8 172.7M153.5 163.7L154.2 164.4M154.2 164.4L154.8 165.1M193.0 162.5L194.0 162.4M192.1 162.7L193.0 162.5M107.0 173.3L107.9 173.1M148.1 162.7L149.0 162.5M147.2 163.1L148.1 162.7M79.9 150.1L80.0 151.2M79.9 176.7L79.9 150.1M80.0 151.2L80.3 152.3M80.3 152.3L80.8 153.4M214.6 156.6L215.7 156.3M215.7 156.3L216.8 155.8M199.2 166.0L199.4 166.9M199.4 166.9L199.5 167.9M199.4 168.8L199.5 167.9M189.2 170.6L189.8 171.4M188.8 169.8L189.2 170.6M189.8 171.4L190.5 172.1M190.5 172.1L191.2 172.7M191.2 172.7L192.1 173.1M192.1 173.1L193.0 173.3M193.0 173.3L194.0 173.4M194.0 173.4L195.0 173.3M195.0 173.3L195.9 173.1M188.6 168.8L188.8 169.8M153.5 172.1L154.2 171.4M154.2 171.4L154.8 170.6M151.0 162.5L151.9 162.7M150.0 162.4L151.0 162.5M85.4 156.6L86.5 156.7M106.0 162.4L107.0 162.5M84.3 156.3L85.4 156.6M105.0 162.5L106.0 162.4M104.1 162.7L105.0 162.5M103.2 163.1L104.1 162.7M102.5 163.7L103.2 163.1M101.8 164.4L102.5 163.7M191.2 163.1L192.1 162.7M190.5 163.7L191.2 163.1M154.8 165.1L155.2 166.0M189.8 164.4L190.5 163.7M145.2 170.6L145.8 171.4M189.2 165.1L189.8 164.4M188.8 166.0L189.2 165.1M188.6 166.9L188.8 166.0M145.8 171.4L146.5 172.1M146.5 172.1L147.2 172.7M147.2 172.7L148.1 173.1M101.2 165.1L101.8 164.4M100.8 166.0L101.2 165.1M83.2 155.8L84.3 156.3M100.8 169.8L101.2 170.6M101.2 170.6L101.8 171.4M148.1 173.1L149.0 173.3M149.0 173.3L150.0 173.4M150.0 173.4L151.0 173.3M151.0 173.3L151.9 173.1M80.8 153.4L81.5 154.3M81.5 154.3L82.3 155.1M82.3 155.1L83.2 155.8M154.8 170.6L155.2 169.8M155.2 169.8L155.4 168.8M188.5 167.9L188.6 168.8M155.4 168.8L155.5 167.9M188.5 167.9L188.6 166.9M155.4 166.9L155.5 167.9M155.2 166.0L155.4 166.9M100.6 166.9L100.8 166.0M100.5 167.9L100.6 166.9M100.5 167.9L100.6 168.8M100.6 168.8L100.8 169.8M101.8 171.4L102.5 172.1M102.5 172.1L103.2 172.7M103.2 172.7L104.1 173.1M145.2 165.1L145.8 164.4M144.8 166.0L145.2 165.1M144.6 166.9L144.8 166.0M104.1 173.1L105.0 173.3M105.0 173.3L106.0 173.4M106.0 173.4L107.0 173.3M144.5 167.9L144.6 166.9M144.5 167.9L144.6 168.8M144.6 168.8L144.8 169.8M144.8 169.8L145.2 170.6M79.9 178.9L220.1 178.9M208.7 88.2L209.0 89.1M208.2 87.4L208.7 88.2M209.0 89.1L209.1 90.0M96.7 85.1L96.9 85.0M94.2 85.7L94.7 85.5M94.7 85.5L95.3 85.3M95.3 85.3L95.8 85.2M95.8 85.2L96.1 85.1M96.1 85.1L96.4 85.1M96.4 85.1L96.7 85.1M96.9 85.0L97.2 85.0M97.2 85.0L97.5 85.0M97.5 85.0L202.5 85.0M202.5 85.0L202.8 85.0M202.8 85.0L203.1 85.0M203.1 85.0L203.3 85.1M203.3 85.1L203.6 85.1M203.6 85.1L203.9 85.1M203.9 85.1L204.2 85.2M204.2 85.2L204.7 85.3M204.7 85.3L205.3 85.5M205.3 85.5L205.8 85.7M205.8 85.7L206.7 86.1M206.7 86.1L207.5 86.7M207.5 86.7L208.2 87.4M91.3 88.2L91.8 87.4M91.0 89.1L91.3 88.2M90.9 90.0L91.0 89.1M91.8 87.4L92.5 86.7M92.5 86.7L92.6 86.6M92.6 86.6L93.3 86.1M93.3 86.1L94.2 85.7M79.9 178.9L79.9 178.9M79.9 177.1L79.9 176.7M79.9 178.6L79.9 178.4M79.9 178.4L79.9 178.1M79.9 178.1L79.9 177.8M79.9 177.4L79.9 177.1M79.9 177.8L79.9 177.4M79.9 178.9L79.9 178.8M79.9 178.8L79.9 178.6M220.1 178.9L220.1 178.9M220.1 177.1L220.1 176.7M220.1 178.1L220.1 177.8M220.1 178.4L220.1 178.1M220.1 178.6L220.1 178.4M220.1 178.9L220.1 178.8M220.1 178.8L220.1 178.6M220.1 177.4L220.1 177.1M220.1 177.8L220.1 177.4M209.1 90.0L209.1 85.3M90.9 90.0L90.9 85.3M150.0 172.3L150.8 172.2M150.8 172.2L151.5 172.0M151.5 172.0L152.2 171.7M152.2 171.7L152.8 171.3M152.8 171.3L153.4 170.7M153.4 170.7L153.8 170.1M153.8 170.1L154.1 169.4M154.1 169.4L154.3 168.7M154.3 168.7L154.4 167.9M154.3 167.1L154.4 167.9M154.1 166.4L154.3 167.1M153.8 165.7L154.1 166.4M153.4 165.1L153.8 165.7M152.8 164.5L153.4 165.1M152.2 164.1L152.8 164.5M151.5 163.8L152.2 164.1M150.8 163.6L151.5 163.8M150.0 163.5L150.8 163.6M149.2 163.6L150.0 163.5M148.5 163.8L149.2 163.6M147.8 164.1L148.5 163.8M147.2 164.5L147.8 164.1M146.6 165.1L147.2 164.5M146.2 165.7L146.6 165.1M145.9 166.4L146.2 165.7M145.7 167.1L145.9 166.4M145.6 167.9L145.7 167.1M145.6 167.9L145.7 168.7M145.7 168.7L145.9 169.4M145.9 169.4L146.2 170.1M146.2 170.1L146.6 170.7M146.6 170.7L147.2 171.3M147.2 171.3L147.8 171.7M147.8 171.7L148.5 172.0M148.5 172.0L149.2 172.2M149.2 172.2L150.0 172.3M194.0 172.3L194.8 172.2M194.8 172.2L195.5 172.0M195.5 172.0L196.2 171.7M196.2 171.7L196.8 171.3M196.8 171.3L197.4 170.7M197.4 170.7L197.8 170.1M197.8 170.1L198.1 169.4M198.1 169.4L198.3 168.7M198.3 168.7L198.4 167.9M198.3 167.1L198.4 167.9M198.1 166.4L198.3 167.1M197.8 165.7L198.1 166.4M197.4 165.1L197.8 165.7M196.8 164.5L197.4 165.1M196.2 164.1L196.8 164.5M195.5 163.8L196.2 164.1M194.8 163.6L195.5 163.8M194.0 163.5L194.8 163.6M193.2 163.6L194.0 163.5M192.5 163.8L193.2 163.6M191.8 164.1L192.5 163.8M191.2 164.5L191.8 164.1M190.6 165.1L191.2 164.5M190.2 165.7L190.6 165.1M189.9 166.4L190.2 165.7M189.7 167.1L189.9 166.4M189.6 167.9L189.7 167.1M189.6 167.9L189.7 168.7M189.7 168.7L189.9 169.4M189.9 169.4L190.2 170.1M190.2 170.1L190.6 170.7M190.6 170.7L191.2 171.3M191.2 171.3L191.8 171.7M191.8 171.7L192.5 172.0M192.5 172.0L193.2 172.2M193.2 172.2L194.0 172.3M106.0 172.3L106.8 172.2M106.8 172.2L107.5 172.0M107.5 172.0L108.2 171.7M108.2 171.7L108.8 171.3M108.8 171.3L109.4 170.7M109.4 170.7L109.8 170.1M109.8 170.1L110.1 169.4M110.1 169.4L110.3 168.7M110.3 168.7L110.4 167.9M110.3 167.1L110.4 167.9M110.1 166.4L110.3 167.1M109.8 165.7L110.1 166.4M109.4 165.1L109.8 165.7M108.8 164.5L109.4 165.1M108.2 164.1L108.8 164.5M107.5 163.8L108.2 164.1M106.8 163.6L107.5 163.8M106.0 163.5L106.8 163.6M105.2 163.6L106.0 163.5M104.5 163.8L105.2 163.6M103.8 164.1L104.5 163.8M103.2 164.5L103.8 164.1M102.6 165.1L103.2 164.5M102.2 165.7L102.6 165.1M101.9 166.4L102.2 165.7M101.7 167.1L101.9 166.4M101.6 167.9L101.7 167.1M101.6 167.9L101.7 168.7M101.7 168.7L101.9 169.4M101.9 169.4L102.2 170.1M102.2 170.1L102.6 170.7M102.6 170.7L103.2 171.3M103.2 171.3L103.8 171.7M103.8 171.7L104.5 172.0M104.5 172.0L105.2 172.2M105.2 172.2L106.0 172.3M162.1 78.7L202.5 78.7M91.3 83.1L91.6 82.4M91.8 82.0L92.2 81.5M94.1 79.7L94.2 79.6M95.6 79.0L96.3 78.9M96.5 78.8L97.5 78.7M91.2 83.3L91.3 83.1M91.2 83.3L91.6 82.4M91.6 82.4L91.8 82.0M91.6 82.4L92.2 81.5M96.3 78.9L96.6 78.8M95.6 79.0L96.6 78.8M90.9 85.3L91.0 84.3M91.0 84.3L91.0 84.2M91.0 84.2L91.2 83.3M91.2 83.3L91.6 82.4M91.6 82.4L92.2 81.5M92.2 81.5L92.5 81.1M92.5 81.1L92.8 80.7M92.8 80.7L93.6 80.0M93.6 80.0L94.5 79.5M94.1 79.7L94.6 79.5M94.2 79.6L94.6 79.5M94.5 79.5L95.5 79.1M95.5 79.1L96.5 78.8M205.8 79.6L205.9 79.7M205.9 79.7L206.3 80.0M206.7 80.3L207.1 80.7M207.5 81.1L207.8 81.5M208.8 83.3L209.0 84.2M206.4 80.0L207.2 80.7M206.4 80.0L207.1 80.7M206.4 80.0L206.7 80.3M205.5 79.5L206.3 80.0M205.5 79.5L206.4 80.0M205.5 79.5L205.9 79.7M205.4 79.5L205.9 79.7M205.4 79.5L205.8 79.6M208.2 82.0L208.4 82.4M207.8 81.5L208.2 82.0M207.2 80.7L207.8 81.5M207.2 80.7L207.8 81.5M207.2 80.7L207.5 81.1M209.0 84.2L209.0 84.3M209.0 84.3L209.1 85.3M208.8 83.3L209.0 84.3M208.8 83.3L209.0 84.3M208.7 83.1L208.8 83.3M208.4 82.4L208.7 83.1M202.5 78.7L203.5 78.8M203.5 78.8L204.5 79.1M204.5 79.1L205.5 79.5M155.5 87.5L155.5 85.3M144.5 87.5L144.5 85.3M155.8 83.3L155.9 83.1M155.6 84.2L155.8 83.3M155.5 85.3L155.6 84.2M156.2 82.3L156.4 82.0M155.9 83.1L156.2 82.3M156.8 81.5L157.0 81.1M156.4 82.0L156.8 81.5M157.9 80.3L158.2 80.0M157.4 80.7L157.9 80.3M157.0 81.1L157.4 80.7M157.9 80.3L158.8 79.6M158.2 80.0L158.8 79.6M157.9 80.3L158.8 79.6M158.8 79.6L159.1 79.5M159.1 79.5L159.8 79.1M159.8 79.1L161.0 78.8M161.0 78.8L162.1 78.7M155.5 87.5L155.5 86.9M155.5 86.9L155.6 86.6M155.6 86.6L155.8 85.8M155.8 85.8L156.2 85.0M137.9 78.7L139.0 78.8M144.4 84.2L144.5 85.3M144.1 83.1L144.4 84.2M143.6 82.0L144.1 83.1M143.0 81.1L143.6 82.0M142.1 80.3L143.0 81.1M141.2 79.6L142.1 80.3M140.2 79.1L141.2 79.6M139.0 78.8L140.2 79.1M139.2 82.7L140.2 82.7M159.8 82.7L160.8 82.7M139.2 82.7L160.8 82.7M144.4 86.4L144.4 86.5M144.0 85.3L144.1 85.6M144.4 86.5L144.5 87.5M140.1 82.7L140.4 82.8M140.1 82.7L141.4 83.1M140.4 82.8L141.4 83.1M139.1 82.7L140.2 82.7M142.0 83.3L143.3 84.4M142.0 83.3L142.5 83.7M140.6 82.8L140.9 82.8M138.9 82.7L140.9 82.8M138.9 82.7L139.0 82.7M139.0 82.7L139.1 82.7M141.4 83.1L142.5 83.7M141.4 83.1L141.8 83.2M140.4 82.8L141.8 83.2M140.4 82.8L140.6 82.8M143.3 84.4L144.3 85.9M143.3 84.4L143.6 84.8M143.0 84.0L143.6 84.8M143.0 84.0L143.3 84.4M144.0 85.3L144.3 85.9M144.1 85.6L144.6 87.1M144.4 86.4L144.6 87.1M160.9 82.7L161.0 82.7M159.1 82.8L161.1 82.7M159.8 82.7L160.9 82.7M157.5 83.7L158.6 83.1M157.5 83.7L158.0 83.3M159.1 82.8L159.4 82.8M159.4 82.8L159.6 82.8M161.0 82.7L161.1 82.7M158.2 83.2L158.6 83.1M158.2 83.2L159.9 82.7M159.6 82.8L159.9 82.7M156.6 84.5L158.0 83.3M156.6 84.5L156.7 84.4M156.0 85.4L156.2 85.0M155.8 85.8L156.0 85.4M155.6 86.5L156.0 85.4M155.6 86.5L155.8 85.8M156.0 85.4L156.7 84.4"/></g>
+          <g class="dwg-line anim-2"><path d="M297.9 87.5L296.8 86.4M295.7 85.4L296.8 86.4M295.7 85.4L294.8 84.5M367.1 136.8L368.6 138.2M362.2 131.7L367.1 136.8M359.9 129.0L362.2 131.7M357.6 126.3L359.9 129.0M353.3 120.7L357.6 126.3M349.3 114.9L353.3 120.7M347.5 111.9L349.3 114.9M345.6 108.9L347.5 111.9M342.3 102.7L345.6 108.9M339.2 96.4L342.3 102.7M337.8 93.2L339.2 96.4M336.5 89.9L337.8 93.2M334.1 83.3L336.5 89.9M327.2 78.8L327.8 78.7M327.8 78.7L328.3 78.7M328.3 78.7L328.9 78.8M328.9 78.8L329.4 78.9M329.4 78.9L329.9 79.1M329.9 79.1L330.4 79.3M330.4 79.3L330.9 79.5M330.9 79.5L331.4 79.8M331.4 79.8L331.7 80.0M331.7 80.0L332.3 80.5M332.3 80.5L332.5 80.7M332.5 80.7L333.1 81.3M333.1 81.3L333.2 81.5M333.2 81.5L333.7 82.2M333.7 82.2L333.7 82.4M333.7 82.4L334.1 83.3M368.6 138.2L368.9 138.4M368.9 138.4L369.3 139.0M369.3 139.0L369.5 139.2M369.5 139.2L370.0 139.9M370.0 139.9L370.1 140.1M370.1 140.1L370.4 140.9M370.4 140.9L370.5 141.1M370.5 141.1L370.7 142.0M370.7 142.0L370.7 142.1M370.7 142.1L370.8 143.1M260.8 47.9L260.8 43.3M263.0 41.1L318.0 41.1M318.0 41.1L321.4 41.4M321.4 41.4L324.8 42.2M324.8 42.2L328.0 43.5M328.0 43.5L331.0 45.3M331.0 45.3L333.6 47.6M333.6 47.6L335.8 50.2M335.8 50.2L337.6 53.2M337.6 53.2L338.9 56.4M338.9 56.4L339.7 59.8M339.7 59.8L341.6 69.4M341.6 69.4L344.3 78.9M344.3 78.9L347.7 88.2M347.7 88.2L351.8 97.2M351.8 97.2L356.6 105.8M356.6 105.8L362.1 114.0M362.1 114.0L368.2 121.8M368.2 121.8L374.9 129.0M374.9 129.0L377.5 131.2M377.5 131.2L380.4 133.0M380.4 133.0L383.6 134.4M383.6 134.4L387.0 135.2M387.0 135.2L390.4 135.4M390.4 135.4L399.2 135.4M399.2 150.1L399.2 135.4M399.2 152.3L399.2 151.2M399.2 151.2L399.2 150.1M399.2 153.4L399.2 152.3M399.2 154.3L399.2 153.4M399.2 155.1L399.2 154.3M399.2 156.3L399.2 155.8M399.2 155.8L399.2 155.1M399.2 156.6L399.2 156.3M399.2 156.7L399.2 156.6M381.8 156.7L399.2 156.7M381.8 153.4L381.8 152.3M381.8 152.3L381.8 151.2M381.8 151.2L381.8 150.1M381.8 176.7L381.8 150.1M381.8 164.4L381.8 163.7M381.8 162.5L381.8 162.4M381.8 155.8L381.8 155.1M381.8 155.1L381.8 154.3M381.8 154.3L381.8 153.4M381.8 156.7L381.8 156.6M381.8 163.7L381.8 163.1M381.8 162.5L381.8 162.4M381.8 162.7L381.8 162.5M381.8 162.7L381.8 162.5M381.8 163.1L381.8 162.7M381.8 156.6L381.8 156.3M381.8 156.3L381.8 155.8M381.8 170.6L381.8 171.4M381.8 169.8L381.8 170.6M381.8 171.4L381.8 172.1M381.8 172.1L381.8 172.7M381.8 172.7L381.8 173.1M381.8 173.1L381.8 173.3M381.8 173.3L381.8 173.4M381.8 168.8L381.8 169.8M381.8 162.5L381.8 162.4M381.8 162.7L381.8 162.5M381.8 163.1L381.8 162.7M381.8 163.7L381.8 163.1M381.8 164.4L381.8 163.7M381.8 163.1L381.8 162.7M381.8 163.7L381.8 163.1M381.8 164.4L381.8 163.7M381.8 170.6L381.8 171.4M381.8 165.1L381.8 164.4M381.8 166.0L381.8 165.1M381.8 166.9L381.8 166.0M381.8 171.4L381.8 172.1M381.8 172.1L381.8 172.7M381.8 172.7L381.8 173.1M381.8 165.1L381.8 164.4M381.8 166.0L381.8 165.1M381.8 169.8L381.8 170.6M381.8 170.6L381.8 171.4M381.8 173.1L381.8 173.3M381.8 173.3L381.8 173.4M381.8 167.9L381.8 168.8M381.8 167.9L381.8 166.9M381.8 166.9L381.8 166.0M381.8 167.9L381.8 166.9M381.8 167.9L381.8 168.8M381.8 168.8L381.8 169.8M381.8 171.4L381.8 172.1M381.8 172.1L381.8 172.7M381.8 172.7L381.8 173.1M381.8 165.1L381.8 164.4M381.8 166.0L381.8 165.1M381.8 166.9L381.8 166.0M381.8 173.1L381.8 173.3M381.8 173.3L381.8 173.4M381.8 167.9L381.8 166.9M381.8 167.9L381.8 168.8M381.8 168.8L381.8 169.8M381.8 169.8L381.8 170.6M375.4 178.9L379.6 178.9M364.8 164.4L369.2 174.7M273.4 86.6L284.1 90.2M284.1 90.2L294.4 94.6M294.4 94.6L304.3 99.8M304.3 99.8L313.9 105.7M313.9 105.7L323.0 112.3M323.0 112.3L331.5 119.6M331.5 119.6L339.5 127.5M339.5 127.5L346.8 136.0M346.8 136.0L353.5 145.0M353.5 145.0L359.5 154.5M359.5 154.5L364.8 164.4M270.0 85.7L269.3 85.5M269.3 85.5L268.7 85.3M268.7 85.3L268.2 85.2M262.5 83.8L267.6 85.0M271.7 86.1L273.4 86.6M262.5 83.8L273.4 86.6M271.7 86.1L273.8 86.7M273.8 86.7L273.4 86.6M278.5 88.2L276.1 87.4M281.0 89.1L278.5 88.2M273.4 86.6L284.1 90.2M284.1 90.2L283.4 90.0M283.4 90.0L281.0 89.1M276.1 87.4L273.8 86.7M273.4 86.6L273.8 86.7M273.8 86.7L273.4 86.6M262.5 83.8L273.4 86.6M273.4 86.6L271.7 86.1M271.7 86.1L270.0 85.7M364.8 164.4L365.2 165.4M364.8 164.4L365.2 165.4M364.2 163.3L364.8 164.4M364.8 164.4L364.2 163.3M359.5 154.5L364.2 163.3M359.5 154.5L364.8 164.4M359.5 154.5L364.2 163.3M353.5 145.0L359.5 154.5M346.8 136.0L353.5 145.0M339.5 127.5L346.8 136.0M331.5 119.6L339.5 127.5M323.0 112.3L331.5 119.6M313.9 105.7L323.0 112.3M304.3 99.8L313.9 105.7M294.4 94.6L304.3 99.8M284.1 90.2L294.4 94.6M283.4 90.0L284.1 90.2M368.9 173.8L369.2 174.7M369.2 174.7L368.9 173.8M368.1 171.8L368.9 173.8M367.2 169.8L368.1 171.8M364.8 164.4L369.2 174.7M366.2 167.6L367.2 169.8M365.2 165.4L366.2 167.6M260.8 81.7L260.8 76.7M262.8 74.5L313.8 69.1M315.8 66.9L315.8 57.7M262.8 50.1L313.8 55.5M315.4 56.3L315.6 56.6M315.6 56.6L315.7 57.0M315.7 57.0L315.8 57.3M315.8 57.3L315.8 57.7M315.8 67.3L315.8 66.9M315.7 67.6L315.8 67.3M315.6 67.9L315.7 67.6M315.4 68.2L315.6 67.9M315.1 68.5L315.4 68.2M314.8 68.7L315.1 68.5M313.8 69.1L314.2 69.0M314.2 69.0L314.5 68.9M261.1 49.0L261.3 49.3M261.3 49.3L261.5 49.5M261.8 49.8L262.1 49.9M314.5 68.9L314.8 68.7M260.9 48.6L261.1 49.0M262.4 50.0L262.8 50.1M262.1 49.9L262.4 50.0M313.8 55.5L314.2 55.5M314.2 55.5L314.5 55.7M314.5 55.7L314.8 55.8M314.8 55.8L315.1 56.1M315.1 56.1L315.4 56.3M379.6 178.9L380.0 178.9M381.8 177.1L381.8 176.7M262.6 41.1L263.0 41.1M262.3 41.2L262.6 41.1M260.8 43.3L260.8 42.9M260.8 42.9L260.9 42.6M261.5 49.5L261.8 49.8M260.8 47.9L260.8 48.3M260.8 48.3L260.9 48.6M369.7 175.7L370.4 176.6M369.2 174.7L369.7 175.7M370.4 176.6L371.2 177.4M371.2 177.4L372.1 178.0M372.1 178.0L373.2 178.5M373.2 178.5L374.3 178.8M374.3 178.8L375.4 178.9M261.9 41.4L262.3 41.2M261.6 41.6L261.9 41.4M260.9 42.6L261.1 42.2M261.3 41.9L261.6 41.6M261.1 42.2L261.3 41.9M261.5 75.1L261.8 74.8M262.4 74.5L262.8 74.5M262.1 74.7L262.4 74.5M261.8 74.8L262.1 74.7M261.3 75.3L261.5 75.1M261.1 75.6L261.3 75.3M260.9 75.9L261.1 75.6M260.8 76.3L260.9 75.9M260.8 76.7L260.8 76.3M260.8 81.7L260.8 82.1M260.8 82.1L260.9 82.4M260.9 82.4L261.1 82.8M261.1 82.8L261.3 83.1M261.3 83.1L261.6 83.3M261.6 83.3L261.9 83.6M261.9 83.6L262.2 83.7M262.2 83.7L262.5 83.8M381.3 178.1L381.5 177.8M381.0 178.4L381.3 178.1M380.7 178.6L381.0 178.4M380.0 178.9L380.4 178.8M380.4 178.8L380.7 178.6M381.7 177.4L381.8 177.1M381.5 177.8L381.7 177.4M367.1 136.8L368.6 138.2M362.2 131.7L367.1 136.8M359.9 129.0L362.2 131.7M357.6 126.3L359.9 129.0M353.3 120.7L357.6 126.3M349.3 114.9L353.3 120.7M347.5 111.9L349.3 114.9M345.6 108.9L347.5 111.9M342.3 102.7L345.6 108.9M339.2 96.4L342.3 102.7M337.8 93.2L339.2 96.4M336.5 89.9L337.8 93.2M334.1 83.3L336.5 89.9M289.5 82.7L327.2 78.8M289.5 82.7L327.2 78.8M267.6 85.0L327.2 78.8M289.5 82.7L267.6 85.0M267.6 85.0L327.2 78.8M370.8 165.5L370.8 143.1M370.8 165.5L370.8 164.9M370.8 164.9L370.8 163.5M370.8 163.5L370.8 162.2M370.8 162.2L370.8 161.2M370.8 170.3L370.8 170.9M370.8 177.0L370.8 170.3M370.8 163.5L370.8 162.2M370.8 162.2L370.8 161.2M370.8 161.2L370.8 160.3M370.8 160.3L370.8 159.6M370.8 159.6L370.8 159.2M370.8 159.2L370.8 159.1M370.8 174.6L370.8 175.5M370.8 173.5L370.8 174.6M370.8 172.3L370.8 173.5M370.8 170.9L370.8 172.3M370.8 169.4L370.8 170.9M370.8 167.9L370.8 169.4M370.8 162.2L370.8 161.2M370.8 161.2L370.8 160.3M370.8 160.3L370.8 159.8M370.8 161.2L370.8 160.3M370.8 160.3L370.8 159.6M370.8 159.6L370.8 159.2M370.8 159.2L370.8 159.1M370.8 176.6L370.8 176.7M370.8 167.9L370.8 166.4M370.8 166.4L370.8 164.9M370.8 159.8L370.8 143.1M370.8 164.9L370.8 163.5M370.8 163.5L370.8 162.2M370.8 174.6L370.8 175.5M370.8 170.9L370.8 172.3M370.8 169.4L370.8 170.9M370.8 176.6L370.8 176.7M370.8 175.5L370.8 176.2M370.8 173.5L370.8 174.6M370.8 172.3L370.8 173.5M370.8 170.9L370.8 172.3M370.8 176.2L370.8 176.6M370.8 175.5L370.8 176.2M370.8 175.5L370.8 176.2M370.8 176.2L370.8 176.6M370.8 174.6L370.8 175.5M370.8 173.5L370.8 174.6M370.8 172.3L370.8 173.5M370.8 176.6L370.8 176.7M370.8 176.2L370.8 176.6M370.8 167.9L370.8 169.4M370.8 167.9L370.8 166.4M370.8 166.4L370.8 164.9M370.8 164.9L370.8 163.5M375.2 172.3L380.7 172.3M375.2 163.5L380.7 163.5M380.7 163.6L380.7 163.5M375.2 163.6L375.2 163.5M380.7 163.8L380.7 163.6M375.2 163.8L375.2 163.6M380.7 164.1L380.7 163.8M375.2 164.1L375.2 163.8M380.7 164.5L380.7 164.1M375.2 164.5L375.2 164.1M380.7 165.1L380.7 164.5M375.2 165.1L375.2 164.5M380.7 165.7L380.7 165.1M375.2 165.7L375.2 165.1M380.7 166.4L380.7 165.7M375.2 166.4L375.2 165.7M380.7 167.1L380.7 166.4M375.2 167.1L375.2 166.4M380.7 167.9L380.7 167.1M375.2 167.9L375.2 167.1M380.7 167.9L380.7 168.7M375.2 167.9L375.2 168.7M380.7 168.7L380.7 169.4M375.2 168.7L375.2 169.4M380.7 169.4L380.7 170.1M375.2 169.4L375.2 170.1M380.7 170.1L380.7 170.7M375.2 170.1L375.2 170.7M380.7 170.7L380.7 171.3M375.2 170.7L375.2 171.3M380.7 171.3L380.7 171.7M375.2 171.3L375.2 171.7M380.7 171.7L380.7 172.0M375.2 171.7L375.2 172.0M380.7 172.0L380.7 172.2M375.2 172.0L375.2 172.2M380.7 172.2L380.7 172.3M375.2 172.2L375.2 172.3M375.2 172.3L380.7 172.3M375.2 163.5L380.7 163.5M380.7 163.6L380.7 163.5M375.2 163.6L375.2 163.5M380.7 163.8L380.7 163.6M375.2 163.8L375.2 163.6M380.7 164.1L380.7 163.8M375.2 164.1L375.2 163.8M380.7 164.5L380.7 164.1M375.2 164.5L375.2 164.1M380.7 165.1L380.7 164.5M375.2 165.1L375.2 164.5M380.7 165.7L380.7 165.1M375.2 165.7L375.2 165.1M380.7 166.4L380.7 165.7M375.2 166.4L375.2 165.7M380.7 167.1L380.7 166.4M375.2 167.1L375.2 166.4M380.7 167.9L380.7 167.1M375.2 167.9L375.2 167.1M380.7 167.9L380.7 168.7M375.2 167.9L375.2 168.7M380.7 168.7L380.7 169.4M375.2 168.7L375.2 169.4M380.7 169.4L380.7 170.1M375.2 169.4L375.2 170.1M380.7 170.1L380.7 170.7M375.2 170.1L375.2 170.7M380.7 170.7L380.7 171.3M375.2 170.7L375.2 171.3M380.7 171.3L380.7 171.7M375.2 171.3L375.2 171.7M380.7 171.7L380.7 172.0M375.2 171.7L375.2 172.0M380.7 172.0L380.7 172.2M375.2 172.0L375.2 172.2M380.7 172.2L380.7 172.3M375.2 172.2L375.2 172.3M375.2 172.3L380.7 172.3M375.2 163.5L380.7 163.5M380.7 163.6L380.7 163.5M375.2 163.6L375.2 163.5M380.7 163.8L380.7 163.6M375.2 163.8L375.2 163.6M380.7 164.1L380.7 163.8M375.2 164.1L375.2 163.8M380.7 164.5L380.7 164.1M375.2 164.5L375.2 164.1M380.7 165.1L380.7 164.5M375.2 165.1L375.2 164.5M380.7 165.7L380.7 165.1M375.2 165.7L375.2 165.1M380.7 166.4L380.7 165.7M375.2 166.4L375.2 165.7M380.7 167.1L380.7 166.4M375.2 167.1L375.2 166.4M380.7 167.9L380.7 167.1M375.2 167.9L375.2 167.1M380.7 167.9L380.7 168.7M375.2 167.9L375.2 168.7M380.7 168.7L380.7 169.4M375.2 168.7L375.2 169.4M380.7 169.4L380.7 170.1M375.2 169.4L375.2 170.1M380.7 170.1L380.7 170.7M375.2 170.1L375.2 170.7M380.7 170.7L380.7 171.3M375.2 170.7L375.2 171.3M380.7 171.3L380.7 171.7M375.2 171.3L375.2 171.7M380.7 171.7L380.7 172.0M375.2 171.7L375.2 172.0M380.7 172.0L380.7 172.2M375.2 172.0L375.2 172.2M380.7 172.2L380.7 172.3M375.2 172.2L375.2 172.3M380.7 172.3L381.8 173.4M380.7 163.5L381.8 162.4M380.7 172.3L381.8 173.4M380.7 163.5L381.8 162.4M380.7 172.3L381.8 173.4M380.7 163.5L381.8 162.4M370.8 167.9L370.8 167.1M370.8 167.9L370.8 168.7M370.8 166.4L370.8 165.5M370.8 167.1L370.8 166.4M370.8 168.7L370.8 169.4M370.8 169.4L370.8 170.3M370.8 176.7L375.2 172.3M370.8 159.1L375.2 163.5M370.8 159.5L370.8 159.3M370.8 159.1L375.2 163.5M370.8 159.2L370.8 159.1M370.8 159.3L370.8 159.2M370.8 159.6L370.8 159.5M370.8 159.8L370.8 159.6M370.8 176.7L375.2 172.3M370.8 159.1L375.2 163.5M370.8 176.7L375.2 172.3M327.2 78.8L327.8 78.7M328.3 78.7L327.8 78.7M328.3 78.7L328.9 78.8M329.4 78.9L328.9 78.8M329.4 78.9L329.9 79.1M330.4 79.3L329.9 79.1M330.4 79.3L330.9 79.5M331.4 79.8L330.9 79.5M331.4 79.8L331.7 80.0M332.3 80.5L331.7 80.0M332.3 80.5L332.5 80.7M333.1 81.3L332.5 80.7M333.1 81.3L333.2 81.5M333.7 82.2L333.2 81.5M333.7 82.2L333.7 82.4M334.1 83.3L333.7 82.4M369.5 175.4L369.7 175.7M369.2 174.7L369.4 175.0M369.4 175.0L369.5 175.4M370.1 176.2L370.3 176.4M369.9 176.0L370.1 176.2M369.7 175.7L369.9 176.0M369.5 175.4L369.7 175.7M370.7 177.0L370.6 176.9M370.7 177.0L370.8 177.0M370.8 177.0L370.8 177.0M370.8 177.0L370.7 177.0M370.8 177.0L370.8 177.0M370.8 177.0L371.2 177.4M370.6 176.9L370.7 177.0M370.5 176.7L370.6 176.9M370.4 176.6L370.5 176.7M370.3 176.4L370.4 176.6M370.3 176.4L370.1 176.2M370.3 176.4L370.4 176.6M370.4 176.6L370.4 176.6M370.5 176.7L370.4 176.6M370.6 176.9L370.5 176.7M369.7 175.7L370.4 176.6M369.9 176.0L369.7 175.7M370.1 176.2L369.9 176.0M369.2 174.7L369.7 175.7M369.4 175.0L369.2 174.7M369.5 175.4L369.4 175.0M368.6 138.2L368.9 138.4M369.3 139.0L368.9 138.4M369.3 139.0L369.5 139.2M370.0 139.9L369.5 139.2M370.0 139.9L370.1 140.1M370.4 140.9L370.1 140.1M370.4 140.9L370.5 141.1M370.7 142.0L370.5 141.1M370.7 142.0L370.7 142.1M370.8 143.1L370.7 142.1M364.9 151.4L366.2 152.7M366.2 152.7L368.4 154.7M368.8 155.1L366.8 153.2M366.8 153.2L368.8 155.1M368.8 155.1L368.4 154.7M368.8 155.1L368.8 155.1M368.8 155.1L368.4 154.7M368.4 154.7L368.8 155.1M369.2 155.6L369.8 156.3M369.8 156.3L369.8 156.3M369.8 156.3L370.0 156.6M369.8 156.3L370.0 156.8M370.0 156.8L370.0 156.6M370.0 156.8L370.2 157.1M370.2 157.1L370.2 157.1M370.0 156.6L370.2 157.1M370.2 157.1L370.5 157.8M370.5 157.7L370.5 157.8M370.5 158.0L370.5 157.8M370.5 158.0L370.5 158.0M370.5 157.8L370.5 158.0M370.5 158.0L370.7 158.8M370.7 158.8L370.5 158.0M370.7 158.8L370.8 159.0M370.5 158.0L370.8 159.0M370.7 158.8L370.8 159.8M370.8 159.8L370.8 159.0M370.4 157.5L370.5 157.7M370.0 156.6L370.0 156.8M369.2 155.6L369.5 155.9M369.5 155.9L369.0 155.3M368.8 155.1L369.0 155.3M368.8 155.1L369.0 155.3M369.4 155.8L369.8 156.3M369.4 155.8L369.2 155.6M369.4 155.8L368.8 155.1M370.0 156.7L369.4 155.8M370.8 159.4L370.7 158.8M368.8 155.1L369.4 155.8M369.4 155.8L368.8 155.1M370.0 156.6L369.8 156.3M369.4 155.8L370.0 156.6M369.9 156.5L369.4 155.8M370.4 157.5L370.2 157.1M370.0 156.6L370.4 157.5M370.3 157.3L369.9 156.5M370.4 157.6L370.4 157.5M370.7 158.5L370.4 157.5M370.6 158.2L370.3 157.3M370.4 157.5L370.7 158.4M370.7 158.4L370.5 158.0M370.8 159.6L370.7 158.5M370.6 158.2L370.8 159.1M370.7 158.4L370.8 159.4M370.7 158.4L370.7 158.8M369.0 155.3L369.4 155.8M369.5 155.9L369.4 155.8M369.5 155.9L369.8 156.3M369.8 156.3L370.0 156.7M369.8 156.3L370.0 156.8M370.0 156.8L370.0 156.7M370.4 157.6L370.0 156.7M370.0 156.8L370.2 157.1M370.2 157.1L370.4 157.6M370.7 158.8L370.8 159.6M370.7 158.8L370.8 159.8M370.7 158.8L370.7 158.5M370.5 158.0L370.7 158.5M370.5 157.7L370.4 157.6M370.2 157.1L370.5 157.7M369.8 156.3L369.2 155.6M370.8 159.0L370.7 158.8M370.8 159.8L370.8 159.0M370.8 159.0L370.5 158.0M370.5 158.0L370.5 158.0M370.8 159.0L370.5 158.0M370.5 157.8L370.5 158.0M370.5 158.0L370.5 157.8M370.5 157.8L370.5 157.7M370.2 157.1L370.5 157.7M370.2 157.1L370.2 157.1M370.2 157.1L370.0 156.6M370.0 156.6L370.0 156.8M370.0 156.6L369.8 156.3M369.8 156.3L369.8 156.3M294.8 84.5L293.9 83.8M293.8 83.7L292.9 83.2M292.9 83.2L292.7 83.2M292.7 83.2L291.8 82.9M290.7 82.7L291.5 82.8M291.8 82.9L291.5 82.8M289.5 82.7L290.2 82.7M290.7 82.7L290.2 82.7M290.3 82.7L290.2 82.7M290.3 82.7L290.7 82.7M290.3 82.7L291.7 82.8M291.7 82.8L291.5 82.8M289.5 82.7L290.4 82.7M290.4 82.7L290.3 82.7M297.9 87.5L299.1 88.6M297.9 87.5L297.9 87.5M297.9 87.5L297.9 87.5M299.1 88.6L300.5 89.8M300.5 89.8L301.6 90.9M301.6 90.9L303.0 92.2M290.3 82.7L290.4 82.7M291.7 82.8L290.3 82.7M290.4 82.7L289.5 82.7M290.2 82.7L290.3 82.7M290.7 82.7L290.3 82.7M291.5 82.8L291.7 82.8M295.1 84.8L293.8 83.7M295.1 84.8L293.9 83.8M303.0 92.2L348.0 135.1M353.3 140.2L358.7 145.4M348.0 135.1L353.3 140.2M370.7 158.9L370.8 159.0M370.8 159.8L370.7 158.9M370.5 158.0L370.4 157.4M370.8 159.0L370.4 157.4M370.5 157.8L369.7 156.1M370.2 157.1L369.7 156.1M370.0 156.6L368.9 155.1M369.8 156.3L368.9 155.1M358.7 145.4L359.6 146.2M359.6 146.2L360.5 147.0M360.5 147.0L361.3 147.8M364.5 151.0L364.9 151.4M363.8 150.3L364.5 151.0M362.0 148.5L363.8 150.3M361.3 147.8L362.0 148.5M364.9 151.4L364.9 151.4M370.8 159.0L370.7 158.9M370.7 158.9L370.8 159.8M370.5 158.0L370.7 158.9M370.4 157.4L370.7 158.9M370.4 157.4L370.5 158.0M368.9 155.1L370.0 156.6M368.9 155.1L369.8 156.3"/></g>
+          <g class="dwg-center anim-2">
+            <path d="M106 150 V184 M150 150 V184 M194 150 V184"/>
+            <path d="M92 167.2 H208"/>
+          </g>
+          <g class="anim-3">
+            <path class="dwg-dim" d="M106 180 V198 M194 180 V198 M112 192 H188"/>
+            <polygon class="dwg-arrow" points="106,192 116,189 116,195"/>
+            <polygon class="dwg-arrow" points="194,192 184,189 184,195"/>
+            <text class="dwg-t" x="150" y="186" text-anchor="middle">40</text>
+            <path class="dwg-dim" d="M79.9 183 V220 M220.1 183 V220 M85.9 214 H214.1"/>
+            <polygon class="dwg-arrow" points="79.9,214 89.9,211 89.9,217"/>
+            <polygon class="dwg-arrow" points="220.1,214 210.1,211 210.1,217"/>
+            <text class="dwg-t" x="150" y="208" text-anchor="middle">63,7</text>
+            <path class="dwg-dim" d="M260.8 183 V220 M399.2 183 V220 M266.8 214 H393.2"/>
+            <polygon class="dwg-arrow" points="260.8,214 270.8,211 270.8,217"/>
+            <polygon class="dwg-arrow" points="399.2,214 389.2,211 389.2,217"/>
+            <text class="dwg-t" x="330" y="208" text-anchor="middle">62,9</text>
+            <path class="dwg-dim" d="M403 41.1 H430 M403 178.9 H430 M424 47.1 V172.9"/>
+            <polygon class="dwg-arrow" points="424,41.1 421,51.1 427,51.1"/>
+            <polygon class="dwg-arrow" points="424,178.9 421,168.9 427,168.9"/>
+            <text class="dwg-t" x="436" y="110" text-anchor="middle" transform="rotate(-90 436 110)">62,6</text>
+          </g>
+          <g class="anim-3">
+            <text class="dwg-t" x="79.9" y="242" data-t="dwg.viewA">priekšas skats</text>
+            <text class="dwg-t" x="260.8" y="242" data-t="dwg.viewB">sānu skats</text>
+            <text class="dwg-t mark" x="79.9" y="266">3× ⌀3,4 · ⌀6 × 90° · M3</text>
+            <text class="dwg-t mark" x="79.9" y="284">ISO 2768-m · PETG · 5140 ▲</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption data-t="dwg.cap">Tā pati plāksne 2D: gabarīti, sēžu pielaides H7, rādiusi un vispārīgā pielaižu klase ISO 2768-m.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" id="pakalpojumi">
+    <div class="wrap">
+      <p class="eyebrow" data-t="sec.services.eyebrow">Pakalpojumi</p>
+      <h2 data-t="sec.services.title">Četri virzieni, viena ķēde</h2>
+      <p class="intro" data-t="sec.services.intro">Katru var ņemt atsevišķi vai visu ķēdi — no skices līdz izgatavotai detaļai.</p>
+      <div class="grid4">
+        <div class="cell">
+          <h3 data-t="s1.title">CAD un 3D modelēšana</h3>
+          <p data-t="s1.body">Parametriski modeļi Fusion 360 un OpenSCAD. Detaļas atjaunošana pēc skices, fotoattēla vai nolietota parauga. Rasējumi ar pielaidēm (ISO 2768-m, pēc vajadzības GD&T).</p>
+          <p class="out"><b data-t="out.label">Nodevums</b><span data-t="s1.out">STEP · 3MF · PDF rasējums</span></p>
+        </div>
+        <div class="cell">
+          <h3 data-t="s2.title">Prototipēšana un 3D druka</h3>
+          <p data-t="s2.body">FDM druka ar slāni 0,12–0,28 mm: korpusi, stiprinājumi, montāžas palīgierīces, rezerves detaļas. Izmērus pārbaudu pēc drukas, labojumi — tajā pašā dienā.</p>
+          <p class="out"><b data-t="out.label">Nodevums</b><span data-t="s2.out">Gatava detaļa · STL</span></p>
+        </div>
+        <div class="cell">
+          <h3 data-t="s3.title">Inženiertehniskie risinājumi</h3>
+          <p data-t="s3.body">DFM — detaļas pārveidošana, lai to tiešām var izgatavot: sēžu un pielaižu izvēle (H7/g6), vītņu ieliktņi, stiprinājumi, materiāla un sienas biezuma izvēle pēc slodzes.</p>
+          <p class="out"><b data-t="out.label">Nodevums</b><span data-t="s3.out">Risinājums · modelis</span></p>
+        </div>
+        <div class="cell">
+          <h3 data-t="s4.title">CAM un CNC sagatavošana</h3>
+          <p data-t="s4.body">Fusion 360 CAM: 3 asu frēzēšana alumīnijā, adaptīvā apstrāde, kontūra, urbšana, fāzes. Griešanas režīmi, nostiprināšana, DXF → NC konvertācija.</p>
+          <p class="out"><b data-t="out.label">Nodevums</b><span data-t="s4.out">NC programma · apstrādes plāns</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <p class="eyebrow" data-t="sec.process.eyebrow">Process</p>
+      <h2 data-t="sec.process.title">Kā notiek darbs</h2>
+      <p class="intro" data-t="sec.process.intro">Katrs solis beidzas ar kaut ko, ko var apskatīt vai paturēt rokā.</p>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><div><h3 data-t="p1.t">Pieprasījums</h3><p data-t="p1.b">Ko detaļa dara, kādas slodzes un vide, daudzums un termiņš. Sākumam der arī foto ar mērlentu.</p></div></div>
+        <div class="step"><div class="n">02</div><div><h3 data-t="p2.t">Modelis</h3><p data-t="p2.b">Parametrisks modelis un viens vai divi varianti. Saskaņojam pēc 3D skata, pirms kaut kas tiek drukāts.</p></div></div>
+        <div class="step"><div class="n">03</div><div><h3 data-t="p3.t">Prototips</h3><p data-t="p3.b">Izdruka, pielaikošana uz vietas, izmēru kontrole ar bīdmēru.</p></div></div>
+        <div class="step"><div class="n">04</div><div><h3 data-t="p4.t">Iterācija</h3><p data-t="p4.b">Labojumi pēc pielaikošanas. Parametriskā modelī izmēru maina minūtēs, nevis zīmē no jauna.</p></div></div>
+        <div class="step"><div class="n">05</div><div><h3 data-t="p5.t">Nodošana</h3><p data-t="p5.b">Faili STEP/STL/3MF/PDF, maza sērija vai ražošanai sagatavots CNC process.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="specs">
+    <div class="wrap">
+      <p class="eyebrow" data-t="sec.specs.eyebrow">Specifikācija</p>
+      <h2 data-t="sec.specs.title">Uz ko var rēķināties</h2>
+      <p class="intro" data-t="sec.specs.intro">Tehniskie rāmji, kas noder, plānojot detaļu.</p>
+      <div class="tables">
+        <div>
+          <p class="t-cap" data-t="tbl.print">Druka un faili</p>
+          <div class="t-scroll">
+            <table>
+              <tbody>
+                <tr><th data-t="sp.tech">Tehnoloģija</th><td data-t="sp.tech.v">FDM (materiāla ekstrūzija)</td></tr>
+                <tr><th data-t="sp.area">Darba zona</th><td>220 × 220 × 250 mm</td></tr>
+                <tr><th data-t="sp.layer">Sprausla / slānis</th><td data-t="sp.layer.v">0,4 mm / 0,12–0,28 mm</td></tr>
+                <tr><th data-t="sp.tol">Tipiskā precizitāte</th><td data-t="sp.tol.v">±0,2 mm (atkarīgs no ģeometrijas)</td></tr>
+                <tr><th data-t="sp.files">Ienākošie faili</th><td data-t="sp.files.v">STEP · STL · 3MF · DXF · foto/skice</td></tr>
+                <tr><th data-t="sp.batch">Apjoms</th><td data-t="sp.batch.v">Atsevišķi gabali un mazas sērijas</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <p class="t-cap" data-t="tbl.mat">Materiāli</p>
+          <div class="t-scroll">
+            <table class="mat">
+              <thead><tr><th data-t="m.h1">Materiāls</th><th data-t="m.h2">Īpašības</th><th data-t="m.h3">Kur izmantoju</th></tr></thead>
+              <tbody>
+                <tr><td>PLA</td><td data-t="m1.b">Stīvs, precīzs, nav karstumizturīgs (~55 °C)</td><td data-t="m1.c">Maketi, formas pārbaude</td></tr>
+                <tr><td>PETG</td><td data-t="m2.b">Sitienizturīgs, mitrumizturīgs</td><td data-t="m2.c">Korpusi, funkcionālas detaļas</td></tr>
+                <tr><td>ASA / ABS</td><td data-t="m3.b">UV un karstumizturīgs (~95 °C)</td><td data-t="m3.c">Āra un auto detaļas</td></tr>
+                <tr><td>PA-CF</td><td data-t="m4.b">Stingrs, nodilumizturīgs</td><td data-t="m4.c">Slodzētas detaļas, palīgierīces</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="darbi">
+    <div class="wrap">
+      <p class="eyebrow" data-t="sec.works.eyebrow">Darbi</p>
+      <h2 data-t="sec.works.title">Daži darbi no darbnīcas</h2>
+      <p class="intro" data-t="sec.works.intro">Modelis, izdruka, pārbaude, labojumi — un tā, līdz detaļa strādā.</p>
+      <div class="works">
+        <div class="work">
+          <h3 data-t="w1.t">Vakuuma putekļu panelis</h3>
+          <p data-t="w1.b">Panelis smalku oglekļa putekļu savākšanai, strādā ar Kärcher NT 27/1. Vairākas versijas: plūsmas sadalījums, stiprinājumi, blīvējums.</p>
+          <span class="tag" data-t="w1.tag">CAD → druka → iterācija</span>
+        </div>
+        <div class="work">
+          <h3 data-t="w2.t">Uzgaļu turētājs</h3>
+          <p data-t="w2.b">Oral-B uzgaļu turētājs: četras adatas un vieta lādētājam. Sagatavots drukai bez balstiem.</p>
+          <span class="tag" data-t="w2.tag">DFM drukai</span>
+        </div>
+        <div class="work">
+          <h3 data-t="w3.t">Kāpurķēžu robots</h3>
+          <p data-t="w3.b">Robots uz ESP32 un L298N ar diviem JGA25-371 enkoderu motoriem, vadība no telefona. Korpuss, kāpurķēžu mezgls un elektronikas stiprinājumi — druka.</p>
+          <span class="tag" data-t="w3.tag">Mehānika + elektronika</span>
+        </div>
+        <div class="work">
+          <h3 data-t="w4.t">DXF → NC konvertors</h3>
+          <p data-t="w4.b">Python rīks DXF kontūru pārvēršanai NC programmā IXShaper iekārtām — mazāk roku darba starp rasējumu un darbgaldu.</p>
+          <span class="tag" data-t="w4.tag">Automatizācija</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="kontakti">
+    <div class="wrap">
+      <p class="eyebrow" data-t="sec.contact.eyebrow">Kontakti</p>
+      <h2 data-t="sec.contact.title">Sāksim ar detaļu</h2>
+      <p class="intro" data-t="sec.contact.intro">Uzrakstiet, ko vajag izgatavot. Atbildu ar jautājumiem, ja kaut kas nav skaidrs, un ar aptuvenu termiņu.</p>
+      <div class="contact-grid">
+        <div>
+          <p class="t-cap" data-t="cl.title">Ko norādīt pieprasījumā</p>
+          <ol class="check">
+            <li><span data-t="cl.1">Ko detaļa dara un kur tā atrodas</span></li>
+            <li><span data-t="cl.2">Daudzums un termiņš</span></li>
+            <li><span data-t="cl.3">Vide: āra, karstums, mitrums, ķīmija</span></li>
+            <li><span data-t="cl.4">Kritiskie izmēri un pielaides</span></li>
+            <li><span data-t="cl.5">Faili STEP, STL, DXF — vai foto ar mērlentu</span></li>
+            <li><span data-t="cl.6">Budžets, ja tāds jau ir noteikts</span></li>
+          </ol>
+        </div>
+        <div class="block">
+          <div class="row"><div class="k" data-t="tb.exec">Izpildītājs</div><div class="v">Vitālijs Ivanovs</div></div>
+          <div class="row"><div class="k" data-t="tb.studio">Studija</div><div class="v">IMAE Design &amp; Engineering</div></div>
+          <div class="row"><div class="k" data-t="tb.loc">Atrašanās vieta</div><div class="v">Salaspils, LV</div></div>
+          <div class="row"><div class="k" data-t="tb.site">Vietne</div><div class="v">imaedesign.eu</div></div>
+          <div class="row"><div class="k" data-t="tb.email">E-pasts</div><div class="v"><span id="email" class="fill" data-t="tb.fill">— aizpildīt —</span><button class="copy" type="button" id="copyBtn" data-t="btn.copy">Kopēt</button></div></div>
+          <div class="row"><div class="k" data-t="tb.phone">Tālrunis</div><div class="v"><span class="fill" data-t="tb.fill">— aizpildīt —</span></div></div>
+          <div class="row"><div class="k" data-t="tb.lang">Valodas</div><div class="v">LV · RU · EN</div></div>
+          <div class="row"><div class="k" data-t="tb.units">Mērvienības</div><div class="v">mm</div></div>
+          <div class="row"><div class="k" data-t="tb.sheet">Lapa</div><div class="v">1 / 1 · 2026</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 IMAE Design &amp; Engineering · imaedesign.eu · Salaspils, LV</span>
+    <span data-t="footer.note">Prototipi · inženiertehniskie risinājumi · 3D druka</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const T = {
+  "nav.services":{lv:"Pakalpojumi",ru:"Услуги",en:"Services"},
+  "nav.process":{lv:"Process",ru:"Процесс",en:"Process"},
+  "nav.specs":{lv:"Specifikācija",ru:"Параметры",en:"Specs"},
+  "nav.works":{lv:"Darbi",ru:"Работы",en:"Work"},
+  "nav.contact":{lv:"Kontakti",ru:"Контакты",en:"Contact"},
+
+  "hero.eyebrow":{lv:"Salaspils · Rīgas reģions · Latvija",ru:"Саласпилс · Рижский регион · Латвия",en:"Salaspils · Riga region · Latvia"},
+  "hero.lead":{lv:"No idejas līdz detaļai, kas der.",ru:"От идеи до детали, которая встаёт на место.",en:"From an idea to a part that fits."},
+  "hero.sub":{lv:"Parametriski CAD modeļi, rasējumi ar pielaidēm, izdrukāti prototipi un sagatavots CNC process. 14+ gadu pieredze precīzijas metālapstrādē.",ru:"Параметрические CAD-модели, чертежи с допусками, напечатанные прототипы и подготовленный процесс для ЧПУ. 14+ лет в точной металлообработке.",en:"Parametric CAD models, drawings with tolerances, printed prototypes and a CNC process ready to run. 14+ years in precision metalworking."},
+  "hero.cta1":{lv:"Sākt projektu",ru:"Обсудить проект",en:"Start a project"},
+  "hero.cta2":{lv:"Ko es daru",ru:"Что я делаю",en:"What I do"},
+  "dwg.alt":{lv:"Turētāja rasējums divos skatos ar izmēriem",ru:"Чертёж держателя в двух видах с размерами",en:"Holder drawing in two views with dimensions"},
+  "dwg.viewA":{lv:"priekšas skats",ru:"вид спереди",en:"front view"},
+  "dwg.viewB":{lv:"sānu skats",ru:"вид сбоку",en:"side view"},
+  "view.cap":{lv:"Krēsla turētājs · PETG · 63,7 × 62,9 × 62,6 mm",ru:"Держатель для стула · PETG · 63,7 × 62,9 × 62,6 мм",en:"Chair holder · PETG · 63.7 × 62.9 × 62.6 mm"},
+  "view.hint":{lv:"velciet, lai pagrieztu",ru:"потяните, чтобы повернуть",en:"drag to rotate"},
+  "sec.dwg.eyebrow":{lv:"Nodevums",ru:"Результат",en:"Deliverable"},
+  "sec.dwg.title":{lv:"Modelis un rasējums — viens fails",ru:"Модель и чертёж — один файл",en:"Model and drawing — one file"},
+  "sec.dwg.intro":{lv:"Katrs modelis aiziet kopā ar rasējumu: gabarīti, urbumu izvietojums, pielaides un vispārīgā pielaižu klase. Tas ir dokuments, pēc kura detaļu var izgatavot vai izdrukāt jebkurš — ne tikai es.",ru:"Каждая модель уходит вместе с чертежом: габариты, расположение отверстий, допуски и класс общих допусков. Это документ, по которому деталь изготовит или напечатает кто угодно — не только я.",en:"Every model leaves with a drawing: overall sizes, hole positions, tolerances and a general tolerance class. That drawing is a document anyone can make or print the part from — not only me."},
+  "dwg.cap":{lv:"Abi skati ģenerēti no tā paša STL faila, kas griežas augšā: kontūras un šķautnes projicētas no 5140 trīsstūriem. Gabarīti 63,7 × 62,9 × 62,6, trīs ⌀3,4 urbumi ar gremdējumu M3 skrūvēm, solis 20.",ru:"Оба вида построены из того же STL-файла, что крутится выше: контуры и рёбра спроецированы с 5140 треугольников. Габариты 63,7 × 62,9 × 62,6, три отверстия ⌀3,4 с потаем под M3, шаг 20.",en:"Both views are generated from the same STL that turns above: outlines and feature edges projected from 5,140 facets. Overall 63.7 × 62.9 × 62.6, three ⌀3.4 holes countersunk for M3 at 20 mm pitch."},
+
+  "sec.services.eyebrow":{lv:"Pakalpojumi",ru:"Услуги",en:"Services"},
+  "sec.services.title":{lv:"Četri virzieni, viena ķēde",ru:"Четыре направления, одна цепочка",en:"Four areas, one chain"},
+  "sec.services.intro":{lv:"Katru var ņemt atsevišķi vai visu ķēdi — no skices līdz izgatavotai detaļai.",ru:"Можно взять одно направление или всю цепочку — от эскиза до готовой детали.",en:"Take one of them, or the whole chain from sketch to finished part."},
+  "out.label":{lv:"Nodevums",ru:"Результат",en:"Deliverable"},
+  "s1.title":{lv:"CAD un 3D modelēšana",ru:"CAD и 3D-моделирование",en:"CAD and 3D modelling"},
+  "s1.body":{lv:"Parametriski modeļi Fusion 360 un OpenSCAD. Detaļas atjaunošana pēc skices, fotoattēla vai nolietota parauga. Rasējumi ar pielaidēm (ISO 2768-m, pēc vajadzības GD&T).",ru:"Параметрические модели в Fusion 360 и OpenSCAD. Восстановление детали по эскизу, фото или изношенному образцу. Чертежи с допусками (ISO 2768-m, при необходимости GD&T).",en:"Parametric models in Fusion 360 and OpenSCAD. Rebuilding a part from a sketch, a photo or a worn sample. Drawings with tolerances (ISO 2768-m, GD&T where needed)."},
+  "s1.out":{lv:"STEP · 3MF · PDF rasējums",ru:"STEP · 3MF · PDF-чертёж",en:"STEP · 3MF · PDF drawing"},
+  "s2.title":{lv:"Prototipēšana un 3D druka",ru:"Прототипы и 3D-печать",en:"Prototyping and 3D printing"},
+  "s2.body":{lv:"FDM druka ar slāni 0,12–0,28 mm: korpusi, stiprinājumi, montāžas palīgierīces, rezerves detaļas. Izmērus pārbaudu pēc drukas, labojumi — tajā pašā dienā.",ru:"FDM-печать слоем 0,12–0,28 мм: корпуса, крепления, монтажная оснастка, запчасти. Размеры проверяю после печати, правки — в тот же день.",en:"FDM printing at 0.12–0.28 mm layers: housings, brackets, assembly jigs, spare parts. Dimensions checked after printing, fixes the same day."},
+  "s2.out":{lv:"Gatava detaļa · STL",ru:"Готовая деталь · STL",en:"Finished part · STL"},
+  "s3.title":{lv:"Inženiertehniskie risinājumi",ru:"Инженерные решения",en:"Engineering solutions"},
+  "s3.body":{lv:"DFM — detaļas pārveidošana, lai to tiešām var izgatavot: sēžu un pielaižu izvēle (H7/g6), vītņu ieliktņi, stiprinājumi, materiāla un sienas biezuma izvēle pēc slodzes.",ru:"DFM — доработка детали, чтобы её реально можно было изготовить: подбор посадок и допусков (H7/g6), резьбовые втулки, крепёж, материал и толщина стенки под нагрузку.",en:"DFM — reworking a part so it can actually be made: fits and tolerances (H7/g6), threaded inserts, fasteners, material and wall thickness chosen for the load."},
+  "s3.out":{lv:"Risinājums · modelis",ru:"Решение · модель",en:"Solution · model"},
+  "s4.title":{lv:"CAM un CNC sagatavošana",ru:"CAM и подготовка под ЧПУ",en:"CAM and CNC prep"},
+  "s4.body":{lv:"Fusion 360 CAM: 3 asu frēzēšana alumīnijā, adaptīvā apstrāde, kontūra, urbšana, fāzes. Griešanas režīmi, nostiprināšana, DXF → NC konvertācija.",ru:"Fusion 360 CAM: 3-осевая фрезеровка алюминия, адаптивная обработка, контур, сверление, фаски. Режимы резания, закрепление, конвертация DXF → NC.",en:"Fusion 360 CAM: 3-axis aluminium milling, adaptive clearing, contour, drilling, chamfers. Cutting data, workholding, DXF → NC conversion."},
+  "s4.out":{lv:"NC programma · apstrādes plāns",ru:"УП · план обработки",en:"NC program · setup sheet"},
+
+  "sec.process.eyebrow":{lv:"Process",ru:"Процесс",en:"Process"},
+  "sec.process.title":{lv:"Kā notiek darbs",ru:"Как идёт работа",en:"How the work runs"},
+  "sec.process.intro":{lv:"Katrs solis beidzas ar kaut ko, ko var apskatīt vai paturēt rokā.",ru:"Каждый шаг заканчивается тем, что можно посмотреть или подержать в руках.",en:"Every step ends with something you can look at or hold."},
+  "p1.t":{lv:"Pieprasījums",ru:"Запрос",en:"Brief"},
+  "p1.b":{lv:"Ko detaļa dara, kādas slodzes un vide, daudzums un termiņš. Sākumam der arī foto ar mērlentu.",ru:"Что деталь делает, нагрузки и среда, количество и срок. Для начала подойдёт и фото с рулеткой.",en:"What the part does, loads and environment, quantity and deadline. A photo with a tape measure is enough to start."},
+  "p2.t":{lv:"Modelis",ru:"Модель",en:"Model"},
+  "p2.b":{lv:"Parametrisks modelis un viens vai divi varianti. Saskaņojam pēc 3D skata, pirms kaut kas tiek drukāts.",ru:"Параметрическая модель и один-два варианта. Согласуем по 3D-виду до того, как что-то печатается.",en:"A parametric model and one or two options, agreed from the 3D view before anything is printed."},
+  "p3.t":{lv:"Prototips",ru:"Прототип",en:"Prototype"},
+  "p3.b":{lv:"Izdruka, pielaikošana uz vietas, izmēru kontrole ar bīdmēru.",ru:"Печать, примерка по месту, контроль размеров штангенциркулем.",en:"Printed, fitted in place, measured with calipers."},
+  "p4.t":{lv:"Iterācija",ru:"Итерация",en:"Iteration"},
+  "p4.b":{lv:"Labojumi pēc pielaikošanas. Parametriskā modelī izmēru maina minūtēs, nevis zīmē no jauna.",ru:"Правки по итогам примерки. В параметрической модели размер меняется за минуты, а не рисуется заново.",en:"Changes after the fit test. In a parametric model a dimension changes in minutes instead of being redrawn."},
+  "p5.t":{lv:"Nodošana",ru:"Передача",en:"Handover"},
+  "p5.b":{lv:"Faili STEP/STL/3MF/PDF, maza sērija vai ražošanai sagatavots CNC process.",ru:"Файлы STEP/STL/3MF/PDF, мелкая серия или подготовленный под производство процесс ЧПУ.",en:"Files in STEP/STL/3MF/PDF, a small batch, or a CNC process ready for production."},
+
+  "sec.specs.eyebrow":{lv:"Specifikācija",ru:"Параметры",en:"Specs"},
+  "sec.specs.title":{lv:"Uz ko var rēķināties",ru:"На что можно рассчитывать",en:"What you can count on"},
+  "sec.specs.intro":{lv:"Tehniskie rāmji, kas noder, plānojot detaļu.",ru:"Технические рамки, которые пригодятся при планировании детали.",en:"The technical envelope to design within."},
+  "tbl.print":{lv:"Druka un faili",ru:"Печать и файлы",en:"Printing and files"},
+  "tbl.mat":{lv:"Materiāli",ru:"Материалы",en:"Materials"},
+  "sp.tech":{lv:"Tehnoloģija",ru:"Технология",en:"Technology"},
+  "sp.tech.v":{lv:"FDM (materiāla ekstrūzija)",ru:"FDM (экструзия материала)",en:"FDM (material extrusion)"},
+  "sp.area":{lv:"Darba zona",ru:"Рабочая зона",en:"Build volume"},
+  "sp.layer":{lv:"Sprausla / slānis",ru:"Сопло / слой",en:"Nozzle / layer"},
+  "sp.layer.v":{lv:"0,4 mm / 0,12–0,28 mm",ru:"0,4 мм / 0,12–0,28 мм",en:"0.4 mm / 0.12–0.28 mm"},
+  "sp.tol":{lv:"Tipiskā precizitāte",ru:"Типичная точность",en:"Typical accuracy"},
+  "sp.tol.v":{lv:"±0,2 mm (atkarīgs no ģeometrijas)",ru:"±0,2 мм (зависит от геометрии)",en:"±0.2 mm (depends on geometry)"},
+  "sp.files":{lv:"Ienākošie faili",ru:"Входящие файлы",en:"Input files"},
+  "sp.files.v":{lv:"STEP · STL · 3MF · DXF · foto/skice",ru:"STEP · STL · 3MF · DXF · фото/эскиз",en:"STEP · STL · 3MF · DXF · photo/sketch"},
+  "sp.batch":{lv:"Apjoms",ru:"Объём",en:"Volume"},
+  "sp.batch.v":{lv:"Atsevišķi gabali un mazas sērijas",ru:"Единичные изделия и мелкие серии",en:"One-offs and small batches"},
+  "m.h1":{lv:"Materiāls",ru:"Материал",en:"Material"},
+  "m.h2":{lv:"Īpašības",ru:"Свойства",en:"Properties"},
+  "m.h3":{lv:"Kur izmantoju",ru:"Где применяю",en:"Where I use it"},
+  "m1.b":{lv:"Stīvs, precīzs, nav karstumizturīgs (~55 °C)",ru:"Жёсткий, точный, не держит нагрев (~55 °C)",en:"Stiff, accurate, not heat-resistant (~55 °C)"},
+  "m1.c":{lv:"Maketi, formas pārbaude",ru:"Макеты, проверка формы",en:"Mock-ups, checking form"},
+  "m2.b":{lv:"Sitienizturīgs, mitrumizturīgs",ru:"Ударопрочный, влагостойкий",en:"Impact- and moisture-resistant"},
+  "m2.c":{lv:"Korpusi, funkcionālas detaļas",ru:"Корпуса, функциональные детали",en:"Housings, functional parts"},
+  "m3.b":{lv:"UV un karstumizturīgs (~95 °C)",ru:"Стойкий к УФ и нагреву (~95 °C)",en:"UV- and heat-resistant (~95 °C)"},
+  "m3.c":{lv:"Āra un auto detaļas",ru:"Уличные и автомобильные детали",en:"Outdoor and automotive parts"},
+  "m4.b":{lv:"Stingrs, nodilumizturīgs",ru:"Жёсткий, износостойкий",en:"Rigid, wear-resistant"},
+  "m4.c":{lv:"Slodzētas detaļas, palīgierīces",ru:"Нагруженные детали, оснастка",en:"Loaded parts, jigs and fixtures"},
+
+  "sec.works.eyebrow":{lv:"Darbi",ru:"Работы",en:"Work"},
+  "sec.works.title":{lv:"Daži darbi no darbnīcas",ru:"Несколько работ из мастерской",en:"A few jobs from the workshop"},
+  "sec.works.intro":{lv:"Modelis, izdruka, pārbaude, labojumi — un tā, līdz detaļa strādā.",ru:"Модель, печать, проверка, правки — и так, пока деталь не заработает.",en:"Model, print, check, revise — until the part works."},
+  "w1.t":{lv:"Vakuuma putekļu panelis",ru:"Панель пылеудаления",en:"Vacuum dust panel"},
+  "w1.b":{lv:"Panelis smalku oglekļa putekļu savākšanai, strādā ar Kärcher NT 27/1. Vairākas versijas: plūsmas sadalījums, stiprinājumi, blīvējums.",ru:"Панель для сбора мелкой углеродной пыли, работает от пылесоса Kärcher NT 27/1. Несколько версий: распределение потока, крепления, уплотнение.",en:"A panel that collects fine carbon dust, running off a Kärcher NT 27/1. Several versions: flow distribution, mounting, sealing."},
+  "w1.tag":{lv:"CAD → druka → iterācija",ru:"CAD → печать → итерация",en:"CAD → print → iteration"},
+  "w2.t":{lv:"Uzgaļu turētājs",ru:"Держатель насадок",en:"Brush-head holder"},
+  "w2.b":{lv:"Oral-B uzgaļu turētājs: četras adatas un vieta lādētājam. Sagatavots drukai bez balstiem.",ru:"Держатель насадок Oral-B: четыре вилки и гнездо под зарядку. Подготовлен под печать без поддержек.",en:"An Oral-B brush-head holder: four posts and a slot for the charger. Prepared to print without supports."},
+  "w2.tag":{lv:"DFM drukai",ru:"DFM под печать",en:"DFM for printing"},
+  "w3.t":{lv:"Kāpurķēžu robots",ru:"Гусеничный робот",en:"Tracked robot"},
+  "w3.b":{lv:"Robots uz ESP32 un L298N ar diviem JGA25-371 enkoderu motoriem, vadība no telefona. Korpuss, kāpurķēžu mezgls un elektronikas stiprinājumi — druka.",ru:"Робот на ESP32 и L298N с двумя мотор-редукторами JGA25-371 с энкодерами, управление с телефона. Корпус, гусеничный узел и крепления электроники — печать.",en:"A robot on ESP32 and L298N with two JGA25-371 encoder motors, driven from a phone. Chassis, track assembly and electronics mounts are printed."},
+  "w3.tag":{lv:"Mehānika + elektronika",ru:"Механика + электроника",en:"Mechanics + electronics"},
+  "w4.t":{lv:"DXF → NC konvertors",ru:"Конвертер DXF → УП",en:"DXF → NC converter"},
+  "w4.b":{lv:"Python rīks DXF kontūru pārvēršanai NC programmā IXShaper iekārtām — mazāk roku darba starp rasējumu un darbgaldu.",ru:"Python-инструмент для перевода контуров DXF в управляющую программу для станков IXShaper — меньше ручной работы между чертежом и станком.",en:"A Python tool that turns DXF contours into NC code for IXShaper machines — less hand work between drawing and machine."},
+  "w4.tag":{lv:"Automatizācija",ru:"Автоматизация",en:"Automation"},
+
+  "sec.contact.eyebrow":{lv:"Kontakti",ru:"Контакты",en:"Contact"},
+  "sec.contact.title":{lv:"Sāksim ar detaļu",ru:"Начнём с детали",en:"Start with the part"},
+  "sec.contact.intro":{lv:"Uzrakstiet, ko vajag izgatavot. Atbildu ar jautājumiem, ja kaut kas nav skaidrs, un ar aptuvenu termiņu.",ru:"Напишите, что нужно изготовить. Отвечу вопросами, если что-то неясно, и примерным сроком.",en:"Write what you need made. You get questions back where something is unclear, plus a rough timeline."},
+  "cl.title":{lv:"Ko norādīt pieprasījumā",ru:"Что указать в запросе",en:"What to include in your request"},
+  "cl.1":{lv:"Ko detaļa dara un kur tā atrodas",ru:"Что деталь делает и где стоит",en:"What the part does and where it sits"},
+  "cl.2":{lv:"Daudzums un termiņš",ru:"Количество и срок",en:"Quantity and deadline"},
+  "cl.3":{lv:"Vide: āra, karstums, mitrums, ķīmija",ru:"Среда: улица, нагрев, влага, химия",en:"Environment: outdoors, heat, moisture, chemicals"},
+  "cl.4":{lv:"Kritiskie izmēri un pielaides",ru:"Критичные размеры и допуски",en:"Critical dimensions and tolerances"},
+  "cl.5":{lv:"Faili STEP, STL, DXF — vai foto ar mērlentu",ru:"Файлы STEP, STL, DXF — или фото с рулеткой",en:"Files in STEP, STL, DXF — or a photo with a tape measure"},
+  "cl.6":{lv:"Budžets, ja tāds jau ir noteikts",ru:"Бюджет, если он уже определён",en:"Budget, if you already have one"},
+  "tb.exec":{lv:"Izpildītājs",ru:"Исполнитель",en:"Engineer"},
+  "tb.studio":{lv:"Studija",ru:"Студия",en:"Studio"},
+  "tb.loc":{lv:"Atrašanās vieta",ru:"Расположение",en:"Location"},
+  "tb.email":{lv:"E-pasts",ru:"E-mail",en:"Email"},
+  "tb.phone":{lv:"Tālrunis",ru:"Телефон",en:"Phone"},
+  "tb.site":{lv:"Vietne",ru:"Сайт",en:"Website"},
+  "tb.lang":{lv:"Valodas",ru:"Языки",en:"Languages"},
+  "tb.units":{lv:"Mērvienības",ru:"Ед. изм.",en:"Units"},
+  "tb.sheet":{lv:"Lapa",ru:"Лист",en:"Sheet"},
+  "tb.fill":{lv:"— aizpildīt —",ru:"— заполнить —",en:"— to fill in —"},
+  "btn.copy":{lv:"Kopēt",ru:"Копировать",en:"Copy"},
+  "btn.copied":{lv:"Nokopēts",ru:"Скопировано",en:"Copied"},
+  "footer.note":{lv:"Prototipi · inženiertehniskie risinājumi · 3D druka",ru:"Прототипы · инженерные решения · 3D-печать",en:"Prototypes · engineering solutions · 3D printing"}
+};
+
+const buttons = Array.from(document.querySelectorAll('.langs button'));
+
+function setLang(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(function(el){
+    const entry = T[el.getAttribute('data-t')];
+    if (entry && entry[lang]) el.textContent = entry[lang];
+  });
+  buttons.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+  try { localStorage.setItem('imae.lang', lang); } catch (e) {}
+}
+
+buttons.forEach(function(b){
+  b.addEventListener('click', function(){ setLang(b.dataset.lang); });
+});
+
+let start = 'lv';
+try {
+  const saved = localStorage.getItem('imae.lang');
+  if (saved && T['nav.services'][saved]) start = saved;
+} catch (e) {}
+setLang(start);
+
+const copyBtn = document.getElementById('copyBtn');
+copyBtn.addEventListener('click', function(){
+  const text = document.getElementById('email').textContent.trim();
+  const done = function(){
+    const lang = document.documentElement.lang || 'lv';
+    copyBtn.textContent = T['btn.copied'][lang];
+    setTimeout(function(){ copyBtn.textContent = T['btn.copy'][lang]; }, 1600);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(selectEmail);
+  } else {
+    selectEmail();
+  }
+});
+function selectEmail(){
+  const node = document.getElementById('email');
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+/* ---------- 3D model: the real STL of a printed part ---------- */
+const MESH_NV=2566, MESH_NI=15420, MESH_MIN=[-31.8500,-31.3140,-31.4500], MESH_SIZE=[63.7000,62.6280,62.9000];
+const MESH_B64="AAAAADkkAAAAAAgsAAAQAIQjAAAuAB0uAABAANUiAACMADAiAAC2ACEwAAD1AJshAAB2ARshAACVAQgyAAALArMgAACxAmUgAADDAsEzAABhAzcgAAAWBCcgAAA5BEA1AADqBXs2AADMB2c3AADrGrM/AABbLWhJAACMNQAAAACMNScgAAAAP3tUAADCT9lgAAC7UAAAAAC7UD0QAAA7UZsWAAC6UtEcAAAvVbYiAACIWCgoAACzXAMtAACFX3JuAAAqamc5AAA0bjJ9AACQeLJEAAC7ewGNAADRh9FOAAACiMqdAAD7knSvAADUl7dXAACUnOTBAAC/pP/UAAB9qFJfAABwq6voAACdsMn8AADRsHL9AAAgsRD+AACKsZ7+AAAKshj/AACdsnv/AAA+s8T/AADrs/D/AACbtP//AAC1uZhlAAD1vf//AACfvvH/AABEv8j/AADhv4X/AABwwCn/AADvwLj+AABZwTT+AACswaD9AADnwQD9AAAGwlv8AABdy35qAAD+y+SdAAAezD+dAABYzJ+cAACszAucAAAWzYebAACUzRWbAAAkzrqaAADBzneaAABlz02aAAAQ0ECaAABc3f5tAAA64UCaAADj4U2aAACI4neaAAAk47qaAACf43ZvAAC04xWbAAAy5IebAACd5AucAADx5J+cAAAq5T+dAABK5eSdAACR6eVxAAAQ7zp1AABD71v8AABi7wD9AACc76D9AADw7zT+AABa8Lj+AADZ8Cn/AABo8YX/AAAE8sj/AACq8vH/AABT8///AAD28195AAAm+Dx+AACE+7CDAADp+///AACe/O//AABO/cD/AAD0/XP/AAD8/ZqJAACJ/gv/AAAK/4v+AABz//b9AAB9/9SPAAC//1H9AADv/6L8AAD//zaWAAD//+37LwBrMwAALwBrMycgugBaMQAAugBaMScgngFqLwAAngFqLycg0gKrLQAA0gKrLScgTwQnLAAATwQnLCcgBwbtKgAABwbtKicg7wcGKgAA7wcGKicg9gl5KQAA9gl5KScgDgxJKQAADgxJKScgGBQDHbZAGBRbLWhJGBQAP3tUGBRwQrZAGBSSRQhEGBSHT3JNGBTCT9lgGBT2WVZWGBSFX3JuGBTYZKxeGBQ0bjJ9GBQkcHBmGBS7ewGNGBTWe5ttGBTihyt0GBQCiMqdGBT7knSv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uOvbiEdyuOshlSl4uOuyoWV9uOvYpqjauOuErvqBuOv3rzaEwesIGc0+xetwQuc+xeuqr/6D3evrGrI/5+sDHbZA5+tbLWhJ5+sAP3tU5+twQrZA5+uSRQhE5+uHT3JN5+vCT9lg5+v2WVZW5+uFX3Ju5+vYZKxe5+s0bjJ95+skcHBm5+u7ewGN5+vWe5tt5+vihyt05+sCiMqd5+v7knSv5+tClBh65+uUnOTB5+vsoF9/5+u/pP/U5+supSLW5+vZrf6D8fNJKQAA8fNJKScgCfZ5KQAACfZ5KScgEPgGKgAAEPgGKicg+PntKgAA+PntKicgsPsnLAAAsPsnLCcgLf2rLQAALf2rLScgYf5qLwAAYf5qLycgRf9aMQAARf9aMScg0P9rMwAA0P9rMycg//8AADkk//8AAAgs//8QAIQj//8uAB0u//9AANUi//+MADAi//+2ACEw///1AJsh//92ARsh//+VAQgy//8LArMg//+xAmUg///DAsEz//9hAzcg//8WBCcg//85BEA1///qBXs2///MB2c3///rGrM///9bLWhJ//+MNQAA//+MNScg//8AP3tU///CT9lg//+7UAAA//+7UD0Q//87UZsW//+6UtEc//8vVbYi//+IWCgo//+zXAMt//+FX3Ju//8qamc5//80bjJ9//+QeLJE//+7ewGN///Rh9FO//8CiMqd///7knSv///Ul7dX//+UnOTB//+/pP/U//99qFJf//9wq6vo//+dsMn8///RsHL9//8gsRD+//+KsZ7+//8Kshj///+dsnv///8+s8T////rs/D///+btP////+1uZhl///1vf////+fvvH///9Ev8j////hv4X///9wwCn////vwLj+//9ZwTT+//+swaD9///nwQD9//8Gwlv8//9dy35q///+y+Sd//8ezD+d//9YzJ+c//+szAuc//8WzYeb//+UzRWb//8kzrqa///Bznea//9lz02a//8Q0ECa//9c3f5t//864UCa///j4U2a//+I4nea//8k47qa//+f43Zv//+04xWb//8y5Ieb//+d5Auc///x5J+c//8q5T+d//9K5eSd//+R6eVx//8Q7zp1//9D71v8//9i7wD9//+c76D9///w7zT+//9a8Lj+///Z8Cn///9o8YX///8E8sj///+q8vH///9T8//////28195//8m+Dx+//+E+7CD///p+/////+e/O////9O/cD////0/XP////8/ZqJ//+J/gv///8K/4v+//9z//b9//99/9SP//+//1H9///v/6L8/////zaW/////+37FgUcBdkE2QQcBUkF2QRJBb4E2wHaAY0CjQLaAYwC2wGNAtwB3AGNAo4C3AGOAt0B3QGOAo8C3QGPAt4B3gGPApAC3gGQAt8B3wGQApEC3wGRAuAB4AGRApIC4AGSAuEB4QGSApMC4QGTAuIB4gGTApQC4gGUAuMB4wGUApUC4wGVAuQB5AGVApYC5AGWAuUB5QGWApcC5QGXAuYB5gGXApgC5gGYAugB6AGYApkC9gH4AaECoQL4AaIC+AH3AaICogL3AfUBogL1AaAC9QH0AaACoAL0AfMBoALzAZ8C8wHyAZ8CnwLyAfEBnwLxAZ4C8QHwAZ4CngLwAe8BngLvAZ0C7wHuAZ0CnQLuAe0BnQLtAZwC7QHsAZwCnALsAesBnALrAZsCmwLrAeoBmwLqAZkCmQLqAekBmQLpAegBjALaAdkBjALZAYsC2QHYAYsCiwLYAdcBiwLXAYoC1wHWAYoCigLWAdUBigLVAYkCiQLVAdQBiQLUAYgC1AHTAYgCiALTAdIBiALSAYcChwLSAdEBhwLRAdABYgD1CWYAZgD1CfkJcQByAAQKBApyAAUKcQAECgEKcQABCm4AbgABCv0JbgD9CWoAagD9CfgJagD4CWUAZQD4CfcJZQD3CWQAZAD3CfYJZAD2CWMAYwD2CesJYwDrCVgAWADrCeoJWADqCVcAVwDqCeMJVwDjCVAAUADjCd4JUADeCUsASwDeCUAAQADeCdMJQADTCTUANQDTCcgJNQDICSoAKgDICb0JKgC9CScAJwC9CboJJwC6CSQAJAC6CbcJJAC3CSIAIgC3CbUJIgC1CSAAIAC1CbMJIACzCR4AHgCzCbEJHgCxCR0AHQCxCbAJHQCwCRwAHACwCa8JHACvCRsAGwCvCa4JGwCuCRoAGgCuCa0JGgCtCRkAGQCtCawJGAAZAKsJqwkZAKwJGACrCRQAFACrCacJjwmBCZEJkQmBCacJgQB/ABQAjwmNCYEJgQmNCYsJgQmLCYkJhwmFCYkJiQmFCYMJiQmDCYEJpwmBCRQAFACBCYMAFACDAIEAdwB1AHkAeQB1AHsAfwB9ABQAFAB9AHsAFAB7AHMAcwB7AHUAhACDAIIJggmDAIEJjgmQCaEJoQmQCZIJoQmSCagJYQJVAgMFAwVVAk8CAwVPAkcChgRcBEYCYALnBFQCVALnBE4CYAJqAucE5wRqAnQC5wR0AnYCdgJ4AucE5wR4AnoC5wR6AnkCeQJ3AucE5wR3AnUC5wR1AgMFAwV1AmsCAwVrAmEC0wfZB6EJoQnZB+UHoQnlB+8H7wf5B6EJoQn5B/sHoQn7B/0HiAmKCaEJoQmKCYwJoQmMCY4JhAn8B4IJggn8B/oH+gfwB4IJggnwB+YHggnmB9oH2gfUB4IJggnUB8wHggnMB8UHhAVhBYIJgglhBUEFhgRGAqoEgwWhCWAFYAWhCUAFhAWCCa8FrwWCCcUHrwXFB9AF0AXFB7oH0AW6B7IHTgLnBEYCRgLnBMsERgLLBKoEFQB0AA4ADgB0AHYADgB2AHgAhAmGCfwH/AeGCYgJ/AeICf4H/geICaEJ/gehCf8H/wehCf0HlQeDBYsHiweDBYkHlQefB4MFgwWfB6sHgwWrB7EHsQe5B4MFgwW5B8AHgwXAB6EJoQnAB8sHoQnLB9MHiQeDBYcHhweDBa4FhweuBc8FQQUrBYIJggkrBQMFggkDBYQAhAADBUcChABHAoIAggBHAkACggBAAoAAgABAAjUCgAA1Ai0CLQInAoAAgAAnAhsCgAAbAhECsgesB9AF0AWsB6AH0AWgB+gF6AWgB5YHOgRbBA4AlgeMB+gF6AWMB4oH6AWKB4gHWwSFBA4ADgCFBKkEDgCpBMoEEQIHAoAAgAAHAgUCgAAFAn4ABAIGAg4ADgAGAhACygTmBA4ADgDmBP4EDgD+BKEJoQn+BCoFoQkqBUAFeAB6AA4ADgB6AHwADgB8AH4AzwXnBYcHhwfnBfoFhwf6BYYHhgf6Bf4Fhgf+BYgHiAf+BfsFiAf7BegFBQIDAn4AfgADAgECfgABAg4ADgABAgICDgACAgQCEAIaAg4ADgAaAiYCDgAmAiwCXAQ7BEYCRgI7BCUERgIlBBAELAI0Ag4ADgA0AjsCDgA7AkYCEAQBBEYCRgIBBA8ERgIPBA4ADgAPBCQEDgAkBDoEAACTCQEAAQCTCZQJPAmkCVIJUgmkCaUJUgmlCWYJZgmlCWkJPAkkCaQJpAkkCQkJpAkJCQAJYwm8CU4JTgm8Cb4JTgm+CTcJYwl/CbwJvAl/CX4JvAl+CbsJuwl+CXwJuwl8CbkJuQl8CXoJuQl6CbgJuAl6CXkJuAl5CbYJtgl5CXYJtgl2CbQJtAl2CXQJtAl0CbIJsgl0CXIJsglyCaoJqglyCXAJqglwCakJqQlwCWwJqQlsCaYJpglsCWsJpglrCaUJpQlrCWoJpQlqCWkJqQG3ASwAOAFMASwALABMAWMBLABjAXoBegGCASwALACCAZIBLACSAakBtwHHASwALADHAecBLADnAb8J5wEiCL8JvwkiCDkIvwk5CEkISQhYCL8JvwlYCHcIvwl3CIIIggiJCL8JvwmJCKoIvwmqCLkIuQjWCL8JvwnWCP0Ivwn9CL4Jvgn9CBwJvgkcCTcJvwDXACsAvwArAKoAqgArACkAqgApAJoA1wDnACsAKwDnAPcAKwD3ACwALAD3ABEBLAARATgBnwCcABIAEgCcAIUAEgCFABMAEwCFAIYAEwCGABYAFgCGAIcAFgCHABcAFwCHAIsAFwCLAB8AHwCLAI0AHwCNACEAIQCNAI8AIQCPACMAIwCPAJEAIwCRACUAJQCRAJQAJQCUACYAJgCUAJUAJgCVACgAKACVAJcAKACXACkAKQCXAJkAKQCZAJoAEQAGAfwA/ADhABEAEQDhAMoAEQDKABIAEgDKALQAEgC0AJ8ANgA0AMkJyQk0AMcJPwDSCUEAQQDSCdQJSgDdCUwATADdCd8JVgDpCVkAWQDpCewJQwAVAEIAQgAVAEEAAAABABEAEwAWABUAJwBGACoAKgBGAEcAKgBHADUANQBHAEgANQBIAEAAAgAAAA0AHgAdABUAFQAdABwAFQAcABsAWQByAFYAVgByAHEAVgBxAFUADQAAAA4ADgAAABEADgARABUAFQARABIAFQASABMAIwAlAEEAQQAlACYAQQAmACgALAA/ACsAKwA/AEEAKwBBACkAKQBBACgAOgA7ADwAQwBEACcAJwBEAEUAJwBFAEYAAQADABEAEQADAAYAEQAGAAkACQAMABEAEQAMAA8AEQAPABAAFgAXABUAFQAXAB8AFQAfAEEAQQAfACEAQQAhACMALwAsAC4ALgAsAC0ALwAwACwALAAwADEALAAxADIAMgAzACwALAAzADQALAA0AD8APwA0ADYAPwA2ADcANwA4AD8APwA4ADkAPwA5ADoAPAA9ADoAOgA9AD4AOgA+AD8AGAAUABkAGQAUABUAGQAVABoAGgAVABsAJwAkAEMAQwAkACIAQwAiABUAFQAiACAAFQAgAB4ASABJAEAAQABJAEoAQABKAEsASwBKAEwAVQBxAFQAVABxAG4AVABuAFMAUwBuAGoAUwBqAFIAUgBqAGUAUgBlAFEAUQBlAGQAUQBkAE8ATwBkAGMATwBjAE4ATgBjAFgATgBYAE0ATQBYAFcATQBXAEwATABXAFAATABQAEsAWgBbAGIAYgBbAFwAYgBcAF0AXQBeAF8AbwBwAGYAZgBwAHIAZgByAGIAYgByAFkAYgBZAFoAXwBgAF0AXQBgAGEAXQBhAGIABwAFAAgACAAFAAoADQALAAIAAgALAAoAAgAKAAQABAAKAAUAawBsAGkAaQBsAGgAZgBnAG8AbwBnAGgAbwBoAG0AbQBoAGwArQmuCagJqAnkCeIJBAoFCuwJ4gnhCagJqAnhCeAJqAngCd8J3wndCagJqAndCdwJqAncCdsJ2wnaCagJqAnaCdkJqAnZCaEJoQnZCdgJoQnYCdcJ1Am2CdUJ1Qm2CbQJ1Qm0CdYJ8gnxCfAJrgmvCagJqAmvCbAJqAmwCbEJ7wnuCfUJpwmrCagJqAmrCawJqAmsCa0JpgmhCakJqQmhCdcJqQnXCaoJqgnXCdYJqgnWCbIJsgnWCbQJpgmlCaEJoQmlCaQJoQmkCZQJ1AnSCb8J8gnwCfMJBQr5CewJ7An5CfUJ7An1Ce0J7Qn1Ce4J7AnpCQQKBArpCegJBAroCQEKAQroCecJAQrnCf0J/QnnCeYJ/QnmCfgJ+AnmCeUJ+AnlCfcJ9wnlCeQJ9wnkCfYJlAmTCaEJoQmTCZUJoQmVCaAJvwm+CdQJ1Am+CbwJ1Am8CbsJuwm5CdQJ1Am5CbgJ1Am4CbYJBQoDCvkJ+QkDCgIK+QkCCvoJ+gkCCvsJ7wn1CfAJ8An1CfQJ8An0CfMJowmiCaQJpAmiCZ8JpAmfCZwJnAmZCaQJpAmZCZYJpAmWCZQJAgoACvsJ+wkACv8J+wn/CfwJ/An/Cf4JzgnSCc8JzwnSCdEJzwnRCdAJzgnNCdIJ0gnNCcwJ0gnMCcsJywnKCdIJ0gnKCckJ0gnJCb8JvwnJCccJvwnHCcYJxgnFCb8JvwnFCcQJvwnECcMJwwnCCb8JvwnCCcEJvwnBCcAJtwnkCbUJtQnkCagJtQmoCbMJswmoCbEJtwm6CeQJ5Am6Cb0J5Am9CcgJyAnTCeQJ5AnTCd4J5AneCeMJmwmdCZoJmgmdCZgJlQmXCaAJoAmXCZgJoAmYCZ4JngmYCZ0J4wnqCeQJ5AnqCesJ5AnrCfYJZQdkBxYIFghkBxUIZQcWCGYHZgcWCBcIZgcXCGcHZwcXCBgIZwcYCGgHaAcYCBkIaAcZCGkHaQcZCBoIaQcaCGoHagcaCBsIagcbCGsHawcbCBwIawccCGwHbAccCB0IbAcdCG0HbQcdCB4IbQceCG4HbgceCB8IbgcfCG8HbwcfCCAIbwcgCHAHcAcgCCEIcAchCHEHcQchCCMIeQcxCHIHcgcxCCIIcgciCJoCmgIiCOcBmgLnAaECoQLnAfYB0AHPAfoBcwJ8AocCCQgGCAgICAgGCAQICAgECAII+gH8AdAB0AH8Af4B0AH+AQACcAKGAnsCewKGAn0CCggLCAcIBwgLCAUI+QHOAc0BgwKGAoUChQKGAoQCgwKBAoYChgKBAn8ChgJ/An0CxgfSBwsICwjSB+AHCwjgB/gH+AcBCAsICwgBCAMICwgDCAUIAggACAgICAgACPUHCAj1B98HQwN6A4YCXweDB4UHAAILAtAB0AELAiEC0AEhAi8CLwJBAtAB0AFBAk0C0AFNAocChwJNAlsChwJbAnMCfAJ+AocChwJ+AoAChwKAAoYChgKAAoIChgKCAoQCjQeEB14HXgeEB4IHXgeCB4AHgAd+B14HXgd+B3wHXgd8B3sHhQW7BV4HXge7BS4GXgcuBo4Gjga/Bl4HXge/BuYGXgfmBo0HjQfmBu4GjQfuBu8GegPdA4YChgLdA1EEhgJRBHwEhQeQB18HXweQB6YHXwemBwsICwimB7QHCwi0B8YHLQa4BbMHswe4BW8FswdvBTwFWgL9BNMEewd9B14HXgd9B38HXgd/B18HXwd/B4EHXweBB4MHCAL/Ac0BQgMbA3ACcAIbAxMDPAX9BLMHswf9BM0BswfNAb8HvwfNAQgIvwcICNEH0QcICN8HCALNASAC/wH9Ac0BzQH9AfsBzQH7AfkBWgLTBHACcALTBJkEcAKZBE4E7wbtBo0HjQftBuUGjQflBqUHpQflBr4GpQe+BrMHswe+Bo0GsweNBi0GTgTcA3ACcALcA3kDcAJ5A0IDWgJMAv0E/QRMAjoC/QQ6As0BzQE6Ai4CzQEuAiACEwMJA3ACcAIJAxQDcAIUA4YChgIUAxwDhgIcA0MDbAluCWsJawluCW0JawltCWoJdgl4CXQJdAl4CXcJdAl3CXIJegmACXkJeQmACX0JeQl9CXYJdgl9CXsJdgl7CXgJegl8CYAJgAl8CX4JgAl+CX8Jdwl1CXIJcgl1CXMJcglzCXAJcAlzCXEJcAlxCWwJbAlxCW8JbAlvCW4JhgCFAIgAlACRAJYAhgCIAIcAlwCbAJkAmQCbAJoAlwCVAJsAmwCVAJQAmwCUAJgAmACUAJYAjQCQAI8AjwCQAJIAjwCSAJEAkQCSAJMAkQCTAJYAiACJAIcAhwCJAIoAhwCKAIsAiwCKAIwAiwCMAI0AjQCMAI4AjQCOAJAA/wQABR4FHgUABR8FHgUfBTgFOAUfBTkFOAU5BU8FTwU5BVAFTwVQBWQFZAVQBWUFZAVlBXoFegVlBXsFegV7BZkFmQV7BZoFmQWaBagFqAWaBakFqAWpBbMFswWpBbQFswW0BbkFuQW0BboFuQW6BbUFtQW6BbYFtQW2BaoFqgW2BasFqgWrBZsFmwWrBZwFmwWcBXwFfAWcBX0FfAV9BWYFZgV9BWcFZgVnBVEFUQVnBVIFUQVSBToFOgVSBTsFOgU7BSAFIAU7BSEFIAUhBQEFAQUhBQIFAQUCBfEE8QQCBfIE8QTyBNcE1wTyBNgE1wTYBLcEtwTYBLgEtwS4BKMEowS4BKQEowSkBI8EjwSkBJAEjwSQBHAEcASQBHEEcARxBGEEYQRxBGIEYQRiBFUEVQRiBFYEVQRWBE8ETwRWBFAETwRQBFMEUwRQBFQEUwRUBF8EXwRUBGAEXwRgBG4EbgRgBG8EbgRvBI0EjQRvBI4EjQSOBKEEoQSOBKIEoQSiBLUEtQSiBLYEtQS2BNUE1QS2BNYE1QTWBO8E7wTWBPAE7wTwBP8E/wTwBAAFwQfCB8cHxwfCB8gHxwfIB80HzQfIB84HzQfOB9UH1QfOB9YH1QfWB9sH2wfWB9wH2wfcB+EH4QfcB+IH4QfiB+cH5wfiB+gH5wfoB+sH6wfoB+wH6wfsB/EH8QfsB/IH8QfyB/YH9gfyB/cH9gf3B/MH8wf3B/QH8wf0B+0H7Qf0B+4H7QfuB+kH6QfuB+oH6QfqB+MH4wfqB+QH4wfkB90H3QfkB94H3QfeB9cH1wfeB9gH1wfYB88HzwfYB9AHzwfQB8kHyQfQB8oHyQfKB8MHwwfKB8QHwwfEB70HvQfEB74HvQe+B7cHtwe+B7gHtwe4B68Hrwe4B7AHrwewB6kHqQewB6oHqQeqB6MHoweqB6QHowekB50HnQekB54HnQeeB5kHmQeeB5oHmQeaB5MHkweaB5QHkweUB44HjgeUB48HjgePB5EHkQePB5IHkQeSB5cHlweSB5gHlweYB5sHmweYB5wHmwecB6EHoQecB6IHoQeiB6cHpweiB6gHpweoB60HrQeoB64HrQeuB7UHtQeuB7YHtQe2B7sHuwe2B7wHuwe8B8EHwQe8B8IHPAI9AkICQgI9AkMCQgJDAkgCSAJDAkkCSAJJAlACUAJJAlECUAJRAlYCVgJRAlcCVgJXAlwCXAJXAl0CXAJdAmICYgJdAmMCYgJjAmYCZgJjAmcCZgJnAmwCbAJnAm0CbAJtAnECcQJtAnICcQJyAm4CbgJyAm8CbgJvAmgCaAJvAmkCaAJpAmQCZAJpAmUCZAJlAl4CXgJlAl8CXgJfAlgCWAJfAlkCWAJZAlICUgJZAlMCUgJTAkoCSgJTAksCSgJLAkQCRAJLAkUCRAJFAj4CPgJFAj8CPgI/AjgCOAI/AjkCOAI5AjICMgI5AjMCMgIzAioCKgIzAisCKgIrAiQCJAIrAiUCJAIlAh4CHgIlAh8CHgIfAhgCGAIfAhkCGAIZAhQCFAIZAhUCFAIVAg4CDgIVAg8CDgIPAgkCCQIPAgoCCQIKAgwCDAIKAg0CDAINAhICEgINAhMCEgITAhYCFgITAhcCFgIXAhwCHAIXAh0CHAIdAiICIgIdAiMCIgIjAigCKAIjAikCKAIpAjACMAIpAjECMAIxAjYCNgIxAjcCNgI3AjwCPAI3Aj0CRAJHAkoCSgJHAk8CSgJPAlICUgJPAlUCUgJVAlgCWAJVAmECWAJhAl4CXgJhAmsCXgJrAmQCZAJrAnUCZAJ1AmgCaAJ1AncCaAJ3Am4CbgJ3AnkCbgJ5AnECcQJ5AnoCcQJ6AmwCbAJ6AngCbAJ4AmYCZgJ4AnYCZgJ2AmICYgJ2AnQCYgJ0AlwCXAJ0AmoCXAJqAlYCVgJqAmACVgJgAlACUAJgAlQCUAJUAkgCSAJUAk4CSAJOAkICQgJOAkYCQgJGAjwCPAJGAjsCPAI7AjYCNgI7AjQCNgI0AjACMAI0AiwCMAIsAigCKAIsAiYCKAImAiICIgImAhoCIgIaAhwCHAIaAhACHAIQAhYCFgIQAgYCFgIGAhICEgIGAgQCEgIEAgwCDAIEAgICDAICAgkCCQICAgECCQIBAg4CDgIBAgMCDgIDAhQCFAIDAgUCFAIFAhgCGAIFAgcCGAIHAh4CHgIHAhECHgIRAiQCJAIRAhsCJAIbAioCKgIbAicCKgInAjICMgInAi0CMgItAjgCOAItAjUCOAI1Aj4CPgI1AkACPgJAAkQCRAJAAkcCIAUrBToFOgUrBUEFOgVBBVEFUQVBBWEFUQVhBWYFZgVhBYQFZgWEBXwFfAWEBa8FfAWvBZsFmwWvBdAFmwXQBaoFqgXQBegFqgXoBbUFtQXoBfsFtQX7BbkFuQX7Bf4FuQX+BbMFswX+BfoFswX6BagFqAX6BecFqAXnBZkFmQXnBc8FmQXPBXoFegXPBa4FegWuBWQFZAWuBYMFZAWDBU8FTwWDBWAFTwVgBTgFOAVgBUAFOAVABR4FHgVABSoFHgUqBf8E/wQqBf4E/wT+BO8E7wT+BOYE7wTmBNUE1QTmBMoE1QTKBLUEtQTKBKkEtQSpBKEEoQSpBIUEoQSFBI0EjQSFBFsEjQRbBG4EbgRbBDoEbgQ6BF8EXwQ6BCQEXwQkBFMEUwQkBA8EUwQPBE8ETwQPBAEETwQBBFUEVQQBBBAEVQQQBGEEYQQQBCUEYQQlBHAEcAQlBDsEcAQ7BI8EjwQ7BFwEjwRcBKMEowRcBIYEowSGBLcEtwSGBKoEtwSqBNcE1wSqBMsE1wTLBPEE8QTLBOcE8QTnBAEFAQXnBAMFAQUDBSAFIAUDBSsFyQfMB88HzwfMB9QHzwfUB9cH1wfUB9oH1wfaB90H3QfaB+YH3QfmB+MH4wfmB/AH4wfwB+kH6QfwB/oH6Qf6B+0H7Qf6B/wH7Qf8B/MH8wf8B/4H8wf+B/YH9gf+B/8H9gf/B/EH8Qf/B/0H8Qf9B+sH6wf9B/sH6wf7B+cH5wf7B/kH5wf5B+EH4Qf5B+8H4QfvB9sH2wfvB+UH2wflB9UH1QflB9kH1QfZB80HzQfZB9MHzQfTB8cHxwfTB8sHxwfLB8EHwQfLB8AHwQfAB7sHuwfAB7kHuwe5B7UHtQe5B7EHtQexB60HrQexB6sHrQerB6cHpwerB58HpwefB6EHoQefB5UHoQeVB5sHmweVB4sHmweLB5cHlweLB4kHlweJB5EHkQeJB4cHkQeHB44HjgeHB4YHjgeGB5MHkweGB4gHkweIB5kHmQeIB4oHmQeKB50HnQeKB4wHnQeMB6MHoweMB5YHoweWB6kHqQeWB6AHqQegB68HrwegB6wHrwesB7cHtwesB7IHtweyB70HvQeyB7oHvQe6B8MHwwe6B8UHwwfFB8kHyQfFB8wHpwmoCZIJpwmSCZEJkQmSCZAJkQmQCY8JjwmQCY4JjwmOCY0JjQmOCYwJjQmMCYsJiwmMCYoJiwmKCYkJiQmKCYgJiQmICYcJhwmICYYJhwmGCYUJhQmGCYQJhQmECYMJgwmECYIJgwmCCYEJFQAUAHMAFQBzAHQAdABzAHUAdAB1AHYAdgB1AHcAdgB3AHgAeAB3AHkAeAB5AHoAegB5AHsAegB7AHwAfAB7AH0AfAB9AH4AfgB9AH8AfgB/AIAAgAB/AIEAgACBAIIAggCBAIMAggCDAIQADQIKAsUBDwLGAQoCCgLGAcMBCgLDAcUBFQLPAQ8CDwLPAckBDwLJAcYBxQHIAQ0CDQLIAc4BDQLOARMCEwLOAfkBEwL5ARcCFwL5AfsBFwL7AR0CHQL7Af0BHQL9ASMCIwL9Af8BIwL/ASkCKQL/AQgCKQIIAjECMQIIAiACMQIgAjcCNwIgAi4CNwIuAj0CPQIuAjoCPQI6AkMCQwI6AkwCQwJMAkkCSQJMAloCSQJaAlECUQJaAnACUQJwAlcCVwJwAnsCVwJ7Al0CXQJ7An0CXQJ9AmMCYwJ9An8CYwJ/AmcCZwJ/AoECZwKBAm0CbQKBAoMCbQKDAnICcgKDAoUCcgKFAm8CbwKFAoQCbwKEAmkCaQKEAoICaQKCAmUCZQKCAoACZQKAAl8CXwKAAn4CXwJ+AlkCWQJ+AnwCWQJ8AlMCUwJ8AnMCUwJzAksCSwJzAlsCSwJbAkUCRQJbAk0CRQJNAj8CPwJNAkECPwJBAjkCOQJBAi8COQIvAjMCMwIvAiECMwIhAisCKwIhAgsCKwILAiUCJQILAgACJQIAAh8CHwIAAv4BHwL+ARkCGQL+AfwBGQL8ARUCFQL8AfoBFQL6Ac8BqATYBMQExATYBPIEOwVYBSEFIQVYBT0FIQU9BQIFAgU9BQQFAgUEBfIE8gQEBdQE8gTUBMQEUgWFBTsFOwWFBXAFOwVwBVgFqASaBNgE2ASaBHwE2AR8BLgEuAR8BFEEuARRBKQEpARRBN0DpATdA5AEkATdA3oDkAR6A3EEcQR6A0MDcQRDA2IEYgRDAxwDYgQcA1YEVgQcAxQDVgQUA1AEUAQUAwkDUAQJA1QEVAQJAxMDVAQTA2AEYAQTAxsDYAQbA28EbwQbA0IDbwRCA44EjgRCA3kDjgR5A6IEogR5A9wDogTcA7YEtgTcA04EtgROBNYE1gROBJkE1gSZBPAE8ASZBNME8ATTBAAFAAXTBP0EAAX9BB8FHwX9BDwFHwU8BTkFOQU8BW8FOQVvBVAFUAVvBbgFUAW4BWUFZQW4BS0GZQUtBnsFewUtBo0GewWNBpoFmgWNBr4GmgW+BqkFqQW+BuUGqQXlBrQFtAXlBu0GtAXtBroFugXtBu8GugXvBrYFtgXvBu4GtgXuBqsFqwXuBuYGqwXmBpwFnAXmBr8GnAW/Bn0FfQW/Bo4GfQWOBmcFZwWOBi4GZwUuBlIFUgUuBrsFUgW7BYUF9Af3BzsI8gc6CPcH9wc6CD8I9wc/CDsI7AcJCPIH8gcJCDcI8gc3CDoIOwg4CPQH9Ac4CAoI9AcKCO4H7gcKCAcI7gcHCOoH6gcHCAUI6gcFCOQH5AcFCAMI5AcDCN4H3gcDCAEI3gcBCNgH2AcBCPgH2Af4B9AH0Af4B+AH0AfgB8oHygfgB9IHygfSB8QHxAfSB8YHxAfGB74HvgfGB7QHvge0B7gHuAe0B6YHuAemB7AHsAemB5AHsAeQB6oHqgeQB4UHqgeFB6QHpAeFB4MHpAeDB54HngeDB4EHngeBB5oHmgeBB38Hmgd/B5QHlAd/B30HlAd9B48Hjwd9B3sHjwd7B5IHkgd7B3wHkgd8B5gHmAd8B34HmAd+B5wHnAd+B4AHnAeAB6IHogeAB4IHogeCB6gHqAeCB4QHqAeEB64HrgeEB40HrgeNB7YHtgeNB6UHtgelB7wHvAelB7MHvAezB8IHwgezB78Hwge/B8gHyAe/B9EHyAfRB84HzgfRB98HzgffB9YH1gffB/UH1gf1B9wH3Af1BwAI3AcACOIH4gcACAII4gcCCOgH6AcCCAQI6AcECOwH7AcECAYI7AcGCAkIbQluCVoJbQlaCVkJWQlaCUUJWQlFCUQJRAlFCS4JRAkuCS0J9AjzCBMJEwnzCAwJDAkPCRMJEwkPCRIJEwkSCS4JLgkSCSkJLgkpCS0JxgjNCLAIsAjNCKEIsAihCKAIxgjKCM0IzQjKCMwIzQjMCPQI9AjMCOwI9AjsCPMIoAihCIUIhQihCG4IhQhuCG0IFggVCG4IbggVCFMIbghTCG0IqQirCHgIXwlgCUsJfQmACWQJeAlgCXcJdwlgCV8JdwlfCXUJNQlLCUwJTAlLCWAJTAlgCWEJYQlgCXgJYQl4CXsJfQlkCWIJYglkCVgJYglYCU0JGwk1CTYJNgk1CUwJNglMCU0JTQlMCWEJTQlhCWIJYglhCXsJYgl7CX0JcQlzCV0JXQlzCV4JXQleCUkJSQleCUoJSQlKCTMJMwlKCTQJMwk0CRkJGQk0CRoJGQkaCfsI+wgaCfwI+wj8CNUIWAlPCU0JTQlPCTgJTQk4CTYJNgk4CSwJNgksCRsJGwksCR0JGwkdCRAJcwl1CV4JXgl1CV8JXglfCUoJSglfCUsJSglLCTQJNAlLCTUJNAk1CRoJGgk1CRsJGgkbCfwI/AgbCRAJogihCM0IEAn+CPwI/Aj+CPEI/AjxCNUI1QjxCNcI1QjXCMsIbwlxCVwJXAlxCV0JXAldCUgJSAldCUkJSAlJCTIJMglJCTMJMgkzCRgJGAkzCRkJGAkZCfoI+ggZCfsI+gj7CNQI1Aj7CNUI1AjVCKkIqQjVCMsIqQjLCKsIbgihCG8IbwihCKIIbwiiCHAIHAgbCHIIcggbCHEIcghxCKQIpAhxCKMIpAijCM8IzwijCM4IzwjOCPUI9QjOCPQI9Qj0CBMJdAhzCKYIpghzCKUIpgilCNEI0QilCNAI0QjQCPcI9wjQCPYI9wj2CBUJFQn2CBQJFQkUCS8JLwkUCS4JLwkuCUUJdQh0CKcIpwh0CKYIpwimCNII0gimCNEI0gjRCPgI+AjRCPcI+Aj3CBYJFgn3CBUJFgkVCTAJMAkVCS8JMAkvCUYJRgkvCUUJRglFCVoJdgh1CKgIqAh1CKcIqAinCNMI0winCNII0wjSCPkI+QjSCPgI+Qj4CBcJFwn4CBYJFwkWCTEJMQkWCTAJMQkwCUcJRwkwCUYJRwlGCVsJWwlGCVoJWwlaCW4JFghuCBcIFwhuCG8IFwhvCBgIGAhvCHAIGAhwCBkIGQhwCBoIGwgaCHEIcQgaCHAIcQhwCKMIowhwCKIIowiiCM4IzgiiCM0IzgjNCPQIHQgcCHMIcwgcCHIIcwhyCKUIpQhyCKQIpQikCNAI0AikCM8I0AjPCPYI9gjPCPUI9gj1CBQJFAn1CBMJFAkTCS4JbglvCVsJWwlvCVwJWwlcCUcJRwlcCUgJRwlICTEJMQlICTIJMQkyCRcJFwkyCRgJFwkYCfkI+QgYCfoI+Qj6CNMI0wj6CNQI0wjUCKgIqAjUCKkIqAipCHYIdgipCHgIdgh4CGwIHQhzCB4IHghzCHQIHgh0CB8IHwh0CHUIHwh1CCAIIAh1CHYIIAh2CCEIIQh2CGwIIQhsCCMIMQh5BzMIMwh5B3oHMwh6BzIIMgh6BzAIMAh6B3gHMAh4By8ILwh4By4ILgh4B3cHLgh3By0ILQh3BywILAh3B3YHLAh2BysIKwh2ByoIKgh2B3UHKgh1BykIKQh1BygIKAh1B3QHKAh0BycIJwh0ByYIJgh0B3MHJghzByUIJQhzByQIJAhzB3EHJAhxByMI1gDYAMAA2ADWANoA9gDyAPEAFAESARABkQGTAWQB5QHmAZEB4wHkAZAB3wHgAY0BigGJAdsB2wHcAYoBigHcAd0BigHdAYsB5gHoAZEBkQHoAZUBkQGVAZMBWgGJAVsBWwGJAYoBWwGKAVwBXAGKAYsBXAGLAV0B4gHjAY8BjwHjAZABjwGQAWEBYQGQAWIBYQFiATcBLwFaATABMAFaAVsBMAFbATEBMQFbAVwBMQFcATIBMgFcAV0BMgFdATMB5AHlAZABkAHlAZEBkAGRAWIBYgGRAWQBYgFkATcBNwFkATsBNwE7ATkBCAEvAQkBCQEvATABCQEwAQoBCgEwATEBCgExAQsBCwExATIBCwEyAQwBDAEyATMBDAEzAQ0B4QHiAY4BjgHiAY8BjgGPAWABYAGPAWEBYAFhATYBNgFhATcBNgE3ARABEAE3ATkBEAE5ARQB6QAIAeoA6gAIAQkB6gAJAesA6wAJAQoB6wAKAewA7AAKAQsB7AALAe0A7QALAQwB7QAMAe4A7gAMAQ0B7gANAe8A4AHhAY0BjQHhAY4BjQGOAV8BXwGOAWABXwFgATUBNQFgATYBNQE2AQ8BDwE2ARABDwEQAfEA8QAQARIB8QASAfYAzgDpAM8AzwDpAOoAzwDqANAA0ADqAOsA0ADrANEA0QDrAOwA0QDsANIA0gDsAO0A0gDtANMA0wDtAO4A0wDuANQA1ADuAO8A1ADvANUA3gHfAYwBjAHfAY0BjAGNAV4BXgGNAV8BXgFfATQBNAFfATUBNAE1AQ4BDgE1AQ8BDgEPAfAA8AAPAfEA8ADxANYA1gDxAPIA1gDyANoAtgDOALcAtwDOAM8AtwDPALgAuADPANAAuADQALkAuQDQANEAuQDRALoAugDRANIAugDSALsAuwDSANMAuwDTALwAvADTANQAvADUAL0AvQDUANUAvQDVAL4AvgCpAL0AvQCpAKgAvQCoALwAvACoAKcAvACnALsAuwCnAKYAuwCmALoAugCmAKUAugClALkAuQClAKQAuQCkALgAuACkAKMAuACjALcAtwCjAKIAtwCiALYAtgCiAKEA3QHeAYsBiwHeAYwBiwGMAV0BXQGMAV4BXQFeATMBMwFeATQBMwE0AQ0BDQE0AQ4BDQEOAe8A7wAOAfAA7wDwANUA1QDwANYA1QDWAL4AvgDWAMAAvgDAAKkAqQDAAK0AqQCtAKsAqwCbAKkAqQCbAJgAqQCYAKgAqACYAJYAqACWAKcApwCWAJMApwCTAKYApgCTAJIApgCSAKUApQCSAJAApQCQAKQApACQAI4ApACOAKMAowCOAIwAowCMAKIAogCMAIoAogCKAKEAoQCKAIkA2gHbAaoBqgHbAYkBTwFZAVoBWgFZAXkBWgF5AYkBiQF5AYgBiQGIAaoBTwFaAT0BPQFaAS8BPQEvAS4BCAHpAPgA+AAFAQgBCAEFAQcBCAEHAS8BLwEHAScBLwEnAS4BzQDkAOkA6QDkAOgA6QDoAPgA6QDOAM0AzQDOALYAzQC2ALUAtQC2ALAAsAC2AKEAsAChAK4ArgChAKAAoAChAIkAoACJAIgAvwCqAKwArACqAJoArACaAJsArACzAL8AvwCzAMEAvwDBANcAwQDJANcA1wDJANkA1wDZAOcA2QDgAOcA5wDgAPMA5wDzAPcA9wDzAP0A9wD9ABEB/QATAREBEQETAR4BEQEeATgBHgEqATgBOAEqAToBOAE6AUwBTAE6AUkBTAFJAWMBYwFJAWUBYwFlAXoBegFlAW4BegFuAYIBggFuAXUBggF1AZIBsAG3AaQBpAG3AakBpAGpAZQBlAGpAZIBlAGSAYcBhwGSAXUBsAG4AbcBtwG4Ab4BtwG+AccBxwG+AcQBxwHEAecB5wHEAcwB5wHMAfYBwgHLAfgBwgH4Ab0BtgG9AfgBrgG2AfgBpwGuAfgBogGnAfgBnwGiAfgBlwGfAfgBoAGXAfgBowGgAfgBrwGoAfgB9AH1AcsB8gHzAcAB8AHxAboB7gHvAbQB7AHtAawB6gHrAaUBwADEAK8A6AHpAZwBxAH4AcwB+AHEAb4B9gHMAfgBuAGwAfgBZQFJAUcBKgEeARwBEwH9APsAwQCzALIAwQCyAMkA4ADZAMgAbAF1AW4BlAGHAagBqAGHAXUBlAGoAaQBpAGoAa8BpAGvAbABsAGvAfgBvgG4AfgBbQGTAZwBnAGTAZUBnAGVAegBZgE8AWQBZAE8ATsBGgEUATwBPAEUATkBPAE5ATsB3QDyAPkA+QDyAPYA+QD2ABoBGgH2ABIBGgESARQBxgDYAN0A3QDYANoA3QDaAPIArACbAJ4AngCbAKsAngCrAK8ArwCrAK0ArwCtAMAAwADYAMQAxADYAMYAxADGAK8ArwDGAMMArwDDAJ4AngDDALIAngCyAKwArACyALMAZAGTAWYBZgGTAW0BZgFtATwBPAFtAUgBPAFIARoBGgFIASEBGgEhAfkA+QAhAQIB+QACAd0A3QACAeYA3QDmAMYAxgDmANwAxgDcAMMAwwDcAMwAwwDMALIAsgDMAMgAsgDIAMkAyQDIANkA6QHqAZwBnAHqAaUBnAGlAW0BbQGlAXYBbQF2AUgBSAF2AU0BSAFNASEBIQFNASkBIQEpAQIBAgEpARYBAgEWAeYA5gAWAf8A5gD/ANwA3AD/APUA3AD1AMwAzAD1AOMAzADjAMgAyADjAN8AyADfAOAA4ADfAPMA6wHsAaUBpQHsAawBpQGsAXYBdgGsAXwBdgF8AU0BTQF8AVUBTQFVASkBKQFVAUABKQFAARYBFgFAASYBFgEmAf8A/wAmARkB/wAZAfUA9QAZAQQB9QAEAeMA4wAEAQEB4wABAd8A3wABAfsA3wD7APMA8wD7AP0A7QHuAawBrAHuAbQBrAG0AXwBfAG0AYQBfAGEAVUBVQGEAXABVQFwAUABQAFwAVMBQAFTASYBJgFTAUQBJgFEARkBGQFEASwBGQEsAQQBBAEsASMBBAEjAQEBAQEjASABAQEgAfsA+wAgARwB+wAcARMBEwEcAR4B7wHwAbQBtAHwAboBtAG6AYQBhAG6AZoBhAGaAXABcAGaAYEBcAGBAVMBUwGBAXIBUwFyAUQBRAFyAVcBRAFXASwBLAFXAVEBLAFRASMBIwFRAUsBIwFLASABIAFLAUYBIAFGARwBHAFGAUEBHAFBASoBKgFBAUcBKgFHAToBOgFHAUkB8QHyAboBugHyAcABugHAAZoBmgHAAbIBmgGyAYEBgQGyAZ0BgQGdAXIBcgGdAYYBcgGGAVcBVwGGAX4BVwF+AVEBUQF+AXgBUQF4AUsBSwF4AXQBSwF0AUYBRgF0AWsBRgFrAUEBQQFrAWgBQQFoAUcBRwFoAWwBRwFsAWUBZQFsAW4B8wH0AcABwAH0AcsBwAHLAbIBsgHLAcIBsgHCAZ0BnQHCAb0BnQG9AYYBhgG9AbYBhgG2AX4BfgG2Aa4BfgGuAXgBeAGuAacBeAGnAXQBdAGnAaIBdAGiAWsBawGiAZ8BawGfAWgBaAGfAZcBaAGXAWwBbAGXAaABbAGgAXUBdQGgAaMBdQGjAagBqAGjAfgB9QH3AcsBywH3AfgBWAhJCDEIMQhJCDkIMQg5CCIIWAgxCHcIdwgxCDQIdwg0CDwIPAhECHcIdwhECEgIdwhICFAIUAhfCHcIdwhfCHkIdwh5CIIIggh5CIkIiQh5CKoIqgh5CHoIqgh6CI8IjwiUCKoIqgiUCKwIqgisCLkIuQisCLwIuQi8CNYI1gi8CNgI1gjYCP0I/QjYCNwI/QjcCOgI6Aj/CP0I/Qj/CAgJ/QgICRwJCAkeCRwJHAkeCSUJHAklCTcJJQk5CTcJNwk5CT0JNwk9CU4JPQlQCU4JTglQCVMJTglTCWMJUwllCWMJYwllCYAJYwmACX8JYQhaCDMIxQi/CJcI7QgOCQQJlAiPCJcIXwhVCFoIWghVCDMISAhECDMINAgzCDwIMwg0CDEIRAg8CDMIUAhICDMIlwiPCGEIYQiPCHoIYQh6CFoIWgh6CHkIWgh5CF8IXwhQCFUIVQhQCDMIvwi8CJcIlwi8CKwIlwisCJQI6wgLCQgJCAn/COsI6wj/COgI6wjoCMUIxQjoCNwIxQjcCL8IvwjcCNgIvwjYCLwIPwk5CScJJwk5CSUJJwklCQsJCwklCR4JCwkeCQgJgAllCWgJaAllCVMJaAlTCVUJVQlTCVAJVQlQCT8JPwlQCT0JPwk9CTkJKAksCTgJ1wjxCO0I7QjxCP4I7Qj+CA4JDgn+CBAJDgkQCR0JngirCMsIZghsCHgI5Qi9CMcIBwkECSAJIAkECQ4JIAkOCSgJKAkOCR0JKAkdCSwJIwhsCCQIJAhsCGYIJAhmCCUIJQhmCF4IJQheCCYI3Qi1CL0IAgkHCREJEQkHCSAJEQkgCSoJKgkgCSgJKgkoCUAJQAkoCTgJQAk4CUIJQgk4CU8JQglPCVgJJgheCCcIJwheCFYIJwhWCCgIxAivCLUI5ggCCQUJBQkCCREJBQkRCSIJIgkRCSoJIgkqCToJOgkqCUAJOglACUMJQwlACUIJQwlCCVYJVglCCVgJVglYCWQJKAhWCCkIKQhWCE4IKQhOCCoIsgiSCK8IxQjmCOsI6wjmCAUJ6wgFCQsJCwkFCSIJCwkiCScJJwkiCToJJwk6CT8JPwk6CUMJPwlDCVUJVQlDCVYJVQlWCWgJaAlWCWQJaAlkCYAJKghOCCsIKwhOCEcIKwhHCCwIkQiDCJIIQQguCEcIRwguCC0IRwgtCCwIfQhnCIMIMwhGCE0ITQhGCGcIZwh9CE0ITQh9CFQITQhUCDMIgwiRCH0IfQiRCIYIfQiGCFQIVAiGCFkIVAhZCDMIkgiyCJEIkQiyCK4IkQiuCIYIhgiuCIwIhgiMCFkIWQiMCGAIWQhgCDMIrwjECLIIsgjECMEIsgjBCK4IrgjBCLMIrgizCIwIjAizCJAIjAiQCGAIYAiQCGMIYAhjCDMItQjdCMQIxAjdCN8IxAjfCMEIwQjfCNsIwQjbCLMIswjbCLoIswi6CJAIkAi6CJYIkAiWCGMIYwiWCGsIYwhrCDMIvQjlCN0I3QjlCPAI3QjwCN8I3wjwCO4I3wjuCNsI2wjuCOEI2wjhCLoIugjhCL4Iugi+CJYIlgi+CJsIlgibCGsIawibCGQIawhkCDMIywjXCMcIxwjXCO0IxwjtCOUI5QjtCAQJ5QgECfAI8AgECQcJ8AgHCe4I7ggHCQIJ7ggCCeEI4QgCCeYI4QjmCL4IvgjmCMUIvgjFCJsImwjFCJcImwiXCGQIZAiXCGEIZAhhCDMIMwgyCDYINggyCDAINggwCEEIQQgwCC8IQQgvCC4IqwieCHgIeAieCJUIeAiVCGYIZgiVCI4IZgiOCF4IXgiOCIcIXgiHCFYIVgiHCH4IVgh+CE4ITgh+CGgITghoCEcIRwhoCE8IRwhPCEEIQQhPCEAIQQhACDYINghACDMIywjHCJ4IngjHCL0Ingi9CJUIlQi9CLUIlQi1CI4Ijgi1CK8IjgivCIcIhwivCJIIhwiSCH4IfgiSCIMIfgiDCGgIaAiDCGcIaAhnCE8ITwhnCEYITwhGCEAIQAhGCDMI6QlWAOgJ6AlWAFUA6AlVAOcJ5wlVAFQA5wlUAOYJ5glUAFMA5glTAOUJ5QlTAFIA5QlSAOQJ5AlSAFEA5AlRAOIJ4glRAE8A4glPAOEJ4QlPAE4A4QlOAOAJ4AlOAE0A4AlNAN8J3wlNAEwA3QlKANwJ3AlKAEkA3AlJANsJ2wlJAEgA2wlIANoJ2glIAEcA2glHANkJ2QlHAEYA2QlGANgJ2AlGAEUA2AlFANcJ1wlFAEQA1wlEANYJ1glEAEMA1glDANUJ1QlDAEIA1QlCANQJ1AlCAEEAZgD5CfoJZgD6CWcAZwD6CfsJZwD7CWgAaAD7CfwJaAD8CWkAaQD8Cf4JaQD+CWsAawD+Cf8JawD/CWwAbAD/CQAKbAAACm0AbQAACgIKbQACCm8AbwACCgMKbwADCnAAcAADCgUKcAAFCnIAWQDsCe0JWQDtCVoAWgDtCe4JWgDuCVsAWwDuCe8JWwDvCVwAXADvCfAJXADwCV0AXQDwCfEJXQDxCV4AXgDxCfIJXgDyCV8AXwDyCfMJXwDzCWAAYADzCfQJYAD0CWEAYQD0CfUJYQD1CWIANgDJCcoJNgDKCTcANwDKCcsJNwDLCTgAOADLCcwJOADMCTkAOQDMCc0JOQDNCToAOgDNCc4JOgDOCTsAOwDOCc8JOwDPCTwAPADPCdAJPADQCT0APQDQCdEJPQDRCT4APgDRCdIJPgDSCT8ALAC/CcAJLADACS0ALQDACcEJLQDBCS4ALgDBCcIJLgDCCS8ALwDCCcMJLwDDCTAAMADDCcQJMADECTEAMQDECcUJMQDFCTIAMgDFCcYJMgDGCTMAMwDGCccJMwDHCTQADgChCaAJDgCgCQ0ADQCgCZ4JDQCeCQsACwCeCZ0JCwCdCQoACgCdCZsJCgCbCQgACACbCZoJCACaCQcABwCaCZgJBwCYCQUABQCYCZcJBQCXCQQABACXCZUJBACVCQIAAgCVCZMJAgCTCQAA6QjgCKMJBgERABcBFwERABAAFwEQAB0BTgFCAQ8ADwBCAS0BDwAtARAAEAAtASQBEAAkAR0BnwmECGkIuwGYAQwAuwEMAM0BaQhFCJ8JnwlFCAgInwkICM0BmAF/AQwADAB/AWkBDABpAQ8ADwBpAVgBDwBYAU4Bwgi0CKIJogm0CJ8IogmfCJ8JnwmfCJkInwmZCIQIowngCKIJogngCNkIognZCMIIpAkACaMJowkACe8IownvCOkIzQEMAJ8JnwkMAAkAnwkJAJwJnAkJAAYAnAkGAJkJmQkGAAMAmQkDAJYJlgkDAAEAlgkBAJQJ6QjvCOoI6gjvCAAJ6ggACQoJ6QjqCOAI4AjqCMMI4AjDCNkImQifCJoImgifCLQImgi0CMMIwwi0CMIIwwjCCNkIaggLCAoICgg4CGoIagg4CDsIagg7CD8ImQiaCIQIhAiaCGoIhAhqCGkIaQhqCD8IaQg/CDoIOgg3CGkIaQg3CAkIaQgJCEUIRQgJCAgIAAkJCQoJCgkJCSQJCgkkCSYJJgkkCTwJJgk8CT4JPgk8CVIJPglSCVQJVAlSCWYJVAlmCWcJZwlmCWkJZwlpCW0JbQlpCWoJEwgSCEsIEQgQCEMIPQhCCFwIQgg9CAsIDwkMCQEJ8wjsCOMIzAjKCMgIyAjKCMYIFQgUCFEIgQhtCFEIUQhtCFMIUQhTCBUInQigCIEIgQigCIUIgQiFCG0IKwlBCS0JUQlXCUQJZwltCVkJDwgOCD4IPggOCA0IighcCHsIewhcCEIIewhCCEoISghCCAsIEAgPCEMIQwgPCD4IQwg+CF0ItwiKCJwInAiKCHsInAh7CIAIgAh7CEoIgAhKCFIIUghKCAsIEggRCEsISwgRCEMISwhDCHwIfAhDCF0IfAhdCIsI5Ai3CMkIyQi3CJwIyQicCLEIsQicCIAIsQiACIgIiAiACFIIiAhSCFcIVwhSCAsIFAgTCFEIUQgTCEsIUQhLCIEIgQhLCHwIgQh8CJ0InQh8CIsInQiLCLgIDQnkCPII8gjkCMkI8gjJCN4I3gjJCLEI3gixCLYItgixCIgItgiICI0IjQiICFcIjQhXCFsIWwhXCAsI7AjMCOMI4wjMCMgI4wjICLgIuAjICMYIuAjGCJ0InQjGCLAInQiwCKAIDAnzCAEJAQnzCOMIAQnjCNoI2gjjCLgI2gi4CK0IrQi4CIsIrQiLCH8IfwiLCF0IfwhdCEwITAhdCD4ITAg+CDUINQg+CA0INQgNCAwIKQkSCSEJIQkSCQ8JIQkPCQ0JDQkPCQEJDQkBCeQI5AgBCdoI5AjaCLcItwjaCK0ItwitCIoIigitCH8Iigh/CFwIXAh/CEwIXAhMCD0IPQhMCDUIPQg1CAsIDAgLCDUICwhiCFsIWwhiCJMIWwiTCI0IjQiTCLsIjQi7CLYItgi7COIItgjiCN4I3gjiCAMJ3ggDCfII8ggDCR8J8ggfCQ0JDQkfCSsJDQkrCSEJIQkrCS0JIQktCSkJCwhlCGIIYghlCJgIYgiYCJMIkwiYCMAIkwjACLsIuwjACOcIuwjnCOII4gjnCAYJ4ggGCQMJAwkGCSMJAwkjCR8JHwkjCTsJHwk7CSsJKwk7CVEJKwlRCUEJQQlRCUQJQQlECS0JCwhqCGUIZQhqCJoIZQiaCJgImAiaCMMImAjDCMAIwAjDCOoIwAjqCOcI5wjqCAoJ5wgKCQYJBgkKCSYJBgkmCSMJIwkmCT4JIwk+CTsJOwk+CVQJOwlUCVEJUQlUCWcJUQlnCVcJVwlnCVkJVwlZCUQJFQhkBxQIFAhkB2MHFAhjBxMIEwhjBxIIEghjB2IHEghiBxEIEQhiBxAIEAhiB2EHEAhhBw8IDwhhBw4IDghhB2AHDghgBw0IDQhgBwwIDAhgB18HDAhfBwsIwQHKAb8BygHBAdAB0AG8AbUBiAF5AXsBwgCwAK4A2wDNAMUAxQDNALUAxQC1ALAA/gD4AOUA5QD4AOgA5QDoAOQAKAEnAQcBWQFPAVQBVAFPAT0BqwHZAaoBqgHZAdoBtQG8AZsBmwG8AbEBmwGxAZkBmQGxAbkBmQG5AbMBrQHQAbUB0AHRAcoBygHRAdIBygHSAb8BvwHSAdMBvwHTAdQB1AG5Ab8BvwG5AbEBvwGxAcEBwQGxAbwBwQG8AdABUgFUAT8BPwFUAT0BPwE9ASgBKAE9AS4BKAEuAScBeQFZAXsBewFZAVQBewFUAW8BbwFUAVIBbwFSAXEB1AHVAbkBuQHVAdYBuQHWAbMBswHWAdcBswHXAdgBrQG1AYUBhQG1AZsBhQGbAYABgAGbAZkBgAGZAYMBgwGZAbMBgwGzAasBqwGzAdgBqwHYAdkBpgF9AXcBdwF9AVYBdwFWAVABUAFWAUMBUAFDASsBKwFDASUBKwElARgBGAElARUBGAEVAf4A/gAVAQUB/gAFAfgAfQFxAVYBVgFxAVIBVgFSAUMBQwFSAT8BQwE/ASUBJQE/ASgBJQEoARUBFQEoAQcBFQEHAQUB0AGmAaEBoQGmAXcBoQF3AXMBcwF3AVABcwFQAUoBSgFQASsBSgErASIBIgErARgBIgEYAQMBAwEYAf4AAwH+APQA9AD+AOUA9ADlANsA2wDlAOQA2wDkAM0A0AGeAZYBlgGeAWoBlgFqAWcBZwFqAUUBZwFFAT4BPgFFAR8BPgEfARsBGwEfAQABGwEAAfoA+gAAAeIA+gDiAN4A3gDiAMsA3gDLAMcAxwDLAMIAxwDCALEAsQDCAK4AsQCuAJ0AnQCuAKAAnQCgAIgAsADCAMUAxQDCAMsAxQDLANsA2wDLAOIA2wDiAPQA9ADiAAAB9AAAAQMBAwEAAR8BAwEfASIBIgEfAUUBIgFFAUoBSgFFAWoBSgFqAXMBcwFqAZ4BcwGeAaEBoQGeAdABqgGIAasBqwGIAXsBqwF7AYMBgwF7AW8BgwFvAYABgAFvAXEBgAFxAYUBhQFxAX0BhQF9Aa0BrQF9AaYBrQGmAdABuwHNAc4BuwHOAZgBmAHOAcgBmAHIAcUBwwHGAZYBxgHJAZYBlgHJAc8BlgHPAdABxQHDAZgBmAHDAZYBmAGWAX8BfwGWAWcBfwFnAWkBLQFCAT4BPgFCAU4BPgFOAWcBZwFOAVgBZwFYAWkB/AAGARsBBgEXARsBGwEXAR0BGwEdAT4BPgEdASQBPgEkAS0BGwH6APwA/AD6AN4A/ADeAOEA4QDeAMcA4QDHAMoAygDHALEAygCxALQAtACxAJ0AtACdAJ8AiACFAJ0AnQCFAJwAnQCcAJ8ABQXiBB0FHQXiBE0FswTNBOIE4gTNBOsE6wT6BOIE4gT6BCIF4gQiBU0FTQUiBUwFTQVMBVwFBQYHBgYG/wUABgYGBgYABgEGBgYBBgIGAgYDBgYGBgYDBgQGBgYEBgUGCgQIBAkECQQIBAcEAgQJBAMEAwQJBAQEBwQGBAkECQQGBAUECQQFBAQEjQWMBd0F3QWMBYsF3QWLBSsGiwWKBSsGKwaKBYkFKwaJBYsGiwaJBdYGiQWIBdYG1gaIBYcF1gaHBekG6QaHBYYF6QaGBTQHNAeGBYUFNAeFBV4HcAWFBYYFhwWIBVYFiQWKBVQFlgSEBIMEcwVcBUwFiwWMBU4FTgWMBY0FTgWNBXMFzQSzBMwEzASzBK4EzASuBK0EcAWGBVgFcwVMBU4FTgVMBSIFTgUiBSMFIwUiBfoEIwX6BPkE+QT6BOsE+QTrBOoEigWLBVQFVAWLBU4FVAVOBSQFJAVOBSMFJAUjBfgE+AQjBfkE+AT5BOgE6AT5BOoE6ATqBMkEiAWJBVYFVgWJBVQFVgVUBSUFJQVUBSQFJQUkBfcE9wQkBfgE9wT4BOUE5QT4BOgE5QToBMcExwToBMkExwTJBKwErASrBMcExwSrBMUExwTFBOUE5QTFBOQE5QTkBPcE9wTkBPYE9wT2BCUFJQX2BCYFJQUmBVYFVgUmBVcFVgVXBYcFmgSoBKsEqwSoBMQEqwTEBMUExQTEBNQExQTUBOQE5ATUBAQF5AQEBfYE9gQEBT0F9gQ9BSYFJgU9BVgFJgVYBVcFVwVYBYYFVwWGBYcFswSWBK4ErgSWBIMErgSDBK0ErQSDBIIErQSCBIEE6wTNBOoE6gTNBMwE6gTMBMkEyQTMBK0EyQStBKwErAStBIEErASBBIAEfASaBH0EfQSaBKsEfQSrBH4EfgSrBKwEfgSsBH8EfwSsBIAEWwdeB18HMAYRBjcGPAZeBlUGagaIBn4GvQbfBtgGvQbYBrcGtwbYBrYGtwa2BqwGrAa2Bq0GrAatBogGiAatBokGiAaJBn4GagZ+Bl4GXgZ+BmAGXgZgBlUGPAZVBjcGNwZVBjgGNwY4BjAGWwdfB1UHDQcxByoHKgcxB1UHKgdVB00HTQdVB18HvQbCBt8G3wbCBuAG3wbgBgQHBAfgBgMHBAcDBw0HDQcDBw4HDQcOBzEHgwSEBCwEhgJ8BH0EhgJ9BMwCzAJ9BH4EzAJ+BBgDGAN+BDIDMgN+BH8EMgN/BH0DfQN/BIAEfQOABOAD4AOABIEE4AOBBCwELASBBIIELASCBIMEMQYPBhEGDgYPBjIGMgYPBjEGMgYxBlYGWQZaBjUGggaDBloGCQYNBjQGNAYNBjMGNAYzBlgGWAYzBlcGWAZXBoAGgAZXBn8GgAZ/Bq4GEQYwBjEGMQYwBjgGMQY4BlYGVgY4BlUGVgZVBmAGDQYOBjMGMwYOBjIGMwYyBlcGVwYyBlYGVwZWBn8GfwZWBmAGsQayBoMG3QayBtwG3AayBrEG3AaxBtsGWgZZBoIGggZZBoEGggaBBrAGsAaBBq8GsAavBtoG2gavBtkG2gbZBgUHYAZ+Bn8GfwZ+BokGfwaJBq4GrgaJBq0GrgatBrYGCgYJBjUGNQYJBjQGNQY0BlkGWQY0BlgGWQZYBoEGgQZYBoAGgQaABq8GrwaABq4GrwauBtkG2QauBrYGCQfdBggHCAfdBtwGCAfcBgcHBwfcBtsGBwfbBgYHLwcJBy4HLgcJBwgHLgcIBy0HLQcIBwcHLQcHBywHLAcHBwYHLAcGBysHtgbYBtkG2QbYBt8G2QbfBgUHBQffBgQHBQcEBw0HgwaCBrEGsQaCBrAGsQawBtsG2wawBtoG2wbaBgYHBgfaBgUHBgcFBysHKwcFBw0HKwcNByoHKgdNBysHKwdNB04HKwdOBywHLAdOB08HLAdPBy0HLQdPB1AHLQdQBy4HLgdQB1EHLgdRBy8HLwdRB1IHTQdfB04HTgdfB2AHTgdgB08HTwdgB2EHTwdhB1AHUAdhB2IHUAdiB1EHUQdiB2MHUQdjB1IHUgdjB2QH4QP4A9MD4QPTA9ED0QPTA9AD0QPQA7QDtAPQA6wDtAOsA6oDqgOsA6kDqgOpA4sDiwOpA4QDiwOEA4ADgAOEA38DgAN/A1IDfwNXA1IDUgNXA1MDUgNTA0QDRANTAysDRAMrAyoDBgMpAyoDKgMpAz8DKgM/A0QDKgP/AgYDBgP/AvwCBgP8AvsC+wL8AtkC+wLZAtgC2ALZArUC2AK1ArMCswK1AqUCpQK1AocCpQKHAoYCZQdTB2QHZAdTB1IHUgdTBzoHUgc6By8HLwc6BzAHLwcwBxcHLwcXBwkHFwcKBwkHCQcKB/AGCQfwBt0G3QbwBt4G3QbeBsMG3QbDBrIGwwazBrIGsgazBpgGsgaYBoMGgwaYBoQGgwaEBmsGgwZrBloGDAYLBhcGFwYLBgoGFwYKBjYGNgYKBjUGNgY1Bj8GPwY1BloGPwZaBlsGWwZaBmsGuAK3AtsCiAKHArUCugKMAosC+AP5A9MD0wP5A9QD0wPUA9ADiQK3AooCigK3ArgCigK4AosCBAPeAt0C3QLeAroCAAPbAtoC2gLbArcC2gK3ArYCtgK3AokCtgKJAogCugKLArkCuQKLArgCuQK4AtwC3AK4AtsC3ALbAgEDAQPbAgADAQMAAywDiAK1ArYCtgK1AtkCtgLZAtoC2gLZAvwC2gL8AgADXAMwAy8DLwMwAwQDBAPdAgMDAwPdAgIDAwMCAy4DLgMCAy0DLgMtA1kDWQMtA1gDWQNYA4UD/AL/AgADAAP/AioDAAMqAywDLAMqAysDLAMrA1MDUwNYAywDLANYAy0DLAMtAwEDAQMtAwIDAQMCA9wC3AICA90C3ALdArkCuQLdAroCUwNXA1gDWANXA38DWAN/A4UDhQN/A4QDhQOEA6kDBAMDAy8DLwMDAy4DLwMuA1oDWgMuA1kDWgNZA4YDhgNZA4UDhgOFA60DrQOFA6kDrQOpA6wD/AP9A9cD1wP9A9gD1wPYA7ED+wP8A9YD1gP8A9cD1gPXA7ADsAPXA7EDsAOxA4kD+gP7A9UD1QP7A9YD1QPWA68DrwPWA7ADrwOwA4gDiAOwA4kDiAOJA1wD+QP6A9QD1AP6A9UD1APVA64DrgPVA68DrgOvA4cDhwOvA4gDhwOIA1sDWwOIA1wDXAMvA1sDWwMvA1oDWwNaA4cDhwNaA4YDhwOGA64DrgOGA60DrgOtA9QD1AOtA6wD1AOsA9ADcAdxB0MHbwdwB0IHbAdtB0AHawdsBz8HGAYIBgwGGQb/BQgGGgYABv8FZwc7B2YHZgc7B1MHZgdTB2UHaQdqBz4HPgdqB2sHbQduB0EHQQduB28HGAcwBzsHOwcwBzoHOwc6B1MH8QYKBxgHGAcKBxcHGAcXBzAHxAbeBvEG8QbeBvAG8QbwBgoHmQazBsQGxAazBsMGxAbDBt4GbAaEBpkGmQaEBpgGmQaYBrMGQAZbBmwGbAZbBmsGbAZrBoQGDAYXBhgGGAYXBjYGGAY2BkAGQAY2Bj8GQAY/BlsGCAYYBhkGGQYYBkAGGQZABkEGQQZABmwGQQZsBm0GbQZsBpkGbQaZBpoGmgaZBsQGmgbEBsUGxQbEBvEGxQbxBvIG8gbxBhgH8gYYBxkHGQcYBzsHGQc7BzwHPAc7B2cHPAdnB2gH/wUZBhoGGgYZBkEGGgZBBkIGQgZBBm0GQgZtBm4GbgZtBpoGbgaaBpsGmwaaBsUGmwbFBsYGxgbFBvIGxgbyBvMG8wbyBhkH8wYZBxoHGgcZBzwHGgc8Bz0HPQc8B2gHPQdoB2kHaQc+Bz0HPQc+BxsHPQcbBxoHGgcbB/QGGgf0BvMG8wb0BscG8wbHBsYGxgbHBpwGxgacBpsGmwacBm8GmwZvBm4GbgZvBkMGbgZDBkIGQgZDBhsGQgYbBhoGGgYbBgEGGgYBBgAGawc/Bz4HPgc/BxwHPgccBxsHGwccB/UGGwf1BvQG9Ab1BsgG9AbIBscGxwbIBp0GxwadBpwGnAadBnAGnAZwBm8GbwZwBkQGbwZEBkMGQwZEBhwGQwYcBhsGGwYcBgIGGwYCBgEGbAdABz8HPwdABx0HPwcdBxwHHAcdB/YGHAf2BvUG9Qb2BskG9QbJBsgGyAbJBp4GyAaeBp0GnQaeBnEGnQZxBnAGcAZxBkUGcAZFBkQGRAZFBh0GRAYdBhwGHAYdBgMGHAYDBgIGbQdBB0AHQAdBBx4HQAceBx0HHQceB/cGHQf3BvYG9gb3BsoG9gbKBskGyQbKBp8GyQafBp4GngafBnIGngZyBnEGcQZyBkYGcQZGBkUGRQZGBh4GRQYeBh0GHQYeBgQGHQYEBgMGbwdCB0EHQQdCBx8HQQcfBx4HHgcfB/gGHgf4BvcG9wb4BssG9wbLBsoGygbLBqAGygagBp8GnwagBnMGnwZzBnIGcgZzBkcGcgZHBkYGRgZHBh8GRgYfBh4GHgYfBgUGHgYFBgQGcAdDB0IHQgdDByAHQgcgBx8HHwcgB/kGHwf5BvgG+Ab5BswG+AbMBssGywbMBqEGywahBqAGoAahBnQGoAZ0BnMGcwZ0BkgGcwZIBkcGRwZIBiAGRwYgBh8GHwYgBgcGHwYHBgUG2AP9A+0D7QP9A/4D7QP+A/8D7QPZA9gD2APZA8QD2APEA7EDxAOyA7EDsQOyA5wDsQOcA4kDnAOKA4kDiQOKA28DiQNvA1wDbwNWA1wDXANWA0YDXANGAzADRgMxAzADMAMxAx4DMAMeAwQDHgMFAwQDBAMFA/ACBAPwAt4C8ALfAt4C3gLfAs4C3gLOAroCzgK7AroCugK7Ao0CugKNAowCUAY7BigGKAY7BicGKAYnBgcGfAZjBlAGUAZjBk8GUAZPBjsGqQaQBnwGfAaQBnsGfAZ7BmMG4gbTBtQG1AbTBroG1Aa6BqkGqQa6BqgGqQaoBpAG4gbUBgAHAAfUBgEHAAcBBxAHEAcBBygHEAcoBycHJwcoBzIHMgcoB0sHMgdLB0oHSgdLB3oHSgd6B3kHBwYmBigGKAYmBk4GKAZOBlAGUAZOBnoGUAZ6BnwGfAZ6BqcGfAanBqkGqQanBtIGqQbSBtQG1AbSBv8G1Ab/BgEHAQf/BiYHAQcmBygHKAcmB0kHKAdJB0sHSwdJB3gHSwd4B3oHBwYlBiYGJgYlBk0GJgZNBk4GTgZNBnkGTgZ5BnoGegZ5BqYGegamBqcGpwamBtEGpwbRBtIG0gbRBv4G0gb+Bv8G/wb+BiUH/wYlByYHJgclB0gHJgdIB0kHSQdIB3cHSQd3B3gHBwYkBiUGJQYkBkwGJQZMBk0GTQZMBngGTQZ4BnkGeQZ4BqUGeQalBqYGpgalBtAGpgbQBtEG0QbQBv0G0Qb9Bv4G/gb9BiQH/gYkByUHJQckB0cHJQdHB0gHSAdHB3YHSAd2B3cHBwYjBiQGJAYjBksGJAZLBkwGTAZLBncGTAZ3BngGeAZ3BqQGeAakBqUGpQakBs8GpQbPBtAG0AbPBvwG0Ab8Bv0G/Qb8BiMH/QYjByQHJAcjB0YHJAdGB0cHRwdGB3UHRwd1B3YHBwYiBiMGIwYiBkoGIwZKBksGSwZKBnYGSwZ2BncGdwZ2BqMGdwajBqQGpAajBs4GpAbOBs8GzwbOBvsGzwb7BvwG/Ab7BiIH/AYiByMHIwciB0UHIwdFB0YHRgdFB3QHRgd0B3UHBwYhBiIGIgYhBkkGIgZJBkoGSgZJBnUGSgZ1BnYGdgZ1BqIGdgaiBqMGowaiBs0GowbNBs4GzgbNBvoGzgb6BvsG+wb6BiEH+wYhByIHIgchB0QHIgdEB0UHRQdEB3MHRQdzB3QHBwYgBiEGIQYgBkgGIQZIBkkGSQZIBnQGSQZ0BnUGdQZ0BqEGdQahBqIGogahBswGogbMBs0GzQbMBvkGzQb5BvoG+gb5BiAH+gYgByEHIQcgB0MHIQdDB0QHRAdDB3EHRAdxB3MHsAKxApkCsQKwAr4C4gLXAtYCCgP5AvgCywPMA6QDAwQEBPEDAgQDBPADAgTuAwAEAATuA+0DAATtA/8DCgT2AwgECAT2A/UDCAT1AwcEBwT1A/QDBwT0AwYEBgT0A/MDBgTzAwUEygPJA/ID9gPjA/UD9QPjA8wD9QPMA/QD9APMA8sD9APLA/MDxQOdA5wDnAOyA8UDxQOyA8QDxQPEA+4D7gPEA9kD7gPZA+0DogOhA8kDdQN0A6EDyQPKA6IDogPKA6MDogOjA3YDdgOjA3cDdgN3A04D4wPNA8wDzAPNA7gDzAO4A6QDpAO4A6UDpAOlA40DBAQFBPID8gMFBPMD8gPzA8oDygPzA8sDygPLA6MDowPLA6QDowOkA3cDdwOkA40DRwNWA3ADcANWA28DcANvA50DnQNvA4oDnQOKA5wDTANLA3QDHwMxA0cDRwMxA0YDRwNGA1YDJAMjA0sDjQN4A3cDdwN4A2ADdwNgA04DTgNgA08DTgNPAzYDoQOiA3UDdQOiA3YDdQN2A00DTQN2A04DTQNOAyYDJgNOAzYDJgM2AycD8QIFAx8DHwMFAx4DHwMeAzED9gL1AiMDdAN1A0wDTAN1A00DTANNAyUDJQNNAyYDJQMmA/gC+AImAycD+AInAwoDzwLfAvEC8QLfAvAC8QLwAgUDqgLPAtAC0ALPAvEC0ALxAvIC8gLxAh8D8gIfAyADIAMfA0cDIANHA0gDSANHA3ADSANwA3EDcQNwA50DcQOdA54DngOdA8UDngPFA8YDxgPFA+4DxgPuA+8D7wPuAwIE0wL1AtQC1AL1AvYC1AL2AtUCSwNMAyQDJANMAyUDJAMlA/cC9wIlA/gC9wL4AtYC1gL4AvkC1gL5AuICqQK7As4CrQLTAq4CrgLTAtQCrgLUAq8CrwLUAtUCrwLVArACIwMkA/YC9gIkA/cC9gL3AtUC1QL3AtYC1QLWArACsALWAtcCsALXAr4CjQK7Ao4CjgK7AqkCjgKpAo8CkAKPAqoCqgKPAqkCqgKpAs8CzwKpAs4CzwLOAt8CAgTwA+8D7wPwA8cD7wPHA8YDxgPHA58DxgOfA54DngOfA3IDngNyA3EDcQNyA0kDcQNJA0gDSANJAyEDSAMhAyADIAMhA/MCIAPzAvIC8gLzAtEC8gLRAtAC0ALRAqsC0AKrAqoCqgKrApECqgKRApACAwTxA/AD8APxA8gD8APIA8cDxwPIA6ADxwOgA58DnwOgA3MDnwNzA3IDcgNzA0oDcgNKA0kDSQNKAyIDSQMiAyEDIQMiA/QCIQP0AvMC8wL0AtIC8wLSAtEC0QLSAqwC0QKsAqsCqwKsApICqwKSApECBATyA/ED8QPyA8kD8QPJA8gDyAPJA6EDyAOhA6ADoAOhA3QDoAN0A3MDcwN0A0sDcwNLA0oDSgNLAyMDSgMjAyIDIgMjA/UCIgP1AvQC9AL1AtMC9ALTAtIC0gLTAq0C0gKtAqwCrAKtApMCrAKTApICmQKYArACsAKYApcCsAKXAq8CrwKXApYCrwKWAq4CrgKWApUCrgKVAq0CrQKVApQCrQKUApMCuga7BqoGBgYHBhAGEAYHBicGEAYnBhUGFQYnBjsGFQY7BjoGOgY7Bk8GOgZPBmIGYgZPBmMGYgZjBmcGZwZjBnsGZwZ7Bo8GjwZ7BpAGjwaQBqoGqgaQBqgGqgaoBroGuwa6BtcG1wa6BtMG1wbTBuIGJwczBxAHEAczBxEHEAcRBwAHAAcRBwsHAAcLB+IG4gYLB+MG4gbjBtcGJwcyBzMHMwcyB0oHMwdKB1cHVwdKB10HXQdKB3kHXQd5B3IHwAK/AuMCxgLFAqECmQKxApsCmwKxAr8CmwK/ApwCnAK/AsACnALAAp0C6gLpAsUCEgMRA+kCsQK+Ar8CvwK+AtcCvwLXAuMC4wLXAuIC4wLiAvkCngKdAsECwQKdAsACwQLAAuQC5ALAAuMC5ALjAgsDCwPjAvkCCwP5AgoDPgM9AxEDoAKfAsMCwwKfAsICwwLCAuYC5gLCAuUC5gLlAg0DDQPlAgwDDQMMAzgDOAMMAzcDOAM3A2EDnwKeAsICwgKeAsECwgLBAuUC5QLBAuQC5QLkAgwDDAPkAgsDDAMLAzcDNwMLAwoDNwMKAycDaANnAz0DlQOUA2cDoQKiAsYCxgKiAsQCxgLEAugC6ALEAucC6ALnAg8DDwPnAg4DDwMOAzoDOgMOAzkDOgM5A2MDYwM5A2IDYwNiA48DjwNiA44DjwOOA7kDJwM2AzcDNwM2A08DNwNPA2EDYQNPA2ADYQNgA3gDogKgAsQCxAKgAsMCxALDAucC5wLDAuYC5wLmAg4DDgPmAg0DDgMNAzkDOQMNAzgDOQM4A2IDYgM4A2EDYgNhA44DjgNhA3gDwAO/A5QDCgTqA+sD6wPqA78DvwPAA+sD6wPAA+kD6wPpAwoElAOVA8ADwAOVA74DwAO+A+kD6QO+A+gD6QPoAwoEZwNoA5UDlQNoA5MDlQOTA74DvgOTA70DvgO9A+gD6AO9A+cD6APnAwoEPQM+A2gDaAM+A2YDaANmA5MDkwNmA5IDkwOSA70DvQOSA7wDvQO8A+cD5wO8A+YD5wPmAwoEEQMSAz4DPgMSAzwDPgM8A2YDZgM8A2UDZgNlA5IDkgNlA5EDkgORA7wDvAORA7sDvAO7A+YD5gO7A+UD5gPlAwoE6QLqAhIDEgPqAhADEgMQAzwDPAMQAzsDPAM7A2UDZQM7A2QDZQNkA5EDkQNkA5ADkQOQA7sDuwOQA7oDuwO6A+UD5QO6A+QD5QPkAwoEeAONA44DjgONA6UDjgOlA7kDuQOlA7gDuQO4A80DxQLGAuoC6gLGAugC6gLoAhADEAPoAg8DEAMPAzsDOwMPAzoDOwM6A2QDZAM6A2MDZANjA5ADkANjA48DkAOPA7oDugOPA7kDugO5A+QD5AO5A80D5APNA+MD4wP2A+QD5AP2AwoESQWQBb4EvgSQBXkEEwb3A3MEeQSQBXMEcwSQBZcFcwSXBRMGwAZBA8ID9wMTBsIDwgMTBj4GwgM+BsAGFgfrAh0DQQPABh0DHQPABuQGHQPkBhYHcgeaAskC6wIWB8kCyQIWBzcHyQI3B3IHxQLpAuEC4QLNAsUCxQLNAr0CxQK9AqECoQK9AqMCoQKjApoCEQM9AzUDNQMzAxEDEQMzAwcDEQMHA+kC6QIHA/4C6QL+AuECZwOUA5YDlgN8A2cDZwN8A18DZwNfAz0DPQNfA14DPQNeAzUD7APeA78DvwPeA8EDvwPBA5QDlAPBA7MDlAOzA5YDvwPqA+wD7APqAwoE7AMKBAkEigSfBEcEZARyBCYEPARBBM4DewOBA0UD9wPCA5cD7QLgAhYDyALJApoCpgKnApoCpgKaAqQCowKkApoCowK9AqQCpAK9AuACpALgAqYCpgLgAu0CpgLtAqcCyQLIAusC6wLIAhcD6wIXAx0DlwPCAxcDFwPCA0EDFwNBAx0DvQLNAuAC4ALNAuEC4ALhAhYDFgPhAv4CFgP+AgcDagOMA0ADNQNeA3sDNQN7AzMDMwN7A0UDMwNFAwcDgQOZA0UDRQOZA2oDRQNqAygDKANqA0ADKANAA+4CmQOrA2oDagOrA8MDagPDA4wDjAPDAxIEjAMSBB0EsgLuAvoC+gLuAkAD+gJAA1QDVANAA4wDVAOMA84DzgOMAx0EzgMdBDwEmgKyArwCvAKyAvoCvAL6AggDCAP6AlQDCANUA20DbQNUA84DbQPOAyYEJgTOA0EEJgRBBGQEmgK8AsgCyAK8AggDyAIIAxcDFwMIA20DFwNtA5cDlwNtAyYElwMmBEcERwQmBHIERwRyBIoEBwNFAxYDFgNFAygDFgMoA+0C7QIoA+4C7QLuAqcCpwLuArICpwKyApoC9wOXA3MEcwSXA0cEcwRHBHkEeQRHBJ8EeQSfBL4EcgRkBIcEQQQ8BFoEEwUUBe4EFAUVBe4E7gQVBRYF7gQWBb0EEwXuBBIFEgXuBPQEEgX0BBEFEQX0BPwEEQX8BBAFqwOZA7cDtwOZA4EDCwTDA6sDNgQdBBIEHQQ2BDwEpgSKBHIEigSmBJ8EFgXZBL0EvQTZBL4EvQS+BJ8ElgPSA3wDfAPSA5gDfAOYA18DXwOYA3sDXwN7A14DqwO3AwsECwS3AxwECwQcBDgEOAQcBCsEOAQrBEQEPAQ2BFoEWgQ2BF4EWgReBIkEiQReBGkEiQRpBJUEcgSHBKYEpgSHBLEEpgSxBNEE0QSxBLoE0QS6BNoElgOzA9ID0gOzA8ED0gPBAw4EDgTBA94DDgTeA+wD7AMJBAwE7AMMBA4EDgQMBBEEDgQRBCIEIgQrBA4EDgQrBBwEDgQcBNID0gMcBLcD0gO3A5gDmAO3A4EDmAOBA3sDIgQnBCsEKwQnBDcEKwQ3BEQERAQ3BEIERARCBFgEWARpBEQERARpBF4ERAReBDgEOAReBDYEOAQ2BAsECwQ2BBIECwQSBMMDWARoBGkEaQRoBHoEaQR6BJUElQR6BJQElQSUBKUEpQS6BJUElQS6BLEElQSxBIkEiQSxBIcEiQSHBFoEWgSHBGQEWgRkBEEEpQS5BLoEugS5BMYEugTGBNoE2gTGBNwE2gTcBOMEnwSmBL0EvQSmBNEEvQTRBO4E7gTRBNoE7gTaBPQE9ATaBOME9ATjBPwEPQZdBpcG7QX4BX0GXwVqBcQFXAddB3IH6gZMBzgHOAdMB3IHAgcPB1YHXQdcB1cHVwdcBykHVwcpBzMHcgc3BzgHOAc3BxYHOAcWB+oG6gYWB+QG6gbkBsAGDwcCB5MGkwYCB2gGkwZoBsQFMwcpBxEHEQcpB+sGEQfrBgsH5gU5BrUGCwfrBuMG4wbrBrwG4wa8BtcGwAY+BmgGaAY+BhMGaAYTBsQFxAUTBpcFxAWXBV8FXwWXBZAFXwWQBUkFagWABcQFxAWABeYFxAXmBZMGkwbmBbUGkwa1Bg8HgAWdBeYF5gWdBaYF5gWmBTkGOQamBcsFOQbLBc4FcgdWB1kHWQdWBw8HWQcPBxMHEwcPB7UGEwe1BsEGwQa1BjkGwQY5Bn0GfQY5Bs4FfQbOBe0FcgdZB1oHWgdZBxMHWgcTBxQHFAcTB8EGFAfBBuEG4QbBBn0G4QZ9BpcGlwZ9BvgFlwb4BT0GwAZoBuoG6gZoBgIH6gYCB0wHTAcCB1YHTAdWB3IHXQa8BpcGlwa8BusGlwbrBuEG4QbrBikH4QYpBxQHFAcpB1wHFAdcB1oHWgdcB3IHXQZmBrwGvAZmBocGvAaHBtcG1waHBowG1waMBrsGuwaMBqoGCQQCBA0E6QQPBRAFEAX8BOkE6QT8BOME6QTjBMgE4wTcBMgEyATcBMYEyATGBKcEpwTGBLkEuQSlBKcEpwSlBJQEpwSUBHsElAR6BHsEewR6BGgEewRoBFkEaARYBFkEWQRYBEIEWQRCBDkEQgQ3BDkEOQQ3BCcEOQQnBCMEJwQiBCMEIwQiBBEEIwQRBA0EDQQRBAwEDQQMBAkEnQWABVUFywWmBXEF+AXtBcAFXQY9Bt8FhwZmBhYGLAUzBTIFQwVTBUsFYwV2BXQFjwWjBaEFsQXKBcYF0wXjBdwFEAUXBRgFGgUSBRgFGAUSBREFGAURBRAFNAUcBRYFFgUVBTQFNAUVBRQFNAUUBRoFGgUUBRMFGgUTBRIF4wXqBfYF9gXqBfkF9gX5Bf0F0wXcBcoFsQXGBaMFjwWhBXYFYwV0BVMFQwVLBTMFYgZUBjoGOgZUBhIGOgYSBhUGFQYSBvYFFQb2BRAGEAb2Bf0FEAb9BQYGqgaMBo8GjwaMBlQGjwZUBmcGZwZUBmIG4wX2BdwF3AX2BRIG3AUSBuUF5QUSBlQG5QVUBhYGFgZUBowGFgaMBocGygXcBcYFxgXcBeUFxgXlBckFyQXlBRYGyQUWBt8F3wUWBmYG3wVmBl0GowXGBaEFoQXGBckFoQXJBaQFpAXJBd8FpAXfBcAFwAXfBT0GwAU9BvgFdgWhBXQFdAWhBaQFdAWkBXcFdwWkBcAFdwXABZUFlQXABe0FlQXtBc4FUwV0BUsFSwV0BXcFSwV3BVoFWgV3BZUFWgWVBXEFcQWVBc4FcQXOBcsFMwVLBTIFMgVLBVoFMgVaBTUFNQVaBXEFNQVxBVUFVQVxBaYFVQWmBZ0FgAU0BVUFVQU0BRoFVQUaBTUFNQUaBRgFNQUYBTIFMgUYBRcFMgUXBSwFSQUcBV8FXwUcBTQFXwU0BWoFagU0BYAFFAQABP8DDQUOBe0E7QQOBewE7QTsBOEE4QTsBM4ErwTCBM4EzgTCBM8EzgTPBOEEiASeBK8ErwSeBLAErwSwBMIEYwR2BIgEiAR2BIsEiASLBJ4EPgRMBGMEYwRMBGUEYwRlBHYEKAQxBD4EPgQxBEAEPgRABEwE/wMWBBQEFAQWBBsEFAQbBCgEKAQbBCkEKAQpBDEEAgQABA0EDQQABBQEDQQUBCMEIwQUBCgEIwQoBDkEOQQoBD4EOQQ+BFkEWQQ+BGMEWQRjBHsEewRjBIgEewSIBKcEpwSIBK8EpwSvBMgEyASvBM4EyATOBOkE6QTOBOwE6QTsBA8FDwXsBA4F/wUGBv0FEAUPBRcFFwUPBSkFQgUzBSkFKQUzBSwFKQUsBRcFYgVTBUIFQgVTBUMFQgVDBTMFjgV2BWIFYgV2BWMFYgVjBVMFsAWjBY4FjgWjBY8FjgWPBXYF4wXTBdEF0QXTBcoF0QXKBbAFsAXKBbEFsAWxBaMF4wXRBeoF6gXRBekF6gXpBfkF+QXpBf0F/QXpBfwF/QX8Bf8FmwN+AzQDqAKlAoYCzALLAoYCzAIYAxoDGgMVA8oCpQKoArMCswKoAuwCswLsAtgCGAMyAxoDGgMyA6YDGgOmAxUDFQOmA24D2ALsAvsC+wLsAhkD+wIZAwYDMgN9A6YDpgN9A+ADpgPgA1cEVwTgAywEVwQsBIQEVwRSBKYDpgNSBDUEpgM1BG4DbgM1BCEEbgMhBN8DhgLKAscCxwLKAhUDxwIVA/0C/QIVA24D/QJuA1EDUQNuA98DUQPfA7YDhgLHArQCtALHAv0CtAL9Au8C7wL9AlED7wJRAzQDNANRA7YDNAO2A5sDzAIaA8sCywIaA8oCywLKAoYCfgMZAzQDNAMZA+wCNAPsAu8C7wLsAqgC7wKoArQCtAKoAoYCfgNsAxkDGQNsA1UDGQNVAwYDBgNVA1ADBgNQAykDKQNQAz8DFgT/A/4DDQXtBAwFDAXtBOAEKQQbBBoEGgQbBBYEMQQyBEAEQAQyBEsEQARLBEwETARLBGUEdgR3BIsEiwR3BJ0EiwSdBJ4EngSdBLAEwgTBBM8EzwTBBOAEzwTgBOEE4QTgBO0EFgT+AxoEGgT+A/0DGgT9AxkEGQQYBBoEGgQYBDIEGgQyBCkEKQQyBDEESgRLBDMEMwRLBDIEMwQyBDAEMAQyBBgESgRNBEsESwRNBHcESwR3BGUEZQR3BHYEnASdBHgEeASdBHcEeAR3BHUEdQR3BE0EnASgBJ0EnQSgBMEEnQTBBLAEsATBBMIECwUMBd8E3wQMBeAE3wTgBMMEwwTgBMEEwwTBBMAEwATBBKAEKAUOBQ0FDAYIBvQF9AUIBvcF9AX3BfEF8QX3BeIFzQXZBeIF4gXZBeAF4gXgBfEFpwW+Bc0FzQW+BcwFzQXMBdkFgQWUBacFpwWUBaUFpwWlBb4FXgVsBYEFgQVsBX8FgQV/BZQFPwVGBV4FXgVGBV0FXgVdBWwFDQUnBSgFKAUnBS8FKAUvBT8FPwUvBT4FPwU+BUYFDwUOBSkFKQUOBSgFKQUoBUIFQgUoBT8FQgU/BWIFYgU/BV4FYgVeBY4FjgVeBYEFjgWBBbAFsAWBBacFsAWnBdEF0QWnBc0F0QXNBekF6QXNBeIF6QXiBfwF/AXiBfcF/AX3Bf8F/wX3BQgGXQNrA2kD2gOoA4MDgwOoA5oDgwOaA10DXQOaA4IDXQOCA2sD4gO1AyoEKgS1Ax4EagRdBEMEQwRdBEkEQwRJBB4EHgRJBDQEHgQ0BCoElgSzBG0EbQSzBJMEbQSTBIwEPwNdA0QDRANdA2kDRANpA1IDbAODA1UDVQODA10DVQNdA1ADUANdAz8DbAN+A4MDgwN+A7UDgwO1A9oD2gO1A+IDfgObA7UDtQObA7YDtQO2Ax4EHgS2A98DHgTfA0MEQwTfAyEEIQQ1BEMEQwQ1BG0EQwRtBGoEagRtBIwEhASWBFcEVwSWBG0EVwRtBFIEUgRtBDUE+wP6AxUEFQT6A/kDFQT5A/gDGQT9A/wD/AP7AxkEGQT7AxUEGQQVBBgEGAQVBBcEGAQXBDAEFwQuBDAEMAQuBC8EMAQvBDMEMwQvBEoELwRFBEoESgRFBEgESgRIBE0ETQRIBHUESARrBHUEdQRrBHQEdQR0BHgEeAR0BJwEdASYBJwEnASYBJsEnASbBKAEoASbBMAEmwS8BMAEwAS8BL8EwAS/BMMEwwS/BN8EvwTdBN8E3wTdBN4E3wTeBAsFCwXeBPsECwX7BAoFzAW+Bb0F4AXZBdcF9AXxBfAFvAW/Bb0F1gXYBdcFDAUuBScFDAUnBQ0F7wUKBgsGkwWSBZEFkQWSBWsFkQVrBW0FbQVrBWkFRwVFBUQFRAVFBS4FRAUuBS0FLQUuBQwFLQUMBQsFDAb0BQsGCwb0BfAFCwbwBe8F7wXwBe4F8QXgBfAF8AXgBdcF8AXXBe4F7gXXBdgF2QXMBdcF1wXMBb0F1wW9BdYF1gW9Bb8FvgWlBb0FvQWlBZIFvQWSBbwFvAWSBZMFbAVrBX8FfwVrBZIFfwWSBZQFlAWSBaUFbAVdBWsFawVdBUUFawVFBWkFaQVFBUcFXQVGBUUFRQVGBT4FRQU+BS4FLgU+BS8FLgUvBScFjASTBNAEXQRqBLIENARJBJIE2gPiAz8EmgOoAx8EawOCA88D3gTdBNsEvwS8BLsEmwSYBJcEdARrBGwESARFBEYELwQuBC0EFwQVBBMECgX7BPUEBgUHBfME8wQHBQgF8wQIBfUE9QQIBQkF9QQJBQoFFQT4A+EDFwQTBC4ELwQtBEUESARGBGsEdARsBJgEmwSXBLwEvwS7BN0E3gTbBPsEFQThAxMEEwThA9EDEwTRA9sD0QO0A9sD2wO0A6oD2wOqA6cDUgNpA4ADgANpA6cDgAOnA4sDiwOnA6oDLgQTBC0ELQQTBNsDLQTbAyAEIATbA6cDIASnA88DzwOnA2kDzwNpA2sDRQQtBEYERgQtBCAERgQgBD0EPQQgBM8DPQTPAx8EHwTPA4IDHwSCA5oDawRGBGwEbARGBD0EbAQ9BGYEZgQ9BB8EZgQfBD8EPwQfBKgDPwSoA9oDmARsBJcElwRsBGYElwRmBJEEkQRmBD8EkQQ/BGcEZwQ/BOIDZwTiAyoEvASXBLsEuwSXBJEEuwSRBLQEtASRBGcEtARnBJIEkgRnBCoEkgQqBDQE3QS7BNsE2wS7BLQE2wS0BNIE0gS0BJIE0gSSBLIEsgSSBEkEsgRJBF0E+wTbBPUE9QTbBNIE9QTSBPME8wTSBLIE8wSyBNAE0ASyBGoE0ARqBIwEBgXzBAUFBQXzBNAEBQXQBOIE4gTQBJME4gSTBLMECwUKBRkFCwUZBS0F9QURBg8GDgYNBu8F7wUNBgkG7wUJBgoGDwYOBvUF9QUOBu8F9QXvBfIF8gXvBe4F8gXuBdsF2wXuBdgF2wXYBdoF2gXYBdYF2gXWBcUFxQXWBb8FxQW/BcIFwgW/BbwFwgW8BZ8FnwW8BZMFnwWTBZYFlgWTBZEFlgWRBXIFcgWRBW0FcgVtBW4FbgVtBWkFbgVpBUoFSgVpBUcFSgVHBUgFSAVHBUQFSAVEBTEFMQVEBS0FMQUtBTAFMAUtBRkFrQXBBawF1QXeBdIFZQaGBmkGBwUGBTcFBwU3BQgFCAU3BRsFCAUbBQkFCQUbBRkFCQUZBQoFlga3BqwGUQZfBmUG8wUpBi8GKQbzBd4FfgWgBYIFggWgBa0FaAV4BX4FeAVoBVwFlQaWBpIGkgaWBqwGkgasBlwGXAVoBU0FTQVoBTcFTQU3BR0FHQU3BQYFHQUGBQUFrAaIBlwGXAaIBmoGXAZqBhQGZQZpBlEGUQZpBioGUQYqBuEF4QUqBuQF4QXkBcgF3gXzBdIF0gXzBcMF0gXDBZgFmAXDBaIFmAWiBXkFrQWsBYIFggWsBXUFggV1BVkFWQV1BVsFWQVbBTYFagZeBhQGFAZeBjwGFAY8BjcG8gUUBvUF9QUUBjcG9QU3BhEG8gXkBRQGFAbkBSoGFAYqBlwGXAYqBmkGXAZpBpIGkgZpBoYGkgaGBpUG8gXbBeQF5AXbBdoF5AXaBcgFyAXaBcUFyAXFBcIFwgWiBcgFyAWiBcMFyAXDBeEF4QXDBfMF4QXzBVEGUQbzBS8GUQYvBl8GwgWfBaIFogWfBZYFogWWBXkFeQWWBXIFeQVyBW4FbgVbBXkFeQVbBXUFeQV1BZgFmAV1BawFmAWsBdIF0gWsBcEF0gXBBdUFbgVKBVsFWwVKBUgFWwVIBTYFNgVIBTEFNgUxBTAFfgWCBWgFaAWCBVkFaAVZBTcFNwVZBTYFNwU2BRsFGwU2BTAFGwUwBRkFeAVcBXMFrQWgBZ4FngWgBX4FngV+BXgF7AVTBikGwQXHBdUF1QXHBewF1QXsBd4F3gXsBSkGhgZlBoUGhQZlBl8GhQZfBlMGUwZfBi8GUwYvBikGvQa3BqsGqwa3BpYGqwaWBpUGeAVzBZ4FngVzBY0FngWNBbIFsgW3BZ4FngW3BccFngXHBa0FrQXHBcEFtwXUBccFxwXUBesFxwXrBewF7AXrBSwG7AUsBlMGLAZSBlMGUwZSBmQGUwZkBoUGhQZkBooGigaUBoUGhQaUBqsGhQarBoYGhgarBpUGwga9BrkGuQa9BqsGuQarBrQGtAarBpQGLAbrBZEGNQc0B14HXgdbB1gHWAdbB1UHNAc1B+kG6QY1B+cG6QbnBtYGVAcVBxIHEgcVB+gGEgfoBtUG1gbnBosGiwbnBmEGiwZhBisGVQcxBxUHFQcxBw4HFQcOB+gG6AYOBwMH6AYDB7kGuQYDB+AGuQbgBsIGuQa0BugG6Aa0BpQG6AaUBtUG1QaUBooG1QaKBmQGXgdUBzkHOQdUBxIHOQcSBwwHDAcSB9UGDAfVBrgGuAbVBmQGuAZkBlIGXgc5BzYHNgc5BwwHNgcMB+wG7AYMB7gG7Aa4BpEGkQa4BlIGkQZSBiwGVQcVB1gHWAcVB1QHWAdUB14H6wVhBpEGkQZhBucGkQbnBuwG7AbnBjUH7AY1BzYHNgc1B14H6wXUBWEGYQbUBbcFYQa3BSsGKwa3BbIFKwayBd0F3QWyBY0F";
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function isDarkTheme(){
+  const m = cssVar('--paper').match(/#([0-9a-fA-F]{6})/);
+  if (!m) return false;
+  const n = parseInt(m[1], 16);
+  return (0.2126*((n>>16)&255) + 0.7152*((n>>8)&255) + 0.0722*(n&255))/255 < 0.5;
+}
+/* anchors in part space (mm): x across, y up, z = depth, origin at the centre of the box */
+const ANN = [
+  {p:[0,-31.3,-20],      o:[0,50],    text:"63,7"},
+  {p:[-31.8,0,-31.4],    o:[-58,-12], text:"62,6"},
+  {p:[0,-26,-31.4],      o:[56,-38],  text:"3× ⌀3,4", mark:true},
+  {p:[31.8,-31.3,0],     o:[56,26],   text:"62,9", opt:true},
+  {p:[0,10,8],           o:[-54,-44], text:"55 cm³", mark:true, opt:true}
+];
+
+function buildViewer(){
+  const box = document.getElementById('vbox');
+  if (!box || !window.THREE) return;
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  } catch (e) { return; }
+
+  const anno = document.getElementById('anno');
+  const labels = document.getElementById('labels');
+  const NS = 'http://www.w3.org/2000/svg';
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(box.clientWidth, box.clientHeight);
+  box.appendChild(renderer.domElement);
+  document.getElementById('vfallback').hidden = true;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, box.clientWidth/box.clientHeight, 1, 2000);
+  camera.position.set(0, 0, 300);
+
+  /* holder_for_chair.STL — real mesh, 5140 facets, positions quantised to 16 bit */
+  const mat = new THREE.MeshStandardMaterial({metalness:0.2, roughness:0.58, flatShading:true});
+  const edgeMat = new THREE.LineBasicMaterial({transparent:true, opacity:0.8});
+  const part = new THREE.Group();
+
+  const bin = atob(MESH_B64);
+  const buf = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  const quant = new Uint16Array(buf.buffer, 0, MESH_NV*3);
+  const index = new Uint16Array(buf.buffer, MESH_NV*6, MESH_NI);
+  const pos = new Float32Array(MESH_NV*3);
+  for (let i = 0; i < MESH_NV*3; i++){
+    const k = i % 3;
+    pos[i] = MESH_MIN[k] + quant[i]/65535*MESH_SIZE[k];
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setIndex(new THREE.BufferAttribute(index, 1));
+  geo.computeVertexNormals();
+  part.add(new THREE.Mesh(geo, mat));
+  part.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 26), edgeMat));
+
+  const BASE_Y = -2.0;
+  const group = new THREE.Group();
+  group.add(part);
+  group.rotation.set(-0.30, BASE_Y, 0);
+  scene.add(group);
+
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x3a4046, 0.9);
+  const key = new THREE.DirectionalLight(0xffffff, 0.8);
+  key.position.set(70, 110, 140);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3);
+  fill.position.set(-120, -60, 70);
+  scene.add(hemi, key, fill);
+
+  function applyTheme(){
+    const dark = isDarkTheme();
+    mat.color.set(dark ? 0x7E888F : 0xB6BEC4);
+    hemi.intensity = dark ? 0.7 : 0.95;
+    edgeMat.color.set(cssVar('--ink') || (dark ? '#E7EBED' : '#12171A'));
+  }
+  applyTheme();
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mq.addEventListener) mq.addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+
+  ANN.forEach(function(a){
+    const el = document.createElement('div');
+    el.className = 'lbl' + (a.mark ? ' mark' : '') + (a.opt ? ' opt' : '');
+    if (a.key) el.setAttribute('data-t', a.key); else el.textContent = a.text;
+    labels.appendChild(el);
+    const line = document.createElementNS(NS, 'line');
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('r', '2.4');
+    if (a.opt){ line.setAttribute('class','opt'); dot.setAttribute('class','opt'); }
+    anno.appendChild(line); anno.appendChild(dot);
+    a.el = el; a.line = line; a.dot = dot;
+    a.v = new THREE.Vector3();
+  });
+
+  function updateLabels(){
+    const w = box.clientWidth, h = box.clientHeight, s = Math.min(1, w/480);
+    ANN.forEach(function(a){
+      a.v.set(a.p[0], a.p[1], a.p[2]).applyMatrix4(part.matrixWorld).project(camera);
+      const x = (a.v.x*0.5+0.5)*w, y = (-a.v.y*0.5+0.5)*h;
+      a.dot.setAttribute('cx', x); a.dot.setAttribute('cy', y);
+      a.line.setAttribute('x1', x); a.line.setAttribute('y1', y);
+      a.line.setAttribute('x2', x + a.o[0]*s*0.76); a.line.setAttribute('y2', y + a.o[1]*s*0.76);
+      a.el.style.left = (x + a.o[0]*s) + 'px';
+      a.el.style.top  = (y + a.o[1]*s) + 'px';
+    });
+  }
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let auto = !reduce, raf = 0, visible = true;
+
+  function frame(now){
+    raf = requestAnimationFrame(frame);
+    if (auto) group.rotation.y = BASE_Y + Math.sin(now/5600)*0.22;
+    renderer.render(scene, camera);
+    updateLabels();
+  }
+  function run(on){
+    if (on && !raf) raf = requestAnimationFrame(frame);
+    if (!on && raf){ cancelAnimationFrame(raf); raf = 0; }
+  }
+
+  if (window.ResizeObserver){
+    new ResizeObserver(function(){
+      const w = box.clientWidth, h = box.clientHeight;
+      if (!w || !h) return;
+      camera.aspect = w/h; camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      renderer.render(scene, camera);
+      updateLabels();
+    }).observe(box);
+  }
+  if (window.IntersectionObserver){
+    new IntersectionObserver(function(es){
+      visible = es[0].isIntersecting;
+      run(visible);
+    }, {threshold:0.05}).observe(box);
+  }
+
+  let drag = false, px = 0, py = 0;
+  box.addEventListener('pointerdown', function(e){
+    drag = true; auto = false; px = e.clientX; py = e.clientY;
+    box.classList.add('grabbing');
+    try { box.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  box.addEventListener('pointermove', function(e){
+    if (!drag) return;
+    group.rotation.y += (e.clientX - px) * 0.008;
+    group.rotation.x = Math.max(-1.2, Math.min(0.6, group.rotation.x + (e.clientY - py) * 0.006));
+    px = e.clientX; py = e.clientY;
+  });
+  function endDrag(){ drag = false; box.classList.remove('grabbing'); }
+  box.addEventListener('pointerup', endDrag);
+  box.addEventListener('pointercancel', endDrag);
+
+  renderer.render(scene, camera);
+  updateLabels();
+  run(true);
+}
+
+try { buildViewer(); } catch (e) {}
+setLang(document.documentElement.lang || start);
+</script>
+</body>
+</html>
