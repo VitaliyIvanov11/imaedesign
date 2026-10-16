@@ -178,13 +178,15 @@
     var meta = document.createElement('span'); meta.className = 'cmeta';
     b.appendChild(th); b.appendChild(name); b.appendChild(meta);
     root.appendChild(b);
-    var card = {m:m, el:b, img:img, name:name, meta:meta, done:false};
+    var card = {m:m, el:b, img:img, thumb:th, name:name, meta:meta, done:false};
     b.__card = card;
     cards.push(card);
+    bindLive(card);
     if (io) io.observe(b); else renderThumb(card);
   });
 
   function applyFilter(){
+    deactivate();
     cards.forEach(function(c){ c.el.hidden = !(filter === 'all' || c.m.cat === filter); });
     Array.prototype.forEach.call(document.querySelectorAll('.cfilters button'), function(b){
       b.setAttribute('aria-pressed', String(b.getAttribute('data-f') === filter));
@@ -206,10 +208,90 @@
 
   function retheme(){
     cards.forEach(function(c){ if (c.done){ c.done = false; if (io){ io.observe(c.el); } } });
+    if (live && live.s) live.s.theme();
   }
   var mq = window.matchMedia('(prefers-color-scheme: dark)');
   if (mq.addEventListener) mq.addEventListener('change', retheme);
   new MutationObserver(retheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+
+  /* ---- live view: hover (mouse) or tap (touch) a card to rotate the part, slightly enlarged ---- */
+  var live = null, liveCard = null;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ensureLive(){
+    if (live !== null) return live;
+    try {
+      var r = new THREE.WebGLRenderer({antialias:true, alpha:true});
+      r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      r.domElement.className = 'clive';
+      live = {r:r, s:makeScene(), raf:0, auto:true, drag:false};
+    } catch (e) { live = false; }
+    return live;
+  }
+  function liveLoop(){
+    if (!liveCard) return;
+    live.raf = requestAnimationFrame(liveLoop);
+    if (live.auto && !live.drag) live.s.group.rotation.y += 0.007;
+    live.r.render(live.s.scene, live.s.camera);
+  }
+  function activate(card){
+    if (liveCard === card) return;
+    deactivate();
+    if (!ensureLive()) return;
+    var w = card.thumb.clientWidth, h = card.thumb.clientHeight;
+    if (!w || !h) return;
+    liveCard = card;
+    live.s.theme();
+    live.s.show(card.m);
+    live.s.group.rotation.set(-0.38, 0.62, 0);
+    live.s.camera.position.z = 300;
+    live.s.camera.aspect = w/h; live.s.camera.updateProjectionMatrix();
+    fit(live.s, card.m, w/h, 0.86);
+    live.r.setSize(w, h, false);
+    live.auto = !reduceMotion; live.drag = false;
+    card.thumb.appendChild(live.r.domElement);
+    card.img.style.visibility = 'hidden';
+    card.el.classList.add('live');
+    liveLoop();
+  }
+  function deactivate(){
+    if (!liveCard) return;
+    cancelAnimationFrame(live.raf);
+    if (live.r.domElement.parentNode) live.r.domElement.parentNode.removeChild(live.r.domElement);
+    liveCard.img.style.visibility = '';
+    liveCard.el.classList.remove('live');
+    liveCard.thumb.classList.remove('dragging');
+    liveCard = null;
+  }
+  function bindLive(card){
+    var th = card.thumb, px = 0, py = 0, touch = false;
+    card.el.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse') activate(card); });
+    card.el.addEventListener('pointerleave', function(e){ if (e.pointerType === 'mouse' && !(live && live.drag)) deactivate(); });
+    th.addEventListener('pointerdown', function(e){
+      touch = e.pointerType !== 'mouse';
+      if (touch) activate(card);
+      if (liveCard !== card) return;
+      live.drag = true; live.auto = false; px = e.clientX; py = e.clientY;
+      th.classList.add('dragging');
+      try { th.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    th.addEventListener('pointermove', function(e){
+      if (!live || liveCard !== card || !live.drag) return;
+      var g = live.s.group;
+      g.rotation.y += (e.clientX - px) * 0.012;
+      if (!touch) g.rotation.x = Math.max(-1.5, Math.min(1.5, g.rotation.x + (e.clientY - py) * 0.01));
+      px = e.clientX; py = e.clientY;
+    });
+    function end(e){
+      if (!live || !live.drag) return;
+      live.drag = false; th.classList.remove('dragging');
+      if (e && e.pointerType === 'mouse' && !card.el.matches(':hover')) deactivate();
+    }
+    th.addEventListener('pointerup', end);
+    th.addEventListener('pointercancel', end);
+  }
+  document.addEventListener('pointerdown', function(e){
+    if (liveCard && e.pointerType !== 'mouse' && !liveCard.el.contains(e.target)) deactivate();
+  });
 
   applyFilter();
   window.renderCollectionLang(document.documentElement.lang || 'lv');
