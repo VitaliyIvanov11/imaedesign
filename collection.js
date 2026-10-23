@@ -140,7 +140,7 @@
       r.setSize(520, 390, false);
       gl = r;
       thumbScene = makeScene();
-      thumbScene.group.rotation.set(-0.38, 0.62, 0);
+      thumbScene.group.rotation.set(0.6155, Math.PI/4, 0);
       thumbScene.camera.position.z = 300;
     } catch (e) { gl = false; }
     return gl;
@@ -242,7 +242,7 @@
     liveCard = card;
     live.s.theme();
     live.s.show(card.m);
-    live.s.group.rotation.set(-0.38, 0.62, 0);
+    live.s.group.rotation.set(0.6155, Math.PI/4, 0);
     live.s.camera.position.z = 300;
     live.s.camera.aspect = w/h; live.s.camera.updateProjectionMatrix();
     fit(live.s, card.m, w/h, 0.86);
