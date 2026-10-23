@@ -221,7 +221,7 @@
     if (live !== null) return live;
     try {
       var r = new THREE.WebGLRenderer({antialias:true, alpha:true});
-      r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      r.setPixelRatio(Math.min(Math.max(window.devicePixelRatio || 1, 2), 3));   // >=2 so it stays sharp at 1x screens and under the hover scale
       r.domElement.className = 'clive';
       live = {r:r, s:makeScene(), raf:0, auto:true, drag:false};
     } catch (e) { live = false; }
