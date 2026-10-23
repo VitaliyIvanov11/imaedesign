@@ -278,7 +278,7 @@
       if (!live || liveCard !== card || !live.drag) return;
       var g = live.s.group;
       g.rotation.y += (e.clientX - px) * 0.012;
-      if (!touch) g.rotation.x = Math.max(-1.5, Math.min(1.5, g.rotation.x + (e.clientY - py) * 0.01));
+      g.rotation.x = Math.max(-1.5, Math.min(1.5, g.rotation.x + (e.clientY - py) * 0.01));
       px = e.clientX; py = e.clientY;
     });
     function end(e){
