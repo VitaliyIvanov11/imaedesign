@@ -60,6 +60,17 @@
     return geo;
   }
 
+  /* per-part colours: [light theme, dark theme] */
+  var DEFAULT_COLOR = [0xBBA892, 0xAF9E8C];
+  var PART_COLORS = {
+    oralb:[0xD9795B,0xDB8A6E], oralb2:[0xE0A04A,0xE0AC62], monitor:[0x7E9CB5,0x8EA9BF], fruit:[0x93AE8B,0x9FB898],
+    lamp27:[0xE3B65C,0xE2BC70], bottle:[0x6FA7A2,0x82B3AE], moduls:[0xB98AA6,0xC298B0], pepco:[0xD88F88,0xDE9F99],
+    planeassem:[0x8FB3CC,0x9FBDD3], lampk:[0xE3B65C,0xE2BC70], holder5:[0x6FA7A2,0x82B3AE], tholder8:[0xA3A862,0xB0B574],
+    flag:[0xD9795B,0xDB8A6E], frame:[0xC8AE86,0xC7B08D], wheelfork:[0x7E9CB5,0x8EA9BF], millassem:[0xB98AA6,0xC298B0],
+    grindassem:[0xA89684,0xB2A290], hookassem:[0xD88F88,0xDE9F99], spiner:[0xE0A04A,0xE0AC62], owl:[0xA3A862,0xB0B574],
+    panda:[0x8E8478,0xA0968A], wcpad:[0x93AE8B,0x9FB898], sunneby:[0xE3B65C,0xE2BC70]
+  };
+
   /* ---- geometry ---- */
   function geometryFor(m){
     if (geoCache[m.id]) return geoCache[m.id];
@@ -114,14 +125,16 @@
     var fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-120, -60, 70);
     scene.add(hemi, key, fill);
     var s = {scene:scene, camera:camera, mat:mat, edgeMat:edgeMat, holder:holder, group:group, hemi:hemi};
+    s.cur = null;
     s.theme = function(){
-      var dark = isDark();
-      mat.color.set(dark ? 0xAF9E8C : 0xBBA892);
+      var dark = isDark(), pc = s.cur && PART_COLORS[s.cur.id] || DEFAULT_COLOR;
+      mat.color.set(dark ? pc[1] : pc[0]);
       hemi.intensity = dark ? 0.7 : 0.62;
       edgeMat.color.set(cssVar('--ink') || (dark ? '#E7EBED' : '#12171A'));
     };
     s.show = function(m){
       while (holder.children.length) holder.remove(holder.children[0]);
+      s.cur = m; s.theme();
       var g = geometryFor(m);
       holder.add(new THREE.Mesh(g.mesh, mat));
       holder.add(new THREE.LineSegments(g.edges, edgeMat));
