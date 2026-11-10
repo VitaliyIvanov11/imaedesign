@@ -22,7 +22,7 @@
     var s = (Math.round(x*10)/10).toString();
     return lang === 'en' ? s : s.replace('.', ',');
   }
-  function dimsText(d){ return fmt(d[0]) + ' × ' + fmt(d[1]) + ' × ' + fmt(d[2]) + (lang === 'ru' ? ' мм' : ' mm'); }
+  function dimsText(d){ return fmt(d[0]) + ' × ' + fmt(d[1]) + ' × ' + fmt(d[2]) + (lang === 'ru' ? ' мм' : ' mm'); }
   function catText(c){
     var e = tr('cat.' + c);
     return e ? (e[lang] || e.lv) : c;
@@ -109,14 +109,14 @@
     var group = new THREE.Group();
     group.add(holder);
     scene.add(group);
-    var hemi = new THREE.HemisphereLight(0xffffff, 0x3a4046, 0.9);
+    var hemi = new THREE.HemisphereLight(0xffffff, 0x8a7766, 0.9);
     var key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(70, 110, 140);
     var fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-120, -60, 70);
     scene.add(hemi, key, fill);
     var s = {scene:scene, camera:camera, mat:mat, edgeMat:edgeMat, holder:holder, group:group, hemi:hemi};
     s.theme = function(){
       var dark = isDark();
-      mat.color.set(dark ? 0x7E888F : 0x8B949B);
+      mat.color.set(dark ? 0xAF9E8C : 0xBBA892);
       hemi.intensity = dark ? 0.7 : 0.62;
       edgeMat.color.set(cssVar('--ink') || (dark ? '#E7EBED' : '#12171A'));
     };

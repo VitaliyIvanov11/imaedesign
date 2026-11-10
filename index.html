@@ -12,7 +12,7 @@
 </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#FFFBF5">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%2312171A%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Arial%27 font-weight=%27800%27 font-size=%2714%27 text-anchor=%27middle%27 fill=%27%234FC9D1%27%3EIM%3C/text%3E%3C/svg%3E">
 <title>IMAE Design &amp; Engineering</title>
 <meta name="description" content="IMAE Design &amp; Engineering — prototipi, inženiertehniskie risinājumi un 3D druka. CAD modelēšana, rasējumi ar pielaidēm, FDM druka, CNC sagatavošana. Salaspils, Latvija.">
@@ -33,27 +33,27 @@
 <style>
 /* Layout: technical drawing sheet — sticky title bar, measured left-aligned columns, hairline grids, datasheet tables, title block at the foot */
 :root{
-  --paper:#FFFFFF;
-  --surface:#F5F5F7;
-  --ink:#111113;
-  --ink-2:#6A6F76;
-  --line:#E5E7EA;
-  --accent:#0A7580;
-  --accent-soft:rgba(10,117,128,.09);
-  --mark:#B26A00;
+  --paper:#FFFBF5;
+  --surface:#F7EEE1;
+  --ink:#2B2420;
+  --ink-2:#7A6B5E;
+  --line:#EADFCF;
+  --accent:#B5532F;
+  --accent-soft:rgba(181,83,47,.10);
+  --mark:#B8741A;
   --display:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
 }
 :root[data-theme="dark"]{
-  --paper:#0B0C0E;
-  --surface:#15171A;
-  --ink:#F2F3F4;
-  --ink-2:#9AA1A8;
-  --line:#25292D;
-  --accent:#5FD3DB;
-  --accent-soft:rgba(79,201,209,.12);
-  --mark:#E0A24A;
+  --paper:#1C1713;
+  --surface:#272019;
+  --ink:#F5ECDF;
+  --ink-2:#B8A892;
+  --line:#3B3128;
+  --accent:#E89A74;
+  --accent-soft:rgba(232,154,116,.15);
+  --mark:#E8B25A;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -136,7 +136,7 @@ h1{
   padding:.72rem 1.15rem;border:1px solid var(--ink);display:inline-block;
 }
 .btn.primary{background:var(--ink);color:var(--paper)}
-.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .btn.ghost{border-color:var(--line);color:var(--ink)}
 .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
 /* 3D viewer with dimension callouts */
@@ -345,12 +345,12 @@ footer .wrap{font-family:var(--body);font-size:.82rem}
 
 .cthumb{background:radial-gradient(110% 90% at 50% 20%,var(--paper),var(--surface) 75%);border-bottom:0}
 .cname{font-stretch:100%;font-weight:650;letter-spacing:-.01em}
-.cmeta{font-family:var(--body);font-size:.78rem}
+.cmeta{font-family:var(--body);font-size:.76rem}
 .ccard.live .cthumb{touch-action:none}
 .cthumb.dragging{cursor:grabbing}
 .clive{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 .ccard{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
-.ccard.live{transform:scale(1.035);box-shadow:0 18px 44px rgba(17,17,19,.14);position:relative;z-index:2;border-color:var(--accent)}
+.ccard.live{transform:scale(1.035);box-shadow:0 18px 44px rgba(90,55,30,.18);position:relative;z-index:2;border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.ccard{transition:none}}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"IMAE Design & Engineering","url":"https://imaedesign.eu/","email":"imaedesign@outlook.com","telephone":"+37122525456","description":"CAD modelēšana, prototipi, 3D druka un CNC sagatavošana.","areaServed":"LV","address":{"@type":"PostalAddress","addressLocality":"Salaspils","addressCountry":"LV"}}</script>
 </head>
@@ -602,8 +602,8 @@ footer .wrap{font-family:var(--body);font-size:.82rem}
 </footer>
 
 <script src="vendor/three.min.js"></script>
-<script src="collection-data.js?v=20261110c"></script>
-<script src="collection.js?v=20261110c"></script>
+<script src="collection-data.js?v=20261110e"></script>
+<script src="collection.js?v=20261110e"></script>
 <script>
 const T = {
   "nav.services":{lv:"Pakalpojumi",ru:"Услуги",en:"Services"},
@@ -850,7 +850,7 @@ function buildViewer(){
   group.rotation.set(-0.30, BASE_Y, 0);
   scene.add(group);
 
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x3a4046, 0.9);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x8a7766, 0.9);
   const key = new THREE.DirectionalLight(0xffffff, 0.8);
   key.position.set(70, 110, 140);
   const fill = new THREE.DirectionalLight(0xffffff, 0.3);
@@ -859,9 +859,9 @@ function buildViewer(){
 
   function applyTheme(){
     const dark = isDarkTheme();
-    mat.color.set(dark ? 0x7E888F : 0x8B949B);
+    mat.color.set(dark ? 0xAF9E8C : 0xBBA892);
     hemi.intensity = dark ? 0.7 : 0.66;
-    edgeMat.color.set(cssVar('--ink') || (dark ? '#E7EBED' : '#12171A'));
+    edgeMat.color.set(cssVar('--ink') || (dark ? '#F5ECDF' : '#2B2420'));
   }
   applyTheme();
   const mq = window.matchMedia('(prefers-color-scheme: dark)');
